@@ -1366,3 +1366,14 @@ body.light-mode .home-kicker {color:var(--accent-strong)}
 .demon-title {display:flex;align-items:center;justify-content:space-between;gap:10px}
 .demon-title > span {min-width:0;overflow-wrap:anywhere}
 .player-demon-face {width:38px;height:38px;object-fit:contain;flex:none}
+
+@media (max-width:780px) {
+  .home-main:has(#player-search:focus, .player-results:not([hidden])) {
+    min-height:0;
+    align-items:flex-start;
+    padding-top:14px;
+  }
+  .home-main:has(#player-search:focus, .player-results:not([hidden])) .home-focus h1 {margin-bottom:12px}
+  #player-search {font-size:16px}
+  .player-results {max-height:min(360px,var(--player-results-height,360px));overscroll-behavior:contain}
+}
