@@ -1,6 +1,32 @@
 {
   "schemaVersion": 1,
   "title": "Geometry Dash List",
-  "description": "Disastrum's Geometry Dash rankings will appear here when supplied.",
-  "levels": []
+  "description": "Disastrum’s Geometry Dash completions, in ranked order.",
+  "levels": [
+    {
+      "rank": 1,
+      "name": "Bloodbath",
+      "videoUrl": "https://youtu.be/9jsSTxCBOYE"
+    },
+    {
+      "rank": 2,
+      "name": "The Flawless",
+      "videoUrl": "https://youtu.be/OMHTCEPaZcg"
+    },
+    {
+      "rank": 3,
+      "name": "8o X",
+      "videoUrl": "https://youtu.be/tetMhJDhQAY"
+    },
+    {
+      "rank": 4,
+      "name": "Acu",
+      "videoUrl": "https://youtu.be/Ll5r5g5GvPo"
+    },
+    {
+      "rank": 5,
+      "name": "Acropolis",
+      "videoUrl": "https://youtu.be/9m1BxYnr2kk"
+    }
+  ]
 }
