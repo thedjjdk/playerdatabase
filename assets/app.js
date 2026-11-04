@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const app = document.getElementById('app');
-  const directoryUrl = 'players.json?v=pixel-art-2';
+  const directoryUrl = 'players.json';
   const cache = new Map();
   const state = {
     directory: [],
@@ -121,7 +121,7 @@
   }
   async function fetchJson(path) {
     if (!cache.has(path)) {
-      cache.set(path, fetch(path).then(r => {
+      cache.set(path, fetch(path, path === directoryUrl ? {cache: 'no-cache'} : undefined).then(r => {
         if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
         return r.json();
       }).catch(error => {cache.delete(path); throw error;}));
