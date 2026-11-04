@@ -52,7 +52,7 @@
   }
   function thumbnailFor(item, profile) {
     if (item.thumbnail && /^thumbnails\/[A-Za-z0-9_.-]+\.(?:png|jpg|jpeg|webp)$/i.test(item.thumbnail)) {
-      return `players/${profile.id}/${item.thumbnail}`;
+      return `players/${profile.id}/${item.thumbnail}?v=1`;
     }
     if (item.thumbnail && /^https:\/\/i\.ytimg\.com\/vi\/[A-Za-z0-9_-]{11}\/hqdefault\.jpg$/.test(item.thumbnail)) {
       return item.thumbnail;
@@ -121,7 +121,7 @@
   }
   async function fetchJson(path) {
     if (!cache.has(path)) {
-      cache.set(path, fetch(path, path === directoryUrl ? {cache: 'no-cache'} : undefined).then(r => {
+      cache.set(path, fetch(path, {cache: 'no-cache'}).then(r => {
         if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
         return r.json();
       }).catch(error => {cache.delete(path); throw error;}));
