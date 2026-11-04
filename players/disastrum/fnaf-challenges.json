@@ -1,6 +1,77 @@
 {
   "schemaVersion": 1,
   "title": "FNaF Challenge List",
-  "description": "Disastrum's Five Nights at Freddy's challenge rankings will appear here when supplied.",
-  "levels": []
+  "description": "Disastrum’s Five Nights at Freddy’s challenge rankings, with videos from Disastrum Extra.",
+  "levels": [
+    {
+      "rank": 1,
+      "name": "Five Nights at Freddy's 2: Golden Freddy Mode No Blackouts (Minus 7)",
+      "videoUrl": "https://youtu.be/wHIlfq-3qs4"
+    },
+    {
+      "rank": 2,
+      "name": "Ultimate Custom Night: 50/20 Mode",
+      "videoUrl": "https://youtu.be/FYNPPF-kUuA"
+    },
+    {
+      "rank": 3,
+      "name": "Five Nights at Freddy's Sister Location: Golden Freddy Very Hard Mode V1.11 (Pre Patch SL)",
+      "videoUrl": "https://youtu.be/yiNq9L2sUrc"
+    },
+    {
+      "rank": 4,
+      "name": "FNaF SL CN: Funtime Gala",
+      "videoUrl": "https://youtu.be/V09ZXUtJ5l8"
+    },
+    {
+      "rank": 5,
+      "name": "Five Nights at Freddy's Sister Location: Golden Freddy V.Hard Mode",
+      "videoUrl": "https://youtu.be/4PAw4gQzxQ4"
+    },
+    {
+      "rank": 6,
+      "name": "Fnaf 3 CN: The Main Attraction",
+      "videoUrl": "https://youtu.be/RH45siPRS5M"
+    },
+    {
+      "rank": 7,
+      "name": "Five Nights at Freddy's: 4/20 Mode With the Old Strategy",
+      "videoUrl": "https://youtu.be/7C9EI8DRnWc"
+    },
+    {
+      "rank": 8,
+      "name": "Five Nights at Freddy's: 4/20 Mode is dead (3x in a row)",
+      "videoUrl": "https://youtu.be/M9trTae43ok"
+    },
+    {
+      "rank": 9,
+      "name": "Five Nights at Freddy's 2: Golden Freddy Challenge (Right Vent Camp)",
+      "videoUrl": "https://youtu.be/LsmaU5JhqLs"
+    },
+    {
+      "rank": 10,
+      "name": "Five Nights at Freddy's 3: Nightmare Aggressive Only",
+      "videoUrl": "https://youtu.be/KBxYOTQbym8"
+    },
+    {
+      "rank": 11,
+      "name": "Five Nights at Freddy's Sister Location: Cupcake Challenge Very Hard",
+      "videoUrl": "https://youtu.be/sNwYXFFOjDU"
+    },
+    {
+      "rank": 12,
+      "name": "Five Nights at Freddy's 4: 20/20/20/20 Mode (Night 8)",
+      "videoUrl": "https://youtu.be/Jffkt6f3-xQ"
+    },
+    {
+      "rank": 13,
+      "name": "Freddy Fazbear's Pizzeria Simulator: Saturday All Active",
+      "videoUrl": "https://youtu.be/miKRQlP7WoM"
+    },
+    {
+      "rank": 14,
+      "name": "Five Nights at Freddy’s: 4/20 Mode",
+      "videoUrl": "https://youtu.be/zYvKZjUn0oA"
+    }
+  ]
 }
