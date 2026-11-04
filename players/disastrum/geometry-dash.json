@@ -7,31 +7,49 @@
       "rank": 1,
       "name": "Bloodbath",
       "difficulty": "extreme-demon",
-      "videoUrl": "https://youtu.be/9jsSTxCBOYE"
+      "videoUrl": "https://youtu.be/9jsSTxCBOYE",
+      "videoPublishedDate": "2025-05-31",
+      "attempts": "22,629",
+      "worstFail": 98,
+      "enjoyment": 4.5,
+      "timeTaken": "Years"
     },
     {
       "rank": 2,
       "name": "The Flawless",
       "difficulty": "extreme-demon",
-      "videoUrl": "https://youtu.be/OMHTCEPaZcg"
+      "videoUrl": "https://youtu.be/OMHTCEPaZcg",
+      "videoPublishedDate": "2025-06-15",
+      "attempts": "~8,252",
+      "worstFail": 90,
+      "enjoyment": 3.3
     },
     {
       "rank": 3,
       "name": "8o X",
       "difficulty": "extreme-demon",
-      "videoUrl": "https://youtu.be/tetMhJDhQAY"
+      "videoUrl": "https://youtu.be/tetMhJDhQAY",
+      "videoPublishedDate": "2023-05-03",
+      "enjoyment": 6.4
     },
     {
       "rank": 4,
       "name": "Acu",
       "difficulty": "extreme-demon",
-      "videoUrl": "https://youtu.be/Ll5r5g5GvPo"
+      "videoUrl": "https://youtu.be/Ll5r5g5GvPo",
+      "videoPublishedDate": "2021-10-23",
+      "attempts": "22,042",
+      "enjoyment": 8.4
     },
     {
       "rank": 5,
       "name": "Acropolis",
       "difficulty": "insane-demon",
-      "videoUrl": "https://youtu.be/9m1BxYnr2kk"
+      "videoUrl": "https://youtu.be/9m1BxYnr2kk",
+      "videoPublishedDate": "2024-09-26",
+      "attempts": "4,500",
+      "enjoyment": 6.8,
+      "timeTaken": "2 days"
     }
   ]
 }

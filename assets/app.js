@@ -210,6 +210,12 @@
     return `<aside class="sidebar"><section class="panel"><h2>About this list</h2><p>${esc(doc.description||'Personal challenge rankings.')}</p>${src?`<a href="${esc(src)}" target="_blank" rel="noopener noreferrer">View original spreadsheet ↗</a>`:''}</section><section class="panel"><h2>List Statistics</h2><div class="bulletrows"><div><span>Ranked entries</span><strong>${(doc.levels||[]).length.toLocaleString()}</strong></div><div><span>Player</span><strong>${esc(profile.name)}</strong></div></div></section>${profile.lists.length>1?`<section class="panel"><h2>Other Lists</h2><div class="tierlinks">${profile.lists.map(list=>`<a class="tierchip" href="${esc(playerRoute(profile.id,list.id))}">${esc(list.title)}</a>`).join('')}</div></section>`:''}</aside>`;
   }
   function levelVideo(item) { return safeLink(item.videoUrl); }
+  function postedDate(item) {
+    return item.videoPublishedDate
+      ? new Date(`${item.videoPublishedDate}T00:00:00Z`).toLocaleDateString('en-US', {
+        timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric'
+      }) : '';
+  }
   function renderCard(profile, listId, item, index) {
     const rank = Number.isInteger(item.rank) ? item.rank : index+1;
     const link = playerRoute(profile.id, listId, rank);
@@ -222,7 +228,7 @@
         ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
       <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> ${esc(name)}</span>${demonFace(item.difficulty, profile)}</h2>
-      <p class="creator">${item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : 'Challenge entry'}</p>
+      <p class="creator">${item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : item.videoPublishedDate ? `Video posted <strong>${esc(postedDate(item))}</strong>` : 'Challenge entry'}</p>
       <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${item.attempts ? ` · ${esc(item.attempts)} attempts` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
   function filteredLevels() {
@@ -283,7 +289,9 @@
     const attr = (key, fallback='Not provided') => item[key] != null && item[key] !== '' ? esc(item[key]) : fallback;
     const facts = [
       [ `#${esc(item.rank)}`, 'LIST RANK' ],
-      [ attr('completionYear'), 'COMPLETION YEAR' ],
+      item.videoPublishedDate && !item.completionYear
+        ? [esc(postedDate(item)), 'VIDEO POSTED']
+        : [attr('completionYear'), 'COMPLETION YEAR'],
       [ attr('attempts'), 'ATTEMPTS' ],
       [ item.worstFail != null ? `${esc(item.worstFail)}%` : 'Not provided', 'WORST FAIL' ]
     ];
