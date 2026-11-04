@@ -54,6 +54,9 @@
     if (item.thumbnail && /^thumbnails\/[A-Za-z0-9_.-]+\.(?:png|jpg|jpeg|webp)$/i.test(item.thumbnail)) {
       return `players/${profile.id}/${item.thumbnail}`;
     }
+    if (item.thumbnail && /^https:\/\/i\.ytimg\.com\/vi\/[A-Za-z0-9_-]{11}\/hqdefault\.jpg$/.test(item.thumbnail)) {
+      return item.thumbnail;
+    }
     if (item.thumbnail) return safeLink(item.thumbnail);
     const id = youtubeId(item.videoUrl);
     return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
@@ -241,7 +244,7 @@
   function detailVideo(item) {
     const video = levelVideo(item);
     const thumb = thumbnailFor(item,state.activeProfile);
-    if (video && thumb) return `<a class="videoarea detail-video-link" target="_blank" rel="noopener noreferrer" href="${esc(video)}" title="Watch the original video"><img data-thumbnail src="${esc(thumb)}" alt="${esc(item.name)} video thumbnail"><span class="videoempty">Open source video ↗</span></a>`;
+    if (video && thumb) return `<a class="videoarea detail-video-link" target="_blank" rel="noopener noreferrer" href="${esc(video)}" title="Watch the original video"><img data-thumbnail src="${esc(thumb)}" alt="${esc(item.name)} thumbnail"><span class="videoempty">Open source video ↗</span></a>`;
     if (thumb) return `<div class="videoarea"><img data-thumbnail src="${esc(thumb)}" alt="${esc(item.name)} thumbnail"></div>`;
     if (video) return `<div class="video-area-empty"><a href="${esc(video)}" target="_blank" rel="noopener noreferrer">Open source video ↗</a></div>`;
     return `<div class="video-area-empty">No direct video link was provided for this entry.</div>`;
