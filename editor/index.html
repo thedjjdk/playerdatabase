@@ -28,8 +28,8 @@
   <dialog id="confirm">
     <form id="confirm-form">
       <h2>Save rankings</h2>
-      <label for="player-code">Player ID</label>
-      <input id="player-code" type="password" autocomplete="off" required>
+      <label for="player-code">Player ID (16 digits)</label>
+      <input id="player-code" type="password" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" autocomplete="off" required>
       <p id="save-status" role="status"></p>
       <button type="submit">Confirm and save</button>
       <button type="button" id="cancel">Cancel</button>

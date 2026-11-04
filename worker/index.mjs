@@ -84,7 +84,7 @@ function normalizeLevels(rows, original) {
 }
 
 async function authorized(code, expected) {
-  if (typeof code !== 'string' || !/^[A-Za-z0-9_-]{22}$/.test(code) || !/^[a-f0-9]{64}$/.test(expected || '')) return false;
+  if (typeof code !== 'string' || !/^[0-9]{16}$/.test(code) || !/^[a-f0-9]{64}$/.test(expected || '')) return false;
   const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(code)));
   let difference = 0;
   for (let i = 0; i < bytes.length; i++) difference |= bytes[i] ^ parseInt(expected.slice(i * 2, i * 2 + 2), 16);
