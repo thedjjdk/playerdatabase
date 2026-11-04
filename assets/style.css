@@ -867,17 +867,15 @@ body.light-mode .language-menu button:hover{background:#e7eaee}
 
 /* Height follows the menu's actual contents, with no oversized max-height guess. */
 .mobile-menu{
-  display:grid;grid-template-rows:0fr;overflow:hidden;
-  padding:0 15px;max-height:none;opacity:1;transform:none;
-  visibility:hidden;pointer-events:none;will-change:auto;
-  transition:grid-template-rows var(--ll-dropdown-duration) var(--ll-dropdown-easing),
+  overflow:hidden;padding:0 15px;max-height:none;opacity:1;transform:none;
+  clip-path:inset(0 0 100% 0);visibility:hidden;pointer-events:none;will-change:auto;
+  transition:clip-path var(--ll-dropdown-duration) var(--ll-dropdown-easing),
     visibility 0s linear var(--ll-dropdown-duration);
 }
 .mobile-menu.open{
-  display:grid;grid-template-rows:1fr;max-height:none;
-  padding:0 15px;opacity:1;transform:none;
-  visibility:visible;pointer-events:auto;
-  transition:grid-template-rows var(--ll-dropdown-duration) var(--ll-dropdown-easing),visibility 0s;
+  max-height:none;padding:0 15px;opacity:1;transform:none;
+  clip-path:inset(0);visibility:visible;pointer-events:auto;
+  transition:clip-path var(--ll-dropdown-duration) var(--ll-dropdown-easing),visibility 0s;
 }
 .mobile-menu-inner{min-height:0;overflow:hidden;display:flex;flex-direction:column;padding:0}
 .mobile-menu-inner > :first-child{margin-top:10px}
