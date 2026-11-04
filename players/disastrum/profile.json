@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "disastrum",
+  "name": "Disastrum",
+  "description": "Personal challenge rankings.",
+  "lists": [
+    {
+      "id": "geometry-dash",
+      "title": "Geometry Dash List",
+      "file": "geometry-dash.json"
+    },
+    {
+      "id": "fnaf-challenges",
+      "title": "FNaF Challenge List",
+      "file": "fnaf-challenges.json"
+    }
+  ]
+}

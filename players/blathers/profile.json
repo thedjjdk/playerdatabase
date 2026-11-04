@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "blathers",
+  "name": "Blathers",
+  "description": "Extreme Demon completions ranked by Blathers.",
+  "lists": [
+    {
+      "id": "geometry-dash",
+      "title": "Geometry Dash List",
+      "file": "geometry-dash.json"
+    }
+  ]
+}
