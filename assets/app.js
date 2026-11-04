@@ -175,7 +175,9 @@
     const name = item.name || `Entry ${rank}`;
     return `<article class="listcard">
       <a class="card-stretched" href="${esc(link)}" aria-label="View ${esc(name)} details"></a>
-      ${video && thumbnail ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" title="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} video thumbnail" data-thumbnail><span class="thumb-watermark" aria-hidden="true">${esc(profile.name.slice(0,1).toUpperCase())}</span></a>` : `<span class="thumbnail" aria-hidden="true"><span class="thumb-watermark">${esc(profile.name.slice(0,1).toUpperCase())}</span></span>`}
+      ${thumbnail ? (video
+        ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
+        : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
       <div class="listcardmeta"><h2><span class="hash">#${rank}</span> ${esc(name)}</h2>
       <p class="creator">${item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : 'Challenge entry'}</p>
       <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${item.attempts ? ` · ${esc(item.attempts)} attempts` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
@@ -222,6 +224,7 @@
     const video = levelVideo(item);
     const thumb = thumbnailFor(item,state.activeProfile);
     if (video && thumb) return `<a class="videoarea detail-video-link" target="_blank" rel="noopener noreferrer" href="${esc(video)}" title="Watch the original video"><img data-thumbnail src="${esc(thumb)}" alt="${esc(item.name)} video thumbnail"><span class="videoempty">Open source video ↗</span></a>`;
+    if (thumb) return `<div class="videoarea"><img data-thumbnail src="${esc(thumb)}" alt="${esc(item.name)} thumbnail"></div>`;
     if (video) return `<div class="video-area-empty"><a href="${esc(video)}" target="_blank" rel="noopener noreferrer">Open source video ↗</a></div>`;
     return `<div class="video-area-empty">No direct video link was provided for this entry.</div>`;
   }
@@ -353,8 +356,8 @@
   });
   app.addEventListener('error',e=>{
     if(e.target instanceof HTMLImageElement && e.target.hasAttribute('data-thumbnail')) {
-      // Don't show a broken-image icon for a missing YouTube poster.
-      e.target.remove();
+      const frame = e.target.closest('.thumbnail, .videoarea:not(a)');
+      (frame || e.target).remove();
     }
   },true);
   document.addEventListener('click',e=>{

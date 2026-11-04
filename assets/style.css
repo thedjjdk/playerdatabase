@@ -1337,14 +1337,14 @@ body.light-mode .home-kicker {color:var(--accent-strong)}
   .sitehead {height:66px}
   .appearance-tools {margin-left:auto}
   .player-title-wrap .player-avatar-small {width:40px;height:40px;font-size:18px}
-  .list-toolbar {display:flex!important;margin:0 16px 17px}
+  .list-toolbar {display:flex!important;width:auto;margin:0 16px 17px}
   .list-filter-area {width:100%}
   .list-filter-area .filter {flex:1 1 190px;max-width:none}
   .list-filter-area .select {flex:0 0 130px;max-width:130px}
   .count-line,.list-description-inline {margin:0 16px 14px}
   .level-meta {font-size:14px}
   .wide-tabs {margin:0 0 22px}
-  .wide-tabs button {flex:1 1 50%;min-width:0!important;padding:0 9px!important;white-space:normal;font-size:13px!important}
+  .wide-tabs button {flex:1 1 0;min-width:0!important;padding:0 9px!important;white-space:normal;font-size:13px!important}
   .home-main {min-height:calc(100vh - 128px);padding-bottom:110px}
 }
 @media(max-width:520px) {
