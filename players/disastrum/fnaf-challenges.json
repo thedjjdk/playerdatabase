@@ -6,72 +6,101 @@
     {
       "rank": 1,
       "name": "Five Nights at Freddy's 2: Golden Freddy Mode No Blackouts (Minus 7)",
-      "videoUrl": "https://youtu.be/wHIlfq-3qs4"
+      "videoUrl": "https://youtu.be/wHIlfq-3qs4",
+      "videoPublishedDate": "2026-02-19",
+      "enjoyment": 6.5
     },
     {
       "rank": 2,
       "name": "Ultimate Custom Night: 50/20 Mode",
-      "videoUrl": "https://youtu.be/FYNPPF-kUuA"
+      "videoUrl": "https://youtu.be/FYNPPF-kUuA",
+      "videoPublishedDate": "2026-08-22",
+      "enjoyment": 0.2
     },
     {
       "rank": 3,
       "name": "Five Nights at Freddy's Sister Location: Golden Freddy Very Hard Mode V1.11 (Pre Patch SL)",
-      "videoUrl": "https://youtu.be/yiNq9L2sUrc"
+      "videoUrl": "https://youtu.be/yiNq9L2sUrc",
+      "videoPublishedDate": "2026-07-18",
+      "enjoyment": 0.5
     },
     {
       "rank": 4,
       "name": "FNaF SL CN: Funtime Gala",
-      "videoUrl": "https://youtu.be/V09ZXUtJ5l8"
+      "videoUrl": "https://youtu.be/V09ZXUtJ5l8",
+      "videoPublishedDate": "2026-10-03",
+      "enjoyment": 8
     },
     {
       "rank": 5,
       "name": "Five Nights at Freddy's Sister Location: Golden Freddy V.Hard Mode",
-      "videoUrl": "https://youtu.be/4PAw4gQzxQ4"
+      "videoUrl": "https://youtu.be/4PAw4gQzxQ4",
+      "videoPublishedDate": "2026-06-12",
+      "enjoyment": 8.7
     },
     {
       "rank": 6,
       "name": "Fnaf 3 CN: The Main Attraction",
-      "videoUrl": "https://youtu.be/RH45siPRS5M"
+      "videoUrl": "https://youtu.be/RH45siPRS5M",
+      "videoPublishedDate": "2026-09-11",
+      "enjoyment": 5.5,
+      "timeTaken": "About 2 hours"
     },
     {
       "rank": 7,
       "name": "Five Nights at Freddy's: 4/20 Mode With the Old Strategy",
-      "videoUrl": "https://youtu.be/7C9EI8DRnWc"
+      "videoUrl": "https://youtu.be/7C9EI8DRnWc",
+      "videoPublishedDate": "2026-05-26",
+      "enjoyment": 1
     },
     {
       "rank": 8,
       "name": "Five Nights at Freddy's: 4/20 Mode is dead (3x in a row)",
-      "videoUrl": "https://youtu.be/M9trTae43ok"
+      "videoUrl": "https://youtu.be/M9trTae43ok",
+      "videoPublishedDate": "2026-04-20",
+      "completionDate": "2026-04-20",
+      "completionYear": 2026
     },
     {
       "rank": 9,
       "name": "Five Nights at Freddy's 2: Golden Freddy Challenge (Right Vent Camp)",
-      "videoUrl": "https://youtu.be/LsmaU5JhqLs"
+      "videoUrl": "https://youtu.be/LsmaU5JhqLs",
+      "videoPublishedDate": "2025-12-28"
     },
     {
       "rank": 10,
       "name": "Five Nights at Freddy's 3: Nightmare Aggressive Only",
-      "videoUrl": "https://youtu.be/KBxYOTQbym8"
+      "videoUrl": "https://youtu.be/KBxYOTQbym8",
+      "videoPublishedDate": "2026-02-22",
+      "enjoyment": 2.5,
+      "timeTaken": "About 2 days"
     },
     {
       "rank": 11,
       "name": "Five Nights at Freddy's Sister Location: Cupcake Challenge Very Hard",
-      "videoUrl": "https://youtu.be/sNwYXFFOjDU"
+      "videoUrl": "https://youtu.be/sNwYXFFOjDU",
+      "videoPublishedDate": "2026-04-06"
     },
     {
       "rank": 12,
       "name": "Five Nights at Freddy's 4: 20/20/20/20 Mode (Night 8)",
-      "videoUrl": "https://youtu.be/Jffkt6f3-xQ"
+      "videoUrl": "https://youtu.be/Jffkt6f3-xQ",
+      "videoPublishedDate": "2026-08-29",
+      "enjoyment": 8
     },
     {
       "rank": 13,
       "name": "Freddy Fazbear's Pizzeria Simulator: Saturday All Active",
-      "videoUrl": "https://youtu.be/miKRQlP7WoM"
+      "videoUrl": "https://youtu.be/miKRQlP7WoM",
+      "videoPublishedDate": "2026-07-19",
+      "enjoyment": 7
     },
     {
       "rank": 14,
       "name": "Five Nights at Freddy’s: 4/20 Mode",
-      "videoUrl": "https://youtu.be/zYvKZjUn0oA"
+      "videoUrl": "https://youtu.be/zYvKZjUn0oA",
+      "videoPublishedDate": "2025-12-08",
+      "completionYear": 2023
     }
   ]
 }
