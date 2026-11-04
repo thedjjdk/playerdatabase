@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const app = document.getElementById('app');
-  const directoryUrl = 'players.json';
+  const directoryUrl = 'players.json?v=pixel-art-2';
   const cache = new Map();
   const state = {
     directory: [],
@@ -82,8 +82,9 @@
       if (!encoded) return '';
       const rgb = tint.slice(1).match(/../g).map(channel => parseInt(channel, 16));
       const svg = atob(encoded).replace(/fill="#([0-9a-f]{2})\1\1"/gi, (_, gray) => {
-        const shade = parseInt(gray, 16) / 110;
-        return 'fill="#' + rgb.map(channel => Math.round(channel * shade).toString(16).padStart(2, '0')).join('') + '"';
+        // Match Layout List: the #4e4e4e tile receives the exact tint.
+        const shade = parseInt(gray, 16) / 0x4e;
+        return 'fill="#' + rgb.map(channel => Math.min(255, Math.round(channel * shade)).toString(16).padStart(2, '0')).join('') + '"';
       });
       pixelPatterns.set(tint, `url(data:image/svg+xml;base64,${btoa(svg)})`);
     }
