@@ -1360,3 +1360,9 @@ body.light-mode .home-kicker {color:var(--accent-strong)}
 @media(prefers-reduced-motion:reduce) {
   .player-search-box,.player-result {transition:none}
 }
+
+.player-avatar-small {position:relative;overflow:hidden}
+.player-avatar-small img {position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.demon-title {display:flex;align-items:center;justify-content:space-between;gap:10px}
+.demon-title > span {min-width:0;overflow-wrap:anywhere}
+.player-demon-face {width:38px;height:38px;object-fit:contain;flex:none}

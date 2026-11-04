@@ -6,26 +6,31 @@
     {
       "rank": 1,
       "name": "Bloodbath",
+      "difficulty": "extreme-demon",
       "videoUrl": "https://youtu.be/9jsSTxCBOYE"
     },
     {
       "rank": 2,
       "name": "The Flawless",
+      "difficulty": "extreme-demon",
       "videoUrl": "https://youtu.be/OMHTCEPaZcg"
     },
     {
       "rank": 3,
       "name": "8o X",
+      "difficulty": "extreme-demon",
       "videoUrl": "https://youtu.be/tetMhJDhQAY"
     },
     {
       "rank": 4,
       "name": "Acu",
+      "difficulty": "extreme-demon",
       "videoUrl": "https://youtu.be/Ll5r5g5GvPo"
     },
     {
       "rank": 5,
       "name": "Acropolis",
+      "difficulty": "insane-demon",
       "videoUrl": "https://youtu.be/9m1BxYnr2kk"
     }
   ]

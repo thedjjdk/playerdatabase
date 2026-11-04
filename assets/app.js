@@ -149,7 +149,7 @@
   }
   function resultMarkup(players) {
     if (!players.length) return `<div class="player-empty">No matching players.</div>`;
-    return players.map((p,i)=>`<a class="player-result ${i===state.highlightedResult?'is-highlighted':''}" href="${esc(playerRoute(p.id))}" role="option" aria-selected="${i===state.highlightedResult}" id="player-option-${i}"><span class="player-avatar-small" style="--accent:${checkedColor(p.accent)}">${esc(p.name.slice(0,1).toUpperCase())}</span><span><span class="result-name">${esc(p.name)}</span><span class="result-meta">Open personal lists</span></span><span class="result-arrow" aria-hidden="true">›</span></a>`).join('');
+    return players.map((p,i)=>`<a class="player-result ${i===state.highlightedResult?'is-highlighted':''}" href="${esc(playerRoute(p.id))}" role="option" aria-selected="${i===state.highlightedResult}" id="player-option-${i}">${playerAvatar(p)}<span><span class="result-name">${esc(p.name)}</span><span class="result-meta">Open personal lists</span></span><span class="result-arrow" aria-hidden="true">›</span></a>`).join('');
   }
   function matchingPlayers() {
     const query = state.search.trim().toLocaleLowerCase();
@@ -180,8 +180,18 @@
   function tabsMarkup(pid, profile, active) {
     return `<div class="wide-tabs" role="tablist" aria-label="Player lists">${profile.lists.map(entry=>`<button type="button" role="tab" aria-selected="${entry.id===active}" data-player-tab="${esc(entry.id)}" data-player-id="${esc(pid)}">${esc(entry.title)}</button>`).join('')}</div>`;
   }
+  function playerAvatar(player) {
+    const initial = esc(player.name.slice(0, 1).toUpperCase());
+    const image = player.avatar === 'avatar.webp' && validId(player.id)
+      ? `<img src="players/${player.id}/avatar.webp" alt="" data-player-avatar>` : '';
+    return `<span class="player-avatar-small" aria-hidden="true" style="--accent:${checkedColor(player.accent)}">${initial}${image}</span>`;
+  }
+  function demonFace(difficulty) {
+    const label = difficulty === 'extreme-demon' ? 'Extreme Demon' : difficulty === 'insane-demon' ? 'Insane Demon' : '';
+    return label ? `<img class="player-demon-face" src="assets/${difficulty}.png" alt="${label}" title="${label}">` : '';
+  }
   function playerIntro(profile) {
-    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to players</a><div class="player-title-wrap" style="margin-top:13px"><div class="player-avatar-small">${esc(profile.name[0]||'?')}</div><div><h1>${esc(profile.name)}</h1><p class="player-subheading">${esc(profile.description||'Personal ranked lists')}</p></div></div></div>`;
+    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to players</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1><p class="player-subheading">${esc(profile.description||'Personal ranked lists')}</p></div></div></div>`;
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);
@@ -199,7 +209,7 @@
       ${thumbnail ? (video
         ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
-      <div class="listcardmeta"><h2><span class="hash">#${rank}</span> ${esc(name)}</h2>
+      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> ${esc(name)}</span>${demonFace(item.difficulty)}</h2>
       <p class="creator">${item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : 'Challenge entry'}</p>
       <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${item.attempts ? ` · ${esc(item.attempts)} attempts` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
@@ -267,7 +277,7 @@
     ];
     const body = `<div class="backrow"><a href="${esc(playerRoute(profile.id,entry.id))}" class="backbutton">‹ Back to list</a><div class="prevnext">
       <button type="button" ${prev?'':'disabled'} data-rank-nav="${prev?prev.rank:''}">‹ Previous</button><button type="button" ${next?'':'disabled'} data-rank-nav="${next?next.rank:''}">Next ›</button></div></div>
-      <section class="singlepanel"><div class="detailheading"><h1>#${esc(item.rank)} – ${esc(item.name)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
+      <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} – ${esc(item.name)}</span>${demonFace(item.difficulty)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
       ${detailVideo(item)}
       <div class="facts detail-grid">${facts.map(([value,label])=>`<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>
       <p class="statline"><strong>Enjoyment rating:</strong> ${item.enjoyment == null ? 'Not provided' : `${esc(item.enjoyment)}/10`}</p>
@@ -293,7 +303,7 @@
       const profile = await fetchJson(`players/${folder}/profile.json`);
       if (seq !== state.request) return;
       if (!profile || profile.id !== player.id || !Array.isArray(profile.lists)) throw new Error('Player profile is invalid.');
-      state.activeProfile = {...profile, accent: checkedColor(player.accent), backgroundTint: player.backgroundTint};
+      state.activeProfile = {...profile, accent: checkedColor(player.accent), backgroundTint: player.backgroundTint, avatar: player.avatar};
       applyTheme(player.accent);
       let entry = profile.lists.find(x=>x.id===state.route.listId);
       if (!entry) entry = profile.lists[0];
@@ -376,6 +386,7 @@
     if(retry) {cache.clear();state.activeKey='';routeView();}
   });
   app.addEventListener('error',e=>{
+    if (e.target instanceof HTMLImageElement && e.target.hasAttribute('data-player-avatar')) e.target.remove();
     if(e.target instanceof HTMLImageElement && e.target.hasAttribute('data-thumbnail')) {
       const frame = e.target.closest('.thumbnail, .videoarea:not(a)');
       (frame || e.target).remove();
