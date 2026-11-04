@@ -73,10 +73,27 @@
       btn.setAttribute('aria-label',btn.title);
     }
   }
+  const pixelPatterns = new Map();
+  function playerPixelPattern(tint) {
+    if (!/^#[0-9a-f]{6}$/i.test(tint || '')) return '';
+    if (!pixelPatterns.has(tint)) {
+      const pattern = getComputedStyle(document.documentElement).getPropertyValue('--laylist-pixel-pattern');
+      const encoded = pattern.match(/base64,([A-Za-z0-9+/=]+)/)?.[1];
+      if (!encoded) return '';
+      const rgb = tint.slice(1).match(/../g).map(channel => parseInt(channel, 16));
+      const svg = atob(encoded).replace(/fill="#([0-9a-f]{2})\1\1"/gi, (_, gray) => {
+        const shade = parseInt(gray, 16) / 110;
+        return 'fill="#' + rgb.map(channel => Math.round(channel * shade).toString(16).padStart(2, '0')).join('') + '"';
+      });
+      pixelPatterns.set(tint, `url(data:image/svg+xml;base64,${btoa(svg)})`);
+    }
+    return pixelPatterns.get(tint);
+  }
   function applyTheme(accent) {
     document.body.classList.toggle('light-mode',state.theme === 'light');
     const color = checkedColor(accent || (state.activeProfile?.accent || '#aeb4bc'));
     // Inline properties override the base stylesheet's light-mode fallback.
+    document.body.style.setProperty('--player-pixel-pattern',playerPixelPattern(state.activeProfile?.backgroundTint));
     document.body.style.setProperty('--accent',color);
     document.body.style.setProperty('--accent-strong',color);
     document.body.style.setProperty('--accent-button',color);
@@ -272,7 +289,7 @@
       const profile = await fetchJson(`players/${folder}/profile.json`);
       if (seq !== state.request) return;
       if (!profile || profile.id !== player.id || !Array.isArray(profile.lists)) throw new Error('Player profile is invalid.');
-      state.activeProfile = {...profile, accent: checkedColor(player.accent)};
+      state.activeProfile = {...profile, accent: checkedColor(player.accent), backgroundTint: player.backgroundTint};
       applyTheme(player.accent);
       let entry = profile.lists.find(x=>x.id===state.route.listId);
       if (!entry) entry = profile.lists[0];

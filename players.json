@@ -2,6 +2,6 @@
   "schemaVersion": 1,
   "players": [
     {"id": "blathers", "name": "Blathers", "folder": "blathers", "accent": "#a1aab6"},
-    {"id": "disastrum", "name": "Disastrum", "folder": "disastrum", "accent": "#df505e"}
+    {"id": "disastrum", "name": "Disastrum", "folder": "disastrum", "backgroundTint": "#a83136"}
   ]
 }
