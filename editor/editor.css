@@ -1,0 +1,18 @@
+.editor {max-width:760px;padding:24px 0 60px}
+.editor h1,.editor p,.editor section {margin:12px 0}
+.editor input,.editor select,.editor button {background:var(--surface2);color:var(--text);border:1px solid var(--border);padding:8px;min-height:38px}
+.editor button:disabled {opacity:.55;cursor:default}
+.editor input,.editor select {width:100%;font-size:16px}
+.editor label {display:block}
+#import {display:flex;gap:8px;flex-wrap:wrap}
+#import label {width:100%}
+#import input {flex:1 1 230px}
+#levels {list-style:none;padding:0;margin:0 0 16px}
+.editor-row {padding:8px;margin-bottom:8px;background:var(--surface);border:1px solid var(--border)}
+.editor-row.drag-target {outline:2px solid var(--accent)}
+.editor-row-head {display:flex;align-items:center;gap:6px}
+.editor-row-head strong {flex:1;min-width:0;overflow-wrap:anywhere}
+.editor-handle {touch-action:none;cursor:grab}
+.editor-fields {display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:8px}
+.editor dialog {width:min(420px,calc(100% - 30px));background:var(--surface);color:var(--text);border:1px solid var(--border);padding:18px}
+.editor dialog::backdrop {background:#0009}

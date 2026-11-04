@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Edit player list</title>
+  <link rel="stylesheet" href="../assets/style.css?v=player-art-2">
+  <link rel="stylesheet" href="editor.css">
+  <script type="module" src="editor.js"></script>
+</head>
+<body>
+<main class="container editor">
+  <a id="back" href="../">Back to Player Lists</a>
+  <h1 id="title">Edit player list</h1>
+  <p>Drag the handle or use the arrow buttons to change placement. Changes stay in this tab until you save.</p>
+  <p id="status" role="status"></p>
+  <section class="singlepanel">
+    <form id="import">
+      <label for="video-url">Add a level from YouTube</label>
+      <input id="video-url" type="url" placeholder="https://youtu.be/…" required>
+      <button type="submit" disabled id="lookup">Add video</button>
+      <button type="button" disabled id="manual">Add manually</button>
+    </form>
+  </section>
+  <ol id="levels"></ol>
+  <button type="button" disabled id="save">Save changes</button>
+  <dialog id="confirm">
+    <form id="confirm-form">
+      <h2>Save rankings</h2>
+      <label for="player-code">Player ID</label>
+      <input id="player-code" type="password" autocomplete="off" required>
+      <p id="save-status" role="status"></p>
+      <button type="submit">Confirm and save</button>
+      <button type="button" id="cancel">Cancel</button>
+    </form>
+  </dialog>
+</main>
+</body>
+</html>

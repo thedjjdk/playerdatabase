@@ -187,7 +187,7 @@
     applyTheme('#aeb4bc');
   }
   function tabsMarkup(pid, profile, active) {
-    return `<div class="wide-tabs" role="tablist" aria-label="Player lists">${profile.lists.map(entry=>`<button type="button" role="tab" aria-selected="${entry.id===active}" data-player-tab="${esc(entry.id)}" data-player-id="${esc(pid)}">${esc(entry.title)}</button>`).join('')}</div>`;
+    return `<div class="wide-tabs" role="tablist" aria-label="Player lists">${profile.lists.map(entry=>`<button type="button" role="tab" aria-selected="${entry.id===active}" data-player-tab="${esc(entry.id)}" data-player-id="${esc(pid)}">${esc(entry.title)}</button>`).join('')}<button type="button" data-list-editor data-player-id="${esc(pid)}" data-list-id="${esc(active)}">Edit</button></div>`;
   }
   function playerAvatar(player) {
     const initial = esc(player.name.slice(0, 1).toUpperCase());
@@ -228,7 +228,7 @@
         ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
       <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> ${esc(name)}</span>${demonFace(item.difficulty, profile)}</h2>
-      <p class="creator">${item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : item.videoPublishedDate ? `Video posted <strong>${esc(postedDate(item))}</strong>` : 'Challenge entry'}</p>
+      <p class="creator">${item.completionDate ? `Completed <strong>${esc(item.completionDate)}</strong>` : item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : item.videoPublishedDate ? `Video posted <strong>${esc(postedDate(item))}</strong>` : 'Challenge entry'}</p>
       <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${item.attempts ? ` · ${esc(item.attempts)} attempts` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
   function filteredLevels() {
@@ -289,7 +289,8 @@
     const attr = (key, fallback='Not provided') => item[key] != null && item[key] !== '' ? esc(item[key]) : fallback;
     const facts = [
       [ `#${esc(item.rank)}`, 'LIST RANK' ],
-      item.videoPublishedDate && !item.completionYear
+      item.completionDate ? [esc(item.completionDate), 'COMPLETION DATE']
+        : item.videoPublishedDate && !item.completionYear
         ? [esc(postedDate(item)), 'VIDEO POSTED']
         : [attr('completionYear'), 'COMPLETION YEAR'],
       [ attr('attempts'), 'ATTEMPTS' ],
@@ -394,6 +395,11 @@
       if(pane) pane.inert=!state.menuOpen;
       menu.classList.toggle('is-open',state.menuOpen);
       menu.setAttribute('aria-expanded',String(state.menuOpen));
+      return;
+    }
+    const editor=e.target.closest('[data-list-editor]');
+    if (editor) {
+      location.href = 'editor/?' + new URLSearchParams({ player: editor.dataset.playerId, list: editor.dataset.listId });
       return;
     }
     const tab=e.target.closest('[data-player-tab]');
