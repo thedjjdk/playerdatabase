@@ -6,8 +6,8 @@
   <meta name="robots" content="noindex">
   <title>Edit player list</title>
   <link rel="stylesheet" href="../assets/style.css?v=player-art-2">
-  <link rel="stylesheet" href="editor.css">
-  <script type="module" src="editor.js"></script>
+  <link rel="stylesheet" href="editor.css?v=save-draft-1">
+  <script type="module" src="editor.js?v=save-draft-1"></script>
 </head>
 <body>
 <main class="container editor">
@@ -28,10 +28,12 @@
   <dialog id="confirm">
     <form id="confirm-form">
       <h2>Save rankings</h2>
-      <label for="player-code">Player ID (16 digits)</label>
-      <input id="player-code" type="password" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" autocomplete="off" required>
       <p id="save-status" role="status"></p>
-      <button type="submit">Confirm and save</button>
+      <fieldset id="save-credentials">
+        <label for="player-code">Player ID (16 digits)</label>
+      <input id="player-code" type="password" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" autocomplete="off" required>
+        <button type="submit">Confirm and save</button>
+      </fieldset>
       <button type="button" id="cancel">Cancel</button>
     </form>
   </dialog>

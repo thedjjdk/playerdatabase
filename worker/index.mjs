@@ -1,6 +1,7 @@
 const files = {
   blathers: ['geometry-dash'],
-  disastrum: ['geometry-dash', 'fnaf-challenges']
+  disastrum: ['geometry-dash', 'fnaf-challenges'],
+  kayceenoelle: ['celeste', 'beat-saber', 'geometry-dash']
 };
 const github = 'https://api.github.com/repos/thedjjdk/playerdatabase/contents/';
 const encoder = new TextEncoder();
@@ -141,7 +142,12 @@ export default {
         const raw = await request.text();
         if (raw.length > 250000) return reply({ error: 'List is too large.' }, 413);
         try { body = JSON.parse(raw); } catch { return reply({ error: 'Invalid request.' }, 400); }
-        if (!body || !await authorized(body.code, JSON.parse(env.PLAYER_CODE_HASHES)[player])) return reply({ error: 'Incorrect player ID for this profile.' }, 403);
+        const hashes = JSON.parse(env.PLAYER_CODE_HASHES);
+        const expected = hashes[player];
+        if (expected && Object.entries(hashes).some(([owner, hash]) => owner !== player && hash === expected)) {
+          return reply({ error: 'Player IDs must be unique across profiles.' }, 503);
+        }
+        if (!body || !await authorized(body.code, expected)) return reply({ error: 'Incorrect player ID for this profile.' }, 403);
       }
       const path = github + 'players/' + player + '/' + list + '.json';
       const ghHeaders = { Authorization: 'Bearer ' + env.GITHUB_TOKEN, Accept: 'application/vnd.github+json', 'User-Agent': 'playerdatabase-editor', 'Content-Type': 'application/json' };

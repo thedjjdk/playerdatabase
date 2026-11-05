@@ -12,7 +12,7 @@ The public site can stay on GitHub Pages. The Cloudflare Worker verifies private
    python3 hash-codes.py | npx wrangler secret put PLAYER_CODE_HASHES
    ```
 
-   For the last command, enter the two player IDs when prompted. The Worker stores their SHA-256 hashes. Keep the actual IDs out of GitHub, Cloudflare source code, and screenshots. To rotate an ID, issue a new random 16-digit numeric code and replace its hash while retaining the other player's hash.
+   For the last command, enter a distinct player ID for each profile when prompted. The Worker stores their SHA-256 hashes. Keep the actual IDs out of GitHub, Cloudflare source code, and screenshots. To rotate an ID, issue a new random 16-digit numeric code and replace its hash while retaining the other players’ hashes.
 
 4. Set `editorApi` in `editor/config.js` to the HTTPS Worker origin, with no trailing slash, and commit it. The Worker is configured for `https://thedjjdk.github.io`. If the frontend moves hosts, update `EDITOR_ORIGIN` in `wrangler.toml` and redeploy.
 5. Confirm the right player ID can save that player's test draft, the other player's ID is rejected, and the resulting GitHub Pages build publishes the new ordering.

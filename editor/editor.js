@@ -1,7 +1,7 @@
 import { editorApi } from './config.js';
 
 const $ = id => document.getElementById(id);
-const allowed = { blathers: ['geometry-dash'], disastrum: ['geometry-dash', 'fnaf-challenges'] };
+const allowed = { blathers: ['geometry-dash'], disastrum: ['geometry-dash', 'fnaf-challenges'], kayceenoelle: ['celeste', 'beat-saber', 'geometry-dash'] };
 const query = new URLSearchParams(location.search);
 const player = query.get('player');
 const list = query.get('list');
@@ -38,7 +38,7 @@ function applyList(data) {
 
 function changed() {
   dirty = true;
-  $('save').disabled = !editorApi;
+  $('save').disabled = false;
 }
 
 function fieldControl(row, key, label, kind, max, title) {
@@ -101,7 +101,7 @@ function render() {
     li.append(head, details);
     listEl.append(li);
   });
-  $('save').disabled = !dirty || !editorApi;
+  $('save').disabled = !dirty;
 }
 
 function updateDragTarget() {
@@ -185,7 +185,9 @@ $('save').addEventListener('click', () => {
     $('status').textContent = 'Enter a name for every level before saving.';
     return;
   }
-  $('save-status').textContent = '';
+  $('save-credentials').hidden = !editorApi;
+  $('save-credentials').disabled = !editorApi;
+  $('save-status').textContent = editorApi ? '' : 'Saving is unavailable until a save service is connected. Your draft is still open.';
   $('confirm').showModal();
 });
 $('cancel').addEventListener('click', () => $('confirm').close());
@@ -195,6 +197,7 @@ $('confirm').addEventListener('cancel', event => {
 $('confirm').addEventListener('close', () => { $('player-code').value = ''; });
 $('confirm-form').addEventListener('submit', async event => {
   event.preventDefault();
+  if (!editorApi || !dirty) return;
   const code = $('player-code').value.trim();
   const submit = event.submitter;
   submit.disabled = $('cancel').disabled = true;
@@ -228,8 +231,9 @@ async function init() {
     $('status').textContent = 'Choose Edit on a player list first.';
     return;
   }
-  const label = player === 'blathers' ? 'Blathers' : 'Disastrum';
-  $('title').textContent = 'Edit ' + label + ' · ' + (list === 'geometry-dash' ? 'Geometry Dash' : 'FNaF Challenges');
+  const names = { blathers: 'Blathers', disastrum: 'Disastrum', kayceenoelle: 'KayceeNoelle' };
+  const titles = { 'geometry-dash': 'Geometry Dash', 'fnaf-challenges': 'FNaF Challenges', celeste: 'Celeste', 'beat-saber': 'Beat Saber' };
+  $('title').textContent = 'Edit ' + names[player] + ' · ' + titles[list];
   $('back').href = '../#/player/' + player + '/' + list;
   try {
     if (editorApi) applyList(await api(listPath));
