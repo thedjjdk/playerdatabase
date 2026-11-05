@@ -158,8 +158,9 @@
     return `<footer class="container player-foot"><span>Player Lists · Built from the supplied Layout List design</span><a href="#/">Search players</a></footer>`;
   }
   function shell(body) {
-    app.innerHTML = `${header()}${demonTintFilter(state.activeProfile)}${body}${footer()}`;
+    app.innerHTML = `${header()}${body}${footer()}`;
     applyTheme();
+    applyDifficultyColors();
   }
   function showError(title, detail) {
     shell(`<main class="container"><section class="singlepanel player-route-error"><h2>${esc(title)}</h2><p class="data-note">${esc(detail)}</p><button type="button" class="ghostbutton" data-retry>Try again</button><div class="buttonrow"><a class="inline-back" href="#/">← Back to player search</a></div></section></main>`);
@@ -214,41 +215,85 @@
       ? `<img src="players/${player.id}/avatar.webp" alt="" data-player-avatar>` : '';
     return `<span class="player-avatar-small" aria-hidden="true" style="--accent:${checkedColor(player.accent)}">${initial}${image}</span>`;
   }
-  function demonTint(profile) {
-    if (!profile) return '';
-    const left = profile.backgroundLeft || profile.backgroundTint;
-    const right = profile.backgroundRight || profile.backgroundTint;
-    if (!left && !right) return '';
-    const rgb = value => checkedColor(value).slice(1).match(/../g).map(channel => parseInt(channel, 16));
-    const a = rgb(left || right);
-    const b = rgb(right || left);
-    return a.map((channel, i) => Math.round((channel + b[i]) / 2).toString(16).padStart(2, '0')).join('');
+  function colorDifficultyPixels(pixels, width, left, right) {
+    for (let offset = 0; offset < pixels.length; offset += 4) {
+      if (!pixels[offset + 3]) continue;
+      const maximum = Math.max(pixels[offset], pixels[offset + 1], pixels[offset + 2]);
+      const minimum = Math.min(pixels[offset], pixels[offset + 1], pixels[offset + 2]);
+      const lightness = (maximum + minimum) / 510;
+      // Match Layout List. Neutral horns, teeth and outlines retain their original pixels.
+      const amount = Math.max(0, Math.min(1, (maximum - minimum - 8) / 38));
+      const x = (offset / 4) % width;
+      const blend = Math.max(0, Math.min(1, (x / Math.max(1, width - 1) - 0.2) / 0.6));
+      for (let channel = 0; channel < 3; channel++) {
+        const accent = left[channel] + (right[channel] - left[channel]) * blend;
+        const tone = lightness <= 0.5
+          ? accent * lightness * 2
+          : accent + (255 - accent) * (lightness - 0.5) * 2;
+        pixels[offset + channel] = Math.round(
+          pixels[offset + channel] * (1 - amount) + tone * amount
+        );
+      }
+    }
   }
-  function demonTintFilter(profile) {
-    const tint = demonTint(profile);
-    if (!tint) return '';
-    const left = checkedColor(profile.backgroundLeft || profile.backgroundTint);
-    const right = checkedColor(profile.backgroundRight || profile.backgroundTint);
-    const filter = (id, hex) => {
-      const channels = hex.match(/../g).map(channel => parseInt(channel, 16) / 255);
-      return `<filter id="${id}" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="table" tableValues="0 ${channels[0]} 1"/><feFuncG type="table" tableValues="0 ${channels[1]} 1"/><feFuncB type="table" tableValues="0 ${channels[2]} 1"/></feComponentTransfer></filter>`;
-    };
-    return `<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>${filter('profile-demon-tint', tint)}${filter('profile-demon-left', left.slice(1))}${filter('profile-demon-right', right.slice(1))}</defs></svg>`;
+  const difficultyImageCache = new Map();
+  const difficultyColorCache = new Map();
+  function coloredDifficulty(difficulty, left, right) {
+    const key = difficulty + '/' + left + '/' + right;
+    if (!difficultyColorCache.has(key)) {
+      if (!difficultyImageCache.has(difficulty)) {
+        const image = new Image();
+        const ready = new Promise((resolve, reject) => {
+          image.onload = () => resolve(image);
+          image.onerror = () => reject(new Error('Difficulty face could not load.'));
+        });
+        image.src = 'assets/' + difficulty + '.png';
+        difficultyImageCache.set(difficulty, ready);
+      }
+      const rendered = difficultyImageCache.get(difficulty).then(image => {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+        if (!context) throw new Error('Difficulty coloring is unavailable.');
+        context.drawImage(image, 0, 0);
+        const frame = context.getImageData(0, 0, canvas.width, canvas.height);
+        const rgb = color => color.slice(1).match(/../g).map(channel => parseInt(channel, 16));
+        colorDifficultyPixels(frame.data, canvas.width, rgb(left), rgb(right));
+        context.putImageData(frame, 0, 0);
+        return canvas.toDataURL('image/png');
+      });
+      difficultyColorCache.set(key, rendered);
+    }
+    return difficultyColorCache.get(key);
+  }
+  function applyDifficultyColors() {
+    app.querySelectorAll('img[data-difficulty-tint]').forEach(image => {
+      coloredDifficulty(image.dataset.difficultyTint, image.dataset.leftColor, image.dataset.rightColor)
+        .then(url => {
+          if (!image.isConnected) return;
+          image.src = url;
+          image.removeAttribute('data-difficulty-tint');
+        })
+        .catch(() => {
+          // Keep the original face available when a browser cannot generate its tint.
+          image.removeAttribute('data-difficulty-tint');
+        });
+    });
   }
   const difficultyLabels = new Map([["easy","Easy"],["normal","Normal"],["hard","Hard"],["harder","Harder"],["insane","Insane"],["easy-demon","Easy Demon"],["medium-demon","Medium Demon"],["hard-demon","Hard Demon"],["insane-demon","Insane Demon"],["extreme-demon","Extreme Demon"]]);
   function demonFace(difficulty, profile) {
     const label = difficultyLabels.get(difficulty);
     if (!label) return '';
-    const tint = demonTint(profile);
-    const left = profile.backgroundLeft || profile.backgroundTint;
-    const right = profile.backgroundRight || profile.backgroundTint;
-    if (left && right && left.toLowerCase() !== right.toLowerCase()) {
-      return `<span class="player-demon-face difficulty-duotone" role="img" aria-label="${label}" title="${label}"><img src="assets/${difficulty}.png" alt="" aria-hidden="true" style="filter:url(#profile-demon-left)"><img src="assets/${difficulty}.png" alt="" aria-hidden="true" style="filter:url(#profile-demon-right)"></span>`;
-    }
+    const left = checkedColor(profile.backgroundLeft || profile.backgroundTint || profile.backgroundRight);
+    const right = checkedColor(profile.backgroundRight || profile.backgroundTint || profile.backgroundLeft);
     const hasPreTintedFace = difficulty === 'insane-demon' || difficulty === 'extreme-demon';
-    const suffix = hasPreTintedFace && (tint === '78bdf4' || tint === 'a83136') ? `-${tint}` : '';
-    const filter = tint && !suffix ? ' style="filter:url(#profile-demon-tint)"' : '';
-    return `<img class="player-demon-face" src="assets/${difficulty}${suffix}.png" alt="${label}" title="${label}"${filter}>`;
+    const preset = hasPreTintedFace && left.toLowerCase() === right.toLowerCase() &&
+      ['#78bdf4', '#a83136'].includes(left.toLowerCase());
+    if (preset) {
+      return `<img class="player-demon-face" src="assets/${difficulty}-${left.slice(1).toLowerCase()}.png" alt="${label}" title="${label}">`;
+    }
+    return `<img class="player-demon-face" src="assets/${difficulty}.png" alt="${label}" title="${label}" data-difficulty-tint="${difficulty}" data-left-color="${left}" data-right-color="${right}">`;
   }
   function playerIntro(profile) {
     return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div></div>`;
@@ -309,6 +354,7 @@
     } else {
       listEl.innerHTML = items.map((x,i)=>renderCard(state.activeProfile,state.route.listId,x,i)).join('');
     }
+    applyDifficultyColors();
   }
   function listView(profile, entry, doc) {
     const years = [...new Set(doc.levels.map(x=>x.completionYear).filter(Boolean))].sort((a,b)=>b-a);
