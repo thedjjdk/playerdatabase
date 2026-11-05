@@ -9,7 +9,8 @@
       "name": "Nowhere to Stand",
       "videoUrl": "https://youtu.be/QzOAF282mmE",
       "videoPublishedDate": "2026-09-03",
-      "enjoyment": 5
+      "enjoyment": 5,
+      "timeTaken": "85 hrs 22 mins"
     },
     {
       "rank": 2,
@@ -17,14 +18,16 @@
       "videoUrl": "https://youtu.be/fFQizCVlMQQ",
       "videoPublishedDate": "2026-01-06",
       "completionYear": 2025,
-      "enjoyment": 2
+      "enjoyment": 2,
+      "timeTaken": "31 hrs 41 mins"
     },
     {
       "rank": 3,
       "name": "Scarlett Sundown",
       "videoUrl": "https://youtu.be/XtkxQJ942jA",
       "videoPublishedDate": "2026-07-11",
-      "enjoyment": 1
+      "enjoyment": 1,
+      "timeTaken": "21 hrs 43 mins"
     },
     {
       "rank": 4,
