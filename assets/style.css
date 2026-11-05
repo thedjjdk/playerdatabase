@@ -458,7 +458,7 @@ body::after { right: 0; left: auto; transform: scaleX(-1); }
 /* User-controllable appearance. Defaults are deliberately neutral grey. */
 :root{--accent:#d0d3d8;--accent-strong:#828992;--accent-button:#666d76;--accent-button-hover:#7b838d;--accent-rgb:208,211,216;--pixel-filter:none;color-scheme:dark}
 body::before,body::after{filter:none}
-.wordmark b,.backbutton,.textbutton,.panel a,.foot a,.pack button,.progressrow button,.fact button{color:var(--accent)}
+.backbutton,.textbutton,.panel a,.foot a,.pack button,.progressrow button,.fact button{color:var(--accent)}
 .navlinks button.active:after,.wide-tabs button[aria-selected=true]::after{background:var(--accent)}
 .listcard:hover,.listcard:focus-visible,.tierchip:hover{border-color:var(--accent)}
 .mobile-search::before{color:var(--accent)}
@@ -1235,7 +1235,7 @@ button.profilestat.points-toggle:focus-visible{outline:2px solid var(--accent);o
 }
 body {min-height:100vh}
 body.light-mode {color-scheme:light}
-body.light-mode .wordmark b {color:var(--accent-strong)}
+.sitehead .wordmark b {color:var(--wordmark-tint,var(--accent))}
 body.light-mode .wide-tabs button[aria-selected=true]::after {background:var(--accent-strong)}
 body.light-mode .pageintro h1,body.light-mode .level-title-link {color:var(--text)}
 body.light-mode .listcard .tiernote {color:var(--dim)}

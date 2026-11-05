@@ -1,4 +1,4 @@
-import { editorApi } from './config.js';
+import { editorApi } from './config.js?v=review-1';
 
 const $ = id => document.getElementById(id);
 const allowed = { blathers: ['geometry-dash'], disastrum: ['geometry-dash', 'fnaf-challenges'], kayceenoelle: ['celeste', 'beat-saber', 'geometry-dash'] };

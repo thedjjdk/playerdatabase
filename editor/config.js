@@ -1,2 +1,1 @@
-// Set to the HTTPS origin of the deployed playerdatabase-editor Worker.
-export const editorApi = '';
+export const editorApi = 'https://playerdatabase-save.botanicaldegu.chatgpt.site';
