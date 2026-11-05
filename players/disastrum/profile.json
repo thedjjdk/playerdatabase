@@ -14,5 +14,7 @@
       "title": "FNaF Challenge List",
       "file": "fnaf-challenges.json"
     }
-  ]
+  ],
+  "backgroundLeft": "#ff000d",
+  "backgroundRight": "#ff000d"
 }
