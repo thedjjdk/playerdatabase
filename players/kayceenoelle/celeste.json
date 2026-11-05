@@ -8,86 +8,100 @@
       "rank": 1,
       "name": "Nowhere to Stand",
       "videoUrl": "https://youtu.be/QzOAF282mmE",
-      "videoPublishedDate": "2026-09-03"
+      "videoPublishedDate": "2026-09-03",
+      "enjoyment": 4
     },
     {
       "rank": 2,
       "name": "silly2k3",
       "videoUrl": "https://youtu.be/fFQizCVlMQQ",
       "videoPublishedDate": "2026-01-06",
-      "completionYear": 2025
+      "completionYear": 2025,
+      "enjoyment": 2
     },
     {
       "rank": 3,
       "name": "Scarlett Sundown",
       "videoUrl": "https://youtu.be/XtkxQJ942jA",
-      "videoPublishedDate": "2026-07-11"
+      "videoPublishedDate": "2026-07-11",
+      "enjoyment": 1
     },
     {
       "rank": 4,
       "name": "Forsaken Undercity",
       "videoUrl": "https://youtu.be/L-bExXcuVo8",
-      "videoPublishedDate": "2026-06-01"
+      "videoPublishedDate": "2026-06-01",
+      "enjoyment": 7
     },
     {
       "rank": 5,
-      "name": "Pinball Purgatory PT.2 All Berries",
+      "name": "Pinball Purgatory (Full Clear)",
       "videoUrl": "https://youtu.be/e8tu022Xvys",
-      "videoPublishedDate": "2026-01-06"
+      "videoPublishedDate": "2026-01-06",
+      "enjoyment": 6
     },
     {
       "rank": 6,
       "name": "Pinball Purgatory",
       "videoUrl": "https://youtu.be/GKqYMhwQrmI",
-      "videoPublishedDate": "2025-12-05"
+      "videoPublishedDate": "2025-12-05",
+      "enjoyment": 4
     },
     {
       "rank": 7,
       "name": "Celestial Resort L-Side",
       "videoUrl": "https://youtu.be/VUwRHpLccUw",
-      "videoPublishedDate": "2025-02-28"
+      "videoPublishedDate": "2025-02-28",
+      "enjoyment": 8
     },
     {
       "rank": 8,
       "name": "Forsaken City Z-Side",
       "videoUrl": "https://youtu.be/Ly3DUHQlr_A",
-      "videoPublishedDate": "2025-06-20"
+      "videoPublishedDate": "2025-06-20",
+      "enjoyment": 5
     },
     {
       "rank": 9,
       "name": "Rift Fortress",
       "videoUrl": "https://youtu.be/cGqandcvL68",
-      "videoPublishedDate": "2026-06-03"
+      "videoPublishedDate": "2026-06-03",
+      "enjoyment": 2
     },
     {
       "rank": 10,
       "name": "Temple on the Earth",
       "videoUrl": "https://youtu.be/J-x4aKWmM3o",
-      "videoPublishedDate": "2026-06-01"
+      "videoPublishedDate": "2026-06-01",
+      "enjoyment": 9
     },
     {
       "rank": 11,
       "name": "Amber Terminus C-Side",
       "videoUrl": "https://youtu.be/p-I4YeovzBw",
-      "videoPublishedDate": "2026-08-22"
+      "videoPublishedDate": "2026-08-22",
+      "enjoyment": 9
     },
     {
       "rank": 12,
       "name": "Ultra Difficult",
       "videoUrl": "https://youtu.be/XfBvmxUHruw",
-      "videoPublishedDate": "2025-11-09"
+      "videoPublishedDate": "2025-11-09",
+      "enjoyment": 5
     },
     {
       "rank": 13,
       "name": "Hellwind",
       "videoUrl": "https://youtu.be/ta6T99x-lBE",
-      "videoPublishedDate": "2026-11-01"
+      "videoPublishedDate": "2026-11-01",
+      "enjoyment": 7
     },
     {
       "rank": 14,
       "name": "Jammin'",
       "videoUrl": "https://youtu.be/doL4thtxDVA",
-      "videoPublishedDate": "2026-10-31"
+      "videoPublishedDate": "2026-10-31",
+      "enjoyment": 10
     }
   ],
   "sourceLabel": "View YouTube playlist"
