@@ -107,7 +107,7 @@ function fieldControl(row, key, label, kind, max, title) {
   const wrap = text('label', label);
   const input = document.createElement(kind === 'select' ? 'select' : 'input');
   if (kind === 'select') {
-    for (const [value, name] of [['', 'Unspecified'], ['extreme-demon', 'Extreme Demon'], ['insane-demon', 'Insane Demon']]) input.add(new Option(name, value));
+    for (const [value, name] of [["","Unspecified"],["easy","Easy"],["normal","Normal"],["hard","Hard"],["harder","Harder"],["insane","Insane"],["easy-demon","Easy Demon"],["medium-demon","Medium Demon"],["hard-demon","Hard Demon"],["insane-demon","Insane Demon"],["extreme-demon","Extreme Demon"]]) input.add(new Option(name, value));
   } else input.type = kind;
   if (max) { input.min = '0'; input.max = String(max); input.step = 'any'; }
   input.value = row[key] ?? '';

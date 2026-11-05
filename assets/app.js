@@ -234,11 +234,13 @@
     }).join(' ');
     return `<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs><filter id="profile-demon-tint" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="${matrix} 0 0 0 1 0"/></filter></defs></svg>`;
   }
+  const difficultyLabels = new Map([["easy","Easy"],["normal","Normal"],["hard","Hard"],["harder","Harder"],["insane","Insane"],["easy-demon","Easy Demon"],["medium-demon","Medium Demon"],["hard-demon","Hard Demon"],["insane-demon","Insane Demon"],["extreme-demon","Extreme Demon"]]);
   function demonFace(difficulty, profile) {
-    const label = difficulty === 'extreme-demon' ? 'Extreme Demon' : difficulty === 'insane-demon' ? 'Insane Demon' : '';
+    const label = difficultyLabels.get(difficulty);
     if (!label) return '';
     const tint = demonTint(profile);
-    const suffix = tint === '78bdf4' || tint === 'a83136' ? `-${tint}` : '';
+    const hasPreTintedFace = difficulty === 'insane-demon' || difficulty === 'extreme-demon';
+    const suffix = hasPreTintedFace && (tint === '78bdf4' || tint === 'a83136') ? `-${tint}` : '';
     const filter = tint && !suffix ? ' style="filter:url(#profile-demon-tint)"' : '';
     return `<img class="player-demon-face" src="assets/${difficulty}${suffix}.png" alt="${label}" title="${label}"${filter}>`;
   }
