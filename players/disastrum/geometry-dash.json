@@ -5,16 +5,6 @@
   "levels": [
     {
       "rank": 1,
-      "name": "The Flawless",
-      "difficulty": "extreme-demon",
-      "videoUrl": "https://youtu.be/OMHTCEPaZcg",
-      "videoPublishedDate": "2025-06-15",
-      "attempts": "~8,252",
-      "worstFail": 90,
-      "enjoyment": 3.3
-    },
-    {
-      "rank": 2,
       "name": "Bloodbath",
       "difficulty": "extreme-demon",
       "videoUrl": "https://youtu.be/9jsSTxCBOYE",
@@ -23,6 +13,16 @@
       "worstFail": 98,
       "enjoyment": 4.5,
       "timeTaken": "Years"
+    },
+    {
+      "rank": 2,
+      "name": "The Flawless",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://youtu.be/OMHTCEPaZcg",
+      "videoPublishedDate": "2025-06-15",
+      "attempts": "~8,252",
+      "worstFail": 90,
+      "enjoyment": 3.3
     },
     {
       "rank": 3,
