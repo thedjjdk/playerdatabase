@@ -27,6 +27,68 @@ async function api(path, options) {
   return data;
 }
 
+const appearancePath = '/appearance?' + new URLSearchParams({ player });
+let appearanceRevision, savedColors;
+const currentColors = () => [$('profile-left').value, $('profile-right').value];
+const colorsChanged = () => savedColors && currentColors().some((color, i) => color !== savedColors[i]);
+
+async function initAppearance() {
+  if (!editorApi) return;
+  try {
+    const [appearance, directory] = await Promise.all([
+      api(appearancePath),
+      fetch('../players.json', { cache: 'no-cache' }).then(response => {
+        if (!response.ok) throw new Error('Could not load player colors.');
+        return response.json();
+      })
+    ]);
+    const fallback = directory.players.find(entry => entry.id === player)?.backgroundTint || '#4e4e4e';
+    $('profile-left').value = appearance.document.backgroundLeft || fallback;
+    $('profile-right').value = appearance.document.backgroundRight || fallback;
+    appearanceRevision = appearance.revision;
+    savedColors = currentColors();
+    $('profile-left').disabled = $('profile-right').disabled = $('profile-code').disabled = false;
+  } catch (error) {
+    $('colors-status').textContent = error.message;
+  }
+}
+
+$('profile-colors').addEventListener('input', () => {
+  $('save-colors').disabled = !colorsChanged();
+});
+$('profile-colors').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!colorsChanged()) return;
+  const [left, right] = currentColors();
+  const code = $('profile-code').value;
+  $('save-colors').disabled = $('profile-left').disabled = $('profile-right').disabled = $('profile-code').disabled = true;
+  $('colors-status').textContent = 'Saving profile colors…';
+  try {
+    const result = await api(appearancePath, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, revision: appearanceRevision, left, right })
+    });
+    if (result.unchanged || result.reviewState === 'merged') {
+      appearanceRevision = result.revision;
+      savedColors = [left, right];
+      $('colors-status').textContent = 'Profile colors saved. They’ll appear after deployment.';
+    } else {
+      $('colors-status').textContent = 'GitHub did not merge the color change. Your draft is still open.';
+    }
+    if (result.review) {
+      const link = text('a', 'View pull request');
+      link.href = result.review;
+      $('colors-status').append(' ', link);
+    }
+  } catch (error) {
+    $('colors-status').textContent = error.message;
+  } finally {
+    $('profile-code').value = '';
+    $('profile-left').disabled = $('profile-right').disabled = $('profile-code').disabled = false;
+    $('save-colors').disabled = !colorsChanged();
+  }
+});
+
 const listPath = '/list?' + new URLSearchParams({ player, list });
 
 function applyList(data) {
@@ -243,7 +305,7 @@ $('confirm-form').addEventListener('submit', async event => {
   }
 });
 window.addEventListener('beforeunload', event => {
-  if (dirty) event.preventDefault();
+  if (dirty || colorsChanged()) event.preventDefault();
 });
 
 async function init() {
@@ -251,6 +313,7 @@ async function init() {
     $('status').textContent = 'Choose Edit on a player list first.';
     return;
   }
+  initAppearance();
   const names = { blathers: 'Blathers', djjdk: 'DJ JDK', disastrum: 'Disastrum', kayceenoelle: 'KayceeNoelle' };
   const titles = { 'geometry-dash': 'Geometry Dash', 'fnaf-challenges': 'FNaF Challenges', celeste: 'Celeste', 'beat-saber': 'Beat Saber' };
   $('title').textContent = 'Edit ' + names[player] + ' · ' + titles[list];
