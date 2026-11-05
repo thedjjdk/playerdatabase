@@ -6,31 +6,53 @@
     {
       "rank": 1,
       "name": "Zettabyte",
-      "videoUrl": "https://youtu.be/bQrGMYJZh4Y"
+      "videoUrl": "https://youtu.be/bQrGMYJZh4Y",
+      "attempts": "35,471",
+      "enjoyment": 7.5,
+      "worstFail": 89,
+      "videoPublishedDate": "2022-05-01",
+      "difficulty": "extreme-demon",
+      "timeTaken": "Just over 2 years, including breaks"
     },
     {
       "rank": 2,
       "name": "Without U",
       "videoUrl": "https://youtu.be/E83F_fJM6No",
-      "difficulty": "extreme-demon"
+      "difficulty": "extreme-demon",
+      "attempts": "1,989",
+      "enjoyment": 10,
+      "worstFail": 91,
+      "videoPublishedDate": "2025-05-27"
     },
     {
       "rank": 3,
       "name": "Acu",
       "videoUrl": "https://youtu.be/h1tJHDGBpEU",
-      "difficulty": "extreme-demon"
+      "difficulty": "extreme-demon",
+      "attempts": "7,382",
+      "enjoyment": 8,
+      "worstFail": 98,
+      "videoPublishedDate": "2021-01-24"
     },
     {
       "rank": 4,
       "name": "Light It Up",
       "videoUrl": "https://youtu.be/rJiQRf_-wjo",
-      "difficulty": "extreme-demon"
+      "difficulty": "extreme-demon",
+      "attempts": "4,538 + ~2,500 lost",
+      "enjoyment": 9,
+      "worstFail": 96,
+      "videoPublishedDate": "2020-12-12"
     },
     {
       "rank": 5,
       "name": "Rubber VRoom",
       "videoUrl": "https://youtu.be/jX-6fSsoGhs",
-      "difficulty": "insane-demon"
+      "difficulty": "insane-demon",
+      "attempts": "~2,800",
+      "enjoyment": 7,
+      "worstFail": 98,
+      "videoPublishedDate": "2023-08-21"
     }
   ]
 }
