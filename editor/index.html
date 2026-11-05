@@ -7,7 +7,7 @@
   <title>Edit player list</title>
   <link rel="stylesheet" href="../assets/style.css?v=player-art-2">
   <link rel="stylesheet" href="editor.css?v=save-draft-1">
-  <script type="module" src="editor.js?v=add-placement-1"></script>
+  <script type="module" src="editor.js?v=profile-colors-1"></script>
 </head>
 <body>
 <main class="container editor">
@@ -24,6 +24,17 @@
       <button type="submit" disabled id="lookup">Add video</button>
       <button type="button" disabled id="manual">Add manually</button>
     </form>
+  </section>
+  <section class="singlepanel" aria-labelledby="profile-colors-heading">
+    <h2 id="profile-colors-heading">Profile colors</h2>
+    <p>These colors apply to the pixel art on every list in this profile.</p>
+    <form id="profile-colors" class="editor-fields">
+      <label>Left side <input type="color" id="profile-left" disabled></label>
+      <label>Right side <input type="color" id="profile-right" disabled></label>
+      <label>Player ID <input type="password" id="profile-code" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" autocomplete="off" required disabled></label>
+      <button type="submit" id="save-colors" disabled>Save profile colors</button>
+    </form>
+    <p id="colors-status" role="status"></p>
   </section>
   <ol id="levels"></ol>
   <button type="button" disabled id="save">Save changes</button>
