@@ -7,21 +7,33 @@
       "folder": "blathers",
       "accent": "#a1aab6",
       "avatar": "avatar.webp",
-      "backgroundTint": "#78bdf4"
+      "backgroundTint": "#78bdf4",
+      "games": [
+        "geometry-dash"
+      ]
     },
     {
       "id": "disastrum",
       "name": "Disastrum",
       "folder": "disastrum",
       "avatar": "avatar.webp",
-      "backgroundTint": "#a83136"
+      "backgroundTint": "#a83136",
+      "games": [
+        "geometry-dash",
+        "fnaf-challenges"
+      ]
     },
     {
       "id": "kayceenoelle",
       "name": "KayceeNoelle",
       "folder": "kayceenoelle",
       "avatar": "avatar.webp",
-      "backgroundTint": "#25bba5"
+      "backgroundTint": "#25bba5",
+      "games": [
+        "celeste",
+        "beat-saber",
+        "geometry-dash"
+      ]
     },
     {
       "id": "djjdk",
@@ -29,7 +41,10 @@
       "folder": "djjdk",
       "avatar": "avatar.webp",
       "accent": "#00c6fe",
-      "backgroundTint": "#00c6fe"
+      "backgroundTint": "#00c6fe",
+      "games": [
+        "geometry-dash"
+      ]
     }
   ]
 }

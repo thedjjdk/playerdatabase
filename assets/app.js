@@ -4,11 +4,18 @@
   const app = document.getElementById('app');
   const directoryUrl = 'players.json';
   const cache = new Map();
+  const games = {
+    'geometry-dash': 'Geometry Dash',
+    'beat-saber': 'Beat Saber',
+    celeste: 'Celeste',
+    'fnaf-challenges': 'FNaF'
+  };
   const state = {
     directory: [],
     loadError: null,
     theme: readTheme(),
     search: '',
+    game: '',
     highlightedResult: 0,
     listSearch: '',
     year: 'all',
@@ -68,7 +75,11 @@
   function setTheme(theme) {
     state.theme = theme === 'light' ? 'light' : 'dark';
     try { localStorage.setItem('player-lists-theme', state.theme); } catch (_) {}
+    document.body.classList.add('theme-switching');
     applyTheme();
+    // Apply the new colors before restoring hover and menu transitions.
+    document.body.getBoundingClientRect();
+    document.body.classList.remove('theme-switching');
     const btn = document.querySelector('[data-theme-toggle]');
     if (btn) {
       btn.innerHTML = state.theme === 'light' ? ICON_SUN : ICON_MOON;
@@ -155,7 +166,8 @@
   }
   function matchingPlayers() {
     const query = state.search.trim().toLocaleLowerCase();
-    return state.directory.filter(p=>p.name.toLocaleLowerCase().includes(query));
+    return state.directory.filter(p => p.name.toLocaleLowerCase().includes(query) &&
+      (!state.game || p.games?.includes(state.game)));
   }
   function fitPlayerResults() {
     const results = document.getElementById('player-results');
@@ -181,7 +193,10 @@
     shell(`<main class="container home-main"><section class="home-focus" aria-label="Player search">
       <div class="home-kicker">PLAYER DIRECTORY</div><h1>Find a player</h1>
       <div class="player-search-wrap"><div class="player-search-box">${ICON_SEARCH}<input type="search" id="player-search" placeholder="Search for a player..." autocomplete="off" aria-label="Search players" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="player-results" value="${esc(state.search)}"></div>
-      </div><p class="home-helper">Search by player name to view their personal lists.</p></section>
+      </div><p class="home-helper">Search by name or filter by game.</p>
+      <div class="game-filters" role="group" aria-label="Filter players by game">
+        ${Object.entries(games).map(([id, name]) => `<button type="button" data-game-filter="${id}" aria-pressed="${state.game === id}">${name}</button>`).join('')}
+      </div></section>
       <section class="player-directory" aria-labelledby="directory-heading"><h2 id="directory-heading">Players A–Z</h2><div class="player-results" id="player-results" role="listbox" aria-labelledby="directory-heading"></div></section></main>`);
     refreshResults();
     applyTheme('#aeb4bc');
@@ -388,6 +403,16 @@
   app.addEventListener('click',e=>{
     const theme=e.target.closest('[data-theme-toggle]');
     if (theme) {setTheme(state.theme==='dark'?'light':'dark');return;}
+    const game = e.target.closest('[data-game-filter]');
+    if (game) {
+      state.game = state.game === game.dataset.gameFilter ? '' : game.dataset.gameFilter;
+      state.highlightedResult = 0;
+      app.querySelectorAll('[data-game-filter]').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.gameFilter === state.game));
+      });
+      refreshResults();
+      return;
+    }
     const menu=e.target.closest('[data-menu-toggle]');
     if (menu) {
       state.menuOpen=!state.menuOpen;

@@ -1379,3 +1379,10 @@ body.light-mode .home-kicker {color:var(--accent-strong)}
   #player-search {font-size:16px}
   .player-results {max-height:min(360px,var(--player-results-height,360px));overscroll-behavior:contain}
 }
+
+.theme-switching, .theme-switching *, .theme-switching::before, .theme-switching::after,
+.theme-switching *::before, .theme-switching *::after {transition:none!important}
+.game-filters {display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.game-filters button {padding:6px 11px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text);font-size:12px;font-weight:700}
+.game-filters button:hover,.game-filters button[aria-pressed="true"] {border-color:var(--accent-strong);background:var(--surface2)}
+.game-filters button[aria-pressed="true"] {box-shadow:inset 0 0 0 1px var(--accent-strong)}
