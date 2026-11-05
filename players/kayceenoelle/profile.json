@@ -19,5 +19,7 @@
       "title": "Geometry Dash List",
       "file": "geometry-dash.json"
     }
-  ]
+  ],
+  "backgroundLeft": "#ea7e9c",
+  "backgroundRight": "#25bba5"
 }
