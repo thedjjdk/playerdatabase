@@ -201,20 +201,29 @@ $('confirm-form').addEventListener('submit', async event => {
   const code = $('player-code').value.trim();
   const submit = event.submitter;
   submit.disabled = $('cancel').disabled = true;
-  $('save-status').textContent = 'Saving…';
+  $('save-status').textContent = 'Submitting for review…';
   try {
     const result = await api(listPath, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, revision, levels: rows })
     });
-    applyList(result);
-    $('confirm').close();
-    $('status').textContent = result.unchanged ? 'No changes to save.' : 'Saved to GitHub. The public list updates after deployment.';
-    if (result.commit) {
-      const link = text('a', 'View commit');
-      link.href = result.commit;
+    if (result.unchanged) {
+      applyList(result);
+      $('status').textContent = 'No changes to save.';
+    } else {
+      if (!result.review) throw new Error('The service did not return a review link. Your draft is still open.');
+      if (result.reviewState === 'open') {
+        dirty = false;
+        $('save').disabled = true;
+      }
+      $('status').textContent = result.reviewState === 'open'
+        ? 'Submitted for review. The public list updates after approval.'
+        : 'This submission has already been closed. Your draft is still open.';
+      const link = text('a', 'View pull request');
+      link.href = result.review;
       $('status').append(' ', link);
     }
+    $('confirm').close();
   } catch (error) {
     $('save-status').textContent = error.message;
   } finally {
