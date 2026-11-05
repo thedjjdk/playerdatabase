@@ -157,7 +157,10 @@
   function footer() {
     return `<footer class="container player-foot"><span>Player Lists · Built from the supplied Layout List design</span><a href="#/">Search players</a></footer>`;
   }
-  function shell(body) {app.innerHTML = `${header()}${body}${footer()}`; applyTheme();}
+  function shell(body) {
+    app.innerHTML = `${header()}${demonTintFilter(state.activeProfile)}${body}${footer()}`;
+    applyTheme();
+  }
   function showError(title, detail) {
     shell(`<main class="container"><section class="singlepanel player-route-error"><h2>${esc(title)}</h2><p class="data-note">${esc(detail)}</p><button type="button" class="ghostbutton" data-retry>Try again</button><div class="buttonrow"><a class="inline-back" href="#/">← Back to player search</a></div></section></main>`);
   }
@@ -211,12 +214,33 @@
       ? `<img src="players/${player.id}/avatar.webp" alt="" data-player-avatar>` : '';
     return `<span class="player-avatar-small" aria-hidden="true" style="--accent:${checkedColor(player.accent)}">${initial}${image}</span>`;
   }
+  function demonTint(profile) {
+    if (!profile) return '';
+    const left = profile.backgroundLeft || profile.backgroundTint;
+    const right = profile.backgroundRight || profile.backgroundTint;
+    if (!left && !right) return '';
+    const rgb = value => checkedColor(value).slice(1).match(/../g).map(channel => parseInt(channel, 16));
+    const a = rgb(left || right);
+    const b = rgb(right || left);
+    return a.map((channel, i) => Math.round((channel + b[i]) / 2).toString(16).padStart(2, '0')).join('');
+  }
+  function demonTintFilter(profile) {
+    const tint = demonTint(profile);
+    if (!tint) return '';
+    const luminance = [0.2126, 0.7152, 0.0722];
+    const matrix = tint.match(/../g).map(channel => {
+      const scale = parseInt(channel, 16) / 255;
+      return luminance.map(weight => weight * scale).join(' ') + ' 0 0';
+    }).join(' ');
+    return `<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs><filter id="profile-demon-tint" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="${matrix} 0 0 0 1 0"/></filter></defs></svg>`;
+  }
   function demonFace(difficulty, profile) {
     const label = difficulty === 'extreme-demon' ? 'Extreme Demon' : difficulty === 'insane-demon' ? 'Insane Demon' : '';
     if (!label) return '';
-    const tint = profile.backgroundTint?.toLowerCase();
-    const suffix = tint === '#78bdf4' || tint === '#a83136' ? `-${tint.slice(1)}` : '';
-    return `<img class="player-demon-face" src="assets/${difficulty}${suffix}.png" alt="${label}" title="${label}">`;
+    const tint = demonTint(profile);
+    const suffix = tint === '78bdf4' || tint === 'a83136' ? `-${tint}` : '';
+    const filter = tint && !suffix ? ' style="filter:url(#profile-demon-tint)"' : '';
+    return `<img class="player-demon-face" src="assets/${difficulty}${suffix}.png" alt="${label}" title="${label}"${filter}>`;
   }
   function playerIntro(profile) {
     return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1><p class="player-subheading">${esc(profile.description||'Personal ranked lists')}</p></div></div></div>`;
