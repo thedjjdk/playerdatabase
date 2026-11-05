@@ -227,15 +227,24 @@
   function demonTintFilter(profile) {
     const tint = demonTint(profile);
     if (!tint) return '';
-    const channels = tint.match(/../g).map(channel => parseInt(channel, 16) / 255);
-    return `<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs><filter id="profile-demon-tint" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="table" tableValues="0 ${channels[0]} 1"/><feFuncG type="table" tableValues="0 ${channels[1]} 1"/><feFuncB type="table" tableValues="0 ${channels[2]} 1"/></feComponentTransfer></filter></defs></svg>`;
+    const left = checkedColor(profile.backgroundLeft || profile.backgroundTint);
+    const right = checkedColor(profile.backgroundRight || profile.backgroundTint);
+    const filter = (id, hex) => {
+      const channels = hex.match(/../g).map(channel => parseInt(channel, 16) / 255);
+      return `<filter id="${id}" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="table" tableValues="0 ${channels[0]} 1"/><feFuncG type="table" tableValues="0 ${channels[1]} 1"/><feFuncB type="table" tableValues="0 ${channels[2]} 1"/></feComponentTransfer></filter>`;
+    };
+    return `<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>${filter('profile-demon-tint', tint)}${filter('profile-demon-left', left.slice(1))}${filter('profile-demon-right', right.slice(1))}</defs></svg>`;
   }
-
   const difficultyLabels = new Map([["easy","Easy"],["normal","Normal"],["hard","Hard"],["harder","Harder"],["insane","Insane"],["easy-demon","Easy Demon"],["medium-demon","Medium Demon"],["hard-demon","Hard Demon"],["insane-demon","Insane Demon"],["extreme-demon","Extreme Demon"]]);
   function demonFace(difficulty, profile) {
     const label = difficultyLabels.get(difficulty);
     if (!label) return '';
     const tint = demonTint(profile);
+    const left = profile.backgroundLeft || profile.backgroundTint;
+    const right = profile.backgroundRight || profile.backgroundTint;
+    if (left && right && left.toLowerCase() !== right.toLowerCase()) {
+      return `<span class="player-demon-face difficulty-duotone" role="img" aria-label="${label}" title="${label}"><img src="assets/${difficulty}.png" alt="" aria-hidden="true" style="filter:url(#profile-demon-left)"><img src="assets/${difficulty}.png" alt="" aria-hidden="true" style="filter:url(#profile-demon-right)"></span>`;
+    }
     const hasPreTintedFace = difficulty === 'insane-demon' || difficulty === 'extreme-demon';
     const suffix = hasPreTintedFace && (tint === '78bdf4' || tint === 'a83136') ? `-${tint}` : '';
     const filter = tint && !suffix ? ' style="filter:url(#profile-demon-tint)"' : '';
