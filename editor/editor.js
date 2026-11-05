@@ -201,23 +201,25 @@ $('confirm-form').addEventListener('submit', async event => {
   const code = $('player-code').value.trim();
   const submit = event.submitter;
   submit.disabled = $('cancel').disabled = true;
-  $('save-status').textContent = 'Submitting for review…';
+  $('save-status').textContent = 'Saving to GitHub…';
   try {
     const result = await api(listPath, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, revision, levels: rows })
     });
-    if (result.unchanged) {
+    if (result.reviewState === 'merged') {
+      applyList(result);
+      $('status').textContent = 'Saved to GitHub. The public list updates after deployment.';
+      const link = text('a', 'View pull request');
+      link.href = result.review;
+      $('status').append(' ', link);
+    } else if (result.unchanged) {
       applyList(result);
       $('status').textContent = 'No changes to save.';
     } else {
       if (!result.review) throw new Error('The service did not return a review link. Your draft is still open.');
-      if (result.reviewState === 'open') {
-        dirty = false;
-        $('save').disabled = true;
-      }
       $('status').textContent = result.reviewState === 'open'
-        ? 'Submitted for review. The public list updates after approval.'
+        ? 'GitHub could not merge automatically. Your draft is still open.'
         : 'This submission has already been closed. Your draft is still open.';
       const link = text('a', 'View pull request');
       link.href = result.review;
