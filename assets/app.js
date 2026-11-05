@@ -153,7 +153,7 @@
   }
   function matchingPlayers() {
     const query = state.search.trim().toLocaleLowerCase();
-    return query ? state.directory.filter(p=>p.name.toLocaleLowerCase().includes(query)) : [];
+    return state.directory.filter(p=>p.name.toLocaleLowerCase().includes(query));
   }
   function fitPlayerResults() {
     const results = document.getElementById('player-results');
@@ -169,10 +169,8 @@
     if (!results || !input) return;
     const matches = matchingPlayers();
     state.highlightedResult = Math.max(0, Math.min(state.highlightedResult, matches.length - 1));
-    results.hidden = !state.search.trim();
-    results.innerHTML = state.search.trim() ? resultMarkup(matches) : '';
-    input.setAttribute('aria-expanded',String(!results.hidden));
-    input.setAttribute('aria-activedescendant',matches.length && !results.hidden ? `player-option-${state.highlightedResult}` : '');
+    results.innerHTML = resultMarkup(matches);
+    input.setAttribute('aria-activedescendant',matches.length ? `player-option-${state.highlightedResult}` : '');
     fitPlayerResults();
   }
   function homeView() {
@@ -180,9 +178,9 @@
     state.activeList = null;
     shell(`<main class="container home-main"><section class="home-focus" aria-label="Player search">
       <div class="home-kicker">PLAYER DIRECTORY</div><h1>Find a player</h1>
-      <div class="player-search-wrap"><div class="player-search-box">${ICON_SEARCH}<input type="search" id="player-search" placeholder="Search for a player..." autocomplete="off" aria-label="Search players" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="player-results" value="${esc(state.search)}"></div>
-      <div class="player-results" id="player-results" role="listbox" hidden></div></div>
-      <p class="home-helper">Search by player name to view their personal lists.</p></section></main>`);
+      <div class="player-search-wrap"><div class="player-search-box">${ICON_SEARCH}<input type="search" id="player-search" placeholder="Search for a player..." autocomplete="off" aria-label="Search players" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="player-results" value="${esc(state.search)}"></div>
+      </div><p class="home-helper">Search by player name to view their personal lists.</p></section>
+      <section class="player-directory" aria-labelledby="directory-heading"><h2 id="directory-heading">Players A–Z</h2><div class="player-results" id="player-results" role="listbox" aria-labelledby="directory-heading"></div></section></main>`);
     refreshResults();
     applyTheme('#aeb4bc');
   }
@@ -203,7 +201,7 @@
     return `<img class="player-demon-face" src="assets/${difficulty}${suffix}.png" alt="${label}" title="${label}">`;
   }
   function playerIntro(profile) {
-    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to players</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1><p class="player-subheading">${esc(profile.description||'Personal ranked lists')}</p></div></div></div>`;
+    return `<div class="pageintro"><a href="#/" class="inline-back" data-player-back>‹ Back</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1><p class="player-subheading">${esc(profile.description||'Personal ranked lists')}</p></div></div></div>`;
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);
@@ -296,7 +294,7 @@
       [ attr('attempts'), 'ATTEMPTS' ],
       [ item.worstFail != null ? `${esc(item.worstFail)}%` : 'Not provided', 'WORST FAIL' ]
     ];
-    const body = `<div class="backrow"><a href="${esc(playerRoute(profile.id,entry.id))}" class="backbutton">‹ Back to list</a><div class="prevnext">
+    const body = `<div class="backrow"><a href="${esc(playerRoute(profile.id,entry.id))}" class="backbutton" data-player-back>‹ Back</a><div class="prevnext">
       <button type="button" ${prev?'':'disabled'} data-rank-nav="${prev?prev.rank:''}">‹ Previous</button><button type="button" ${next?'':'disabled'} data-rank-nav="${next?next.rank:''}">Next ›</button></div></div>
       <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} – ${esc(item.name)}</span>${demonFace(item.difficulty, profile)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
       ${detailVideo(item)}
@@ -332,7 +330,7 @@
       if (entry.id !== state.route.listId) {
         const destination=playerRoute(player.id,entry.id);
         // Resolve the default tab without a full page reload.
-        history.replaceState(null, '', destination);
+        history.replaceState(history.state, '', destination);
         routeView();
         return;
       }
@@ -354,7 +352,8 @@
   function routeTo(href) {
     state.menuOpen=false;
     if (location.hash===href) {routeView();return;}
-    location.hash=href;
+    history.pushState({ playerListsBack: true }, '', href);
+    routeView();
   }
   function syncSearch(e) {
     state.search=e.target.value;
@@ -377,6 +376,7 @@
       e.preventDefault();
       state.highlightedResult=(state.highlightedResult+(e.key==='ArrowDown'?1:-1)+matches.length)%matches.length;
       refreshResults();
+      document.getElementById(`player-option-${state.highlightedResult}`)?.scrollIntoView({block:'nearest'});
     } else if (e.key==='Enter' && matches.length) {
       e.preventDefault();routeTo(playerRoute(matches[state.highlightedResult].id));
     } else if (e.key==='Escape') {
@@ -420,7 +420,10 @@
   },true);
   document.addEventListener('click',e=>{
     const anchor=e.target.closest('a[href^="#/"]');
-    if(anchor && location.hash===anchor.getAttribute('href')) routeView();
+    if (!anchor || e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    if (anchor.hasAttribute('data-player-back') && history.state?.playerListsBack) history.back();
+    else routeTo(anchor.getAttribute('href'));
   });
   window.addEventListener('hashchange',routeView);
   window.addEventListener('resize',fitPlayerResults);
@@ -433,7 +436,7 @@
     try {
       const data=await fetchJson(directoryUrl);
       if(!Array.isArray(data.players)) throw new Error('Invalid player directory');
-      state.directory=data.players.filter(p=>validId(p.id) && validId(p.folder) && typeof p.name==='string');
+      state.directory=data.players.filter(p=>validId(p.id) && validId(p.folder) && typeof p.name==='string').sort((a,b)=>a.name.localeCompare(b.name, undefined, {sensitivity:'base'}));
       routeView();
     } catch(e) {
       state.route={type:'home'};

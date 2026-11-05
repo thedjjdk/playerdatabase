@@ -234,7 +234,17 @@ async function init() {
   const names = { blathers: 'Blathers', disastrum: 'Disastrum', kayceenoelle: 'KayceeNoelle' };
   const titles = { 'geometry-dash': 'Geometry Dash', 'fnaf-challenges': 'FNaF Challenges', celeste: 'Celeste', 'beat-saber': 'Beat Saber' };
   $('title').textContent = 'Edit ' + names[player] + ' · ' + titles[list];
-  $('back').href = '../#/player/' + player + '/' + list;
+  const back = $('back');
+  back.href = '../#/player/' + player + '/' + list;
+  back.textContent = 'Back to list';
+  back.addEventListener('click', event => {
+    if (!document.referrer || history.length < 2 || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const previous = new URL(document.referrer);
+    const home = new URL('../', location.href);
+    if (previous.origin !== home.origin || ![home.pathname, home.pathname + 'index.html'].includes(previous.pathname)) return;
+    event.preventDefault();
+    history.back();
+  });
   try {
     if (editorApi) applyList(await api(listPath));
     else {
