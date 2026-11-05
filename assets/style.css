@@ -1386,3 +1386,5 @@ body.light-mode .home-kicker {color:var(--accent-strong)}
 .game-filters button {padding:6px 11px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text);font-size:12px;font-weight:700}
 .game-filters button:hover,.game-filters button[aria-pressed="true"] {border-color:var(--accent-strong);background:var(--surface2)}
 .game-filters button[aria-pressed="true"] {box-shadow:inset 0 0 0 1px var(--accent-strong)}
+
+body::after {background-image:var(--player-pixel-pattern-right,var(--laylist-pixel-pattern))}
