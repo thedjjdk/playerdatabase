@@ -227,13 +227,10 @@
   function demonTintFilter(profile) {
     const tint = demonTint(profile);
     if (!tint) return '';
-    const luminance = [0.2126, 0.7152, 0.0722];
-    const matrix = tint.match(/../g).map(channel => {
-      const scale = parseInt(channel, 16) / 255;
-      return luminance.map(weight => weight * scale).join(' ') + ' 0 0';
-    }).join(' ');
-    return `<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs><filter id="profile-demon-tint" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="${matrix} 0 0 0 1 0"/></filter></defs></svg>`;
+    const channels = tint.match(/../g).map(channel => parseInt(channel, 16) / 255);
+    return `<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs><filter id="profile-demon-tint" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="table" tableValues="0 ${channels[0]} 1"/><feFuncG type="table" tableValues="0 ${channels[1]} 1"/><feFuncB type="table" tableValues="0 ${channels[2]} 1"/></feComponentTransfer></filter></defs></svg>`;
   }
+
   const difficultyLabels = new Map([["easy","Easy"],["normal","Normal"],["hard","Hard"],["harder","Harder"],["insane","Insane"],["easy-demon","Easy Demon"],["medium-demon","Medium Demon"],["hard-demon","Hard Demon"],["insane-demon","Insane Demon"],["extreme-demon","Extreme Demon"]]);
   function demonFace(difficulty, profile) {
     const label = difficultyLabels.get(difficulty);
@@ -245,7 +242,7 @@
     return `<img class="player-demon-face" src="assets/${difficulty}${suffix}.png" alt="${label}" title="${label}"${filter}>`;
   }
   function playerIntro(profile) {
-    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1><p class="player-subheading">${esc(profile.description||'Personal ranked lists')}</p></div></div></div>`;
+    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div></div>`;
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);
@@ -258,7 +255,11 @@
         timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric'
       }) : '';
   }
+  function listGame(entry) {
+    return entry?.game || entry?.id;
+  }
   function renderCard(profile, listId, item, index) {
+    const gd = listGame(profile.lists.find(entry => entry.id === listId)) === 'geometry-dash';
     const rank = Number.isInteger(item.rank) ? item.rank : index+1;
     const link = playerRoute(profile.id, listId, rank);
     const video = levelVideo(item);
@@ -269,9 +270,9 @@
       ${thumbnail ? (video
         ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
-      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> – ${esc(name)}</span>${demonFace(item.difficulty, profile)}</h2>
+      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> – ${esc(name)}</span>${gd ? demonFace(item.difficulty, profile) : ''}</h2>
       <p class="creator">${item.completionDate ? `Completed on <strong>${esc(item.completionDate)}</strong>` : item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : item.videoPublishedDate ? `Completed by <strong>${esc(postedDate(item))}</strong>` : 'Completion date unavailable'}</p>
-      <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${item.attempts ? ` · ${esc(item.attempts)} attempts` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
+      <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${gd ? (item.attempts ? ` · ${esc(item.attempts)} attempts` : '') : (item.timeTaken ? ` · Game Time: ${esc(item.timeTaken)}` : '')}${!gd && item.gameRank ? ` · Rank: ${esc(item.gameRank)}` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
   function filteredLevels() {
     const items = Array.isArray(state.activeList?.levels) ? [...state.activeList.levels] : [];
@@ -321,6 +322,7 @@
   }
   function detailView(profile, entry, doc, rank) {
     const levels = doc.levels;
+    const gd = listGame(entry) === 'geometry-dash';
     const index = levels.findIndex(x => x.rank === rank);
     if (index < 0) {showError('Level not found', `No level with rank #${rank} exists in this list.`);return;}
     const item = levels[index];
@@ -335,16 +337,16 @@
         : item.videoPublishedDate && !item.completionYear
         ? [esc(postedDate(item)), 'COMPLETED BY']
         : [attr('completionYear'), 'COMPLETION YEAR'],
-      [ attr('attempts'), 'ATTEMPTS' ],
+      [ gd ? attr('attempts') : attr('timeTaken'), gd ? 'ATTEMPTS' : 'GAME TIME' ],
       [ item.worstFail != null ? `${esc(item.worstFail)}%` : 'Not provided', 'WORST FAIL' ]
     ];
     const body = `<div class="backrow"><a href="${esc(playerRoute(profile.id,entry.id))}" class="backbutton" data-player-back>‹ Back</a><div class="prevnext">
       <button type="button" ${prev?'':'disabled'} data-rank-nav="${prev?prev.rank:''}">‹ Previous</button><button type="button" ${next?'':'disabled'} data-rank-nav="${next?next.rank:''}">Next ›</button></div></div>
-      <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} – ${esc(item.name)}</span>${demonFace(item.difficulty, profile)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
+      <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} – ${esc(item.name)}</span>${gd ? demonFace(item.difficulty, profile) : ''}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
       ${detailVideo(item)}
       <div class="facts detail-grid">${facts.map(([value,label])=>`<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>
       <p class="statline"><strong>Enjoyment rating:</strong> ${item.enjoyment == null ? 'Not provided' : `${esc(item.enjoyment)}/10`}</p>
-      <p class="statline"><strong>Time taken:</strong> ${attr('timeTaken')}</p>
+      ${gd ? `<p class="statline"><strong>Time taken:</strong> ${attr('timeTaken')}</p>` : `<p class="statline"><strong>Rank:</strong> ${attr('gameRank')}</p>`}
       ${item.videoTitle ? `<p class="statline"><strong>Video reference in the spreadsheet:</strong> ${esc(item.videoTitle)}</p>` : ''}
       ${item.rankLabel && item.rankLabel !== String(item.rank) ? `<p class="statline"><strong>Original ranking label:</strong> ${esc(item.rankLabel)}</p>` : ''}
       ${item.name.includes('*') ? `<p class="statline"><strong>Source notation:</strong> Asterisk(s) are retained as written in the source spreadsheet.</p>` : ''}
@@ -370,7 +372,7 @@
       applyTheme(player.accent);
       let entry = profile.lists.find(x=>x.id===state.route.listId);
       if (!entry) entry = profile.lists[0];
-      if (!entry || !validId(entry.id) || !validJsonName(entry.file)) throw new Error('No valid lists are configured for this player.');
+      if (!entry || !validId(entry.id) || (!entry.data && !validJsonName(entry.file))) throw new Error('No valid lists are configured for this player.');
       if (entry.id !== state.route.listId) {
         const destination=playerRoute(player.id,entry.id);
         // Resolve the default tab without a full page reload.
@@ -378,11 +380,11 @@
         routeView();
         return;
       }
-      const key = `${folder}/${entry.file}`;
+      const key = `${folder}/${entry.id}`;
       if (state.activeKey !== key) {
         state.listSearch='';state.year='all';state.order='rank';state.activeKey=key;
       }
-      const data = await fetchJson(`players/${key}`);
+      const data = entry.data || await fetchJson(`players/${folder}/${entry.file}`);
       if (seq !== state.request) return;
       if (!data || !Array.isArray(data.levels)) throw new Error('The list data is invalid.');
       state.activeList = data;
@@ -492,6 +494,11 @@
       if(!Array.isArray(data.players)) throw new Error('Invalid player directory');
       state.directory=data.players.filter(p=>validId(p.id) && validId(p.folder) && typeof p.name==='string').sort((a,b)=>a.name.localeCompare(b.name, undefined, {sensitivity:'base'}));
       routeView();
+      await Promise.allSettled(state.directory.map(async player => {
+        const profile = await fetchJson(`players/${player.folder}/profile.json`);
+        player.games = [...new Set(profile.lists.map(entry => listGame(entry)))];
+      }));
+      if (state.route?.type === 'home') refreshResults();
     } catch(e) {
       state.route={type:'home'};
       state.activeProfile=null;
@@ -501,3 +508,4 @@
   setTheme(state.theme);
   boot();
 })();
+

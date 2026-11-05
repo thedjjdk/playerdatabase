@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>Edit player list</title>
-  <link rel="stylesheet" href="../assets/style.css?v=player-art-2">
+  <link rel="stylesheet" href="../assets/style.css?v=manage-lists-1">
   <link rel="stylesheet" href="editor.css?v=save-draft-1">
-  <script type="module" src="editor.js?v=gd-difficulties-1"></script>
+  <script type="module" src="editor.js?v=manage-lists-1"></script>
 </head>
 <body>
 <main class="container editor">
@@ -16,14 +16,10 @@
   <p>Drag the handle or use the arrow buttons to change placement. Changes stay in this tab until you save.</p>
   <p id="status" role="status"></p>
   <section class="singlepanel">
-    <form id="import">
-      <label for="video-url">Add a level from YouTube</label>
-      <input id="video-url" type="url" placeholder="https://youtu.be/…" required>
-      <label for="placement">Placement</label>
-      <input id="placement" type="number" min="1" step="1" placeholder="End of list">
-      <button type="submit" disabled id="lookup">Add video</button>
-      <button type="button" disabled id="manual">Add manually</button>
-    </form>
+    <label for="list-select">Manage list</label>
+    <select id="list-select" disabled></select>
+    <button type="button" id="create-list" disabled>Create New List</button>
+    <button type="button" id="create-placement" disabled>Create New Placement</button>
   </section>
   <section class="singlepanel" aria-labelledby="profile-colors-heading">
     <h2 id="profile-colors-heading">Profile colors</h2>
@@ -36,6 +32,17 @@
     </form>
     <p id="colors-status" role="status"></p>
   </section>
+  <dialog id="new-list-dialog">
+    <form id="new-list-form">
+      <h2>Create New List</h2>
+      <label>List name <input id="new-list-title" maxlength="60" required></label>
+      <label>Game <select id="new-list-game"></select></label>
+      <label>Player ID <input id="new-list-code" type="password" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" autocomplete="off" required></label>
+      <p id="new-list-status" role="status"></p>
+      <button type="submit">Create list</button>
+      <button type="button" id="cancel-list">Cancel</button>
+    </form>
+  </dialog>
   <ol id="levels"></ol>
   <button type="button" disabled id="save">Save changes</button>
   <dialog id="confirm">
@@ -53,3 +60,4 @@
 </main>
 </body>
 </html>
+

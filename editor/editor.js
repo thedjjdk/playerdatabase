@@ -4,14 +4,21 @@ const $ = id => document.getElementById(id);
 const allowed = { blathers: ['geometry-dash'], djjdk: ['geometry-dash'], disastrum: ['geometry-dash', 'fnaf-challenges'], kayceenoelle: ['celeste', 'beat-saber', 'geometry-dash'] };
 const query = new URLSearchParams(location.search);
 const player = query.get('player');
-const list = query.get('list');
+let list = query.get('list');
+let profile, game, baseline = '';
+const drafts = new Map();
+const gameNames = { 'geometry-dash': 'Geometry Dash', celeste: 'Celeste', 'beat-saber': 'Beat Saber', 'fnaf-challenges': 'FNaF' };
 let rows = [], revision = '', dirty = false, drag, dragFrame;
-const fields = [
-  ['name', 'Level name', 'text'], ['videoUrl', 'Video link', 'url'],
-  ['difficulty', 'Difficulty', 'select'], ['completionDate', 'Completion date', 'date'],
-  ['attempts', 'Attempts', 'text'], ['enjoyment', 'Enjoyment / 10', 'number', 10],
-  ['worstFail', 'Worst fail %', 'number', 100], ['timeTaken', 'Time taken', 'text']
-];
+function fields() {
+  return [
+    ['name', 'Level name', 'text'], ['videoUrl', 'Video link', 'url'],
+    game === 'geometry-dash' ? ['difficulty', 'Difficulty', 'select'] : ['gameRank', 'Rank', 'text'],
+    ['completionDate', 'Completion date', 'date'],
+    game === 'geometry-dash' ? ['attempts', 'Attempts', 'text'] : ['timeTaken', 'Game Time', 'text'],
+    ['enjoyment', 'Enjoyment / 10', 'number', 10],
+    ...(game === 'geometry-dash' ? [['worstFail', 'Worst fail %', 'number', 100], ['timeTaken', 'Time taken', 'text']] : [])
+  ];
+}
 
 function text(tag, value, className) {
   const el = document.createElement(tag);
@@ -89,11 +96,12 @@ $('profile-colors').addEventListener('submit', async event => {
   }
 });
 
-const listPath = '/list?' + new URLSearchParams({ player, list });
+const listPath = () => '/list?' + new URLSearchParams({ player, list });
 
 function applyList(data) {
   rows = data.document.levels.map(entry => ({ ...entry, originalRank: entry.rank }));
   revision = data.revision;
+  baseline = JSON.stringify(data.document);
   dirty = false;
   render();
 }
@@ -130,7 +138,7 @@ function move(from, to) {
 function render() {
   const listEl = $('levels');
   listEl.replaceChildren();
-  $('placement').max = String(rows.length + 1);
+
   rows.forEach((row, i) => {
     const li = text('li', '', 'editor-row');
     li.dataset.position = i;
@@ -158,7 +166,19 @@ function render() {
     details.open = row.originalRank == null;
     details.append(text('summary', 'Level details'));
     const controls = text('div', '', 'editor-fields');
-    for (const [key, label, kind, max] of fields) controls.append(fieldControl(row, key, label, kind, max, title));
+    const placement = text('label', 'Placement');
+    const position = document.createElement('input');
+    position.type = 'number';
+    position.min = '1';
+    position.max = String(rows.length);
+    position.step = '1';
+    position.value = String(i + 1);
+    position.addEventListener('change', () => {
+      if (position.reportValidity() && position.value) move(i, position.valueAsNumber - 1);
+    });
+    placement.append(position);
+    controls.append(placement);
+    for (const [key, label, kind, max] of fields()) controls.append(fieldControl(row, key, label, kind, max, title));
     details.append(controls);
     if (row.videoPublishedDate) details.append(text('p', 'Video posted ' + row.videoPublishedDate));
     li.append(head, details);
@@ -202,52 +222,85 @@ $('levels').addEventListener('pointerup', endDrag);
 $('levels').addEventListener('pointercancel', endDrag);
 $('levels').addEventListener('lostpointercapture', endDrag);
 
-function parseVideo(value) {
-  try {
-    const url = new URL(value);
-    if (url.protocol !== 'https:') return '';
-    let id = '';
-    if (url.hostname === 'youtu.be') id = url.pathname.split('/')[1];
-    else if (['www.youtube.com', 'youtube.com', 'm.youtube.com'].includes(url.hostname)) {
-      id = url.pathname === '/watch' ? url.searchParams.get('v') : /^\/(shorts|live|embed)\//.test(url.pathname) && url.pathname.split('/')[2];
-    }
-    return /^[\w-]{11}$/.test(id || '') ? id : '';
-  } catch { return ''; }
-}
-
-function add(row, position) {
-  const index = position == null ? rows.length : position - 1;
-  rows.splice(index, 0, row);
-  $('placement').value = '';
+$('create-placement').addEventListener('click', () => {
+  rows.push({ name: '' });
   changed();
   render();
-  const entry = $('levels').children[index];
+  const entry = $('levels').lastElementChild;
   entry.scrollIntoView({ block: 'nearest' });
   entry.querySelector('details input').focus({ preventScroll: true });
+});
+
+function rememberDraft() {
+  if (list) drafts.set(list, { rows, revision, dirty, baseline });
 }
 
-$('manual').addEventListener('click', () => {
-  const placement = $('placement');
-  if (placement.reportValidity()) add({ name: '' }, placement.valueAsNumber || null);
-});
-$('import').addEventListener('submit', async event => {
-  event.preventDefault();
-  const input = $('video-url');
-  const id = parseVideo(input.value.trim());
-  if (!id) { $('status').textContent = 'Enter a valid YouTube video link.'; return; }
-  $('lookup').disabled = $('manual').disabled = true;
-  const position = $('placement').valueAsNumber || null;
-  const videoUrl = 'https://youtu.be/' + id;
+function refreshListSelector() {
+  $('list-select').replaceChildren(...profile.lists.map(entry => new Option(entry.title, entry.id)));
+  $('list-select').value = list;
+}
+
+async function switchList(id) {
+  const entry = profile.lists.find(entry => entry.id === id);
+  if (!entry) throw new Error('Choose a list from this profile.');
+  const previous = list;
+  rememberDraft();
+  $('list-select').disabled = $('save').disabled = $('create-placement').disabled = true;
+  $('levels').inert = true;
   try {
-    const metadata = editorApi ? await api('/metadata?' + new URLSearchParams({ id })) : { videoUrl };
-    add({ ...metadata, videoUrl }, position);
-    $('status').textContent = editorApi ? 'Video added to your draft. Review the imported details.' : 'Video added to your draft. Enter its details manually while the save service is offline.';
+    const data = drafts.has(id) ? null : await api('/list?' + new URLSearchParams({ player, list: id }));
+    list = id;
+    game = entry.game || entry.id;
+    if (data) applyList(data);
+    else {
+      ({ rows, revision, dirty, baseline } = drafts.get(id));
+      render();
+    }
+    $('title').textContent = 'Edit ' + profile.name;
+    $('back').href = '../#/player/' + player + '/' + list;
+    refreshListSelector();
+    history.replaceState(null, '', '?' + new URLSearchParams({ player, list }));
+    $('status').textContent = dirty ? 'Unsaved draft restored.' : '';
   } catch (error) {
-    add({ name: '', videoUrl }, position);
+    list = previous;
+    $('list-select').value = previous;
     $('status').textContent = error.message;
+    if (!previous) throw error;
   } finally {
-    input.value = '';
-    $('lookup').disabled = $('manual').disabled = false;
+    $('levels').inert = false;
+    $('list-select').disabled = $('create-placement').disabled = !list;
+    $('save').disabled = !dirty || !list;
+  }
+}
+$('list-select').addEventListener('change', event => switchList(event.target.value));
+
+$('create-list').addEventListener('click', () => $('new-list-dialog').showModal());
+$('cancel-list').addEventListener('click', () => $('new-list-dialog').close());
+$('new-list-dialog').addEventListener('close', () => { $('new-list-code').value = ''; });
+$('new-list-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const submit = event.submitter;
+  submit.disabled = $('cancel-list').disabled = true;
+  $('new-list-status').textContent = 'Creating list…';
+  try {
+    const latest = await api(appearancePath);
+    const result = await api('/create-list?' + new URLSearchParams({ player }), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code: $('new-list-code').value, revision: latest.revision,
+        title: $('new-list-title').value, game: $('new-list-game').value
+      })
+    });
+    if (result.reviewState !== 'merged') throw new Error('The list could not publish automatically. Try again.');
+    profile = result.document;
+    await switchList(profile.lists.at(-1).id);
+    $('new-list-dialog').close();
+    $('new-list-form').reset();
+  } catch (error) {
+    $('new-list-status').textContent = error.message;
+  } finally {
+    $('new-list-code').value = '';
+    submit.disabled = $('cancel-list').disabled = false;
   }
 });
 
@@ -274,7 +327,12 @@ $('confirm-form').addEventListener('submit', async event => {
   submit.disabled = $('cancel').disabled = true;
   $('save-status').textContent = 'Saving to GitHub…';
   try {
-    const result = await api(listPath, {
+    const latest = await api(listPath());
+    if (latest.revision !== revision && JSON.stringify(latest.document) !== baseline) {
+      throw new Error('This list changed elsewhere. Your draft is still open. Reload to review the latest version.');
+    }
+    revision = latest.revision;
+    const result = await api(listPath(), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, revision, levels: rows })
     });
@@ -305,38 +363,24 @@ $('confirm-form').addEventListener('submit', async event => {
   }
 });
 window.addEventListener('beforeunload', event => {
-  if (dirty || colorsChanged()) event.preventDefault();
+  if (dirty || colorsChanged() || [...drafts.entries()].some(([id, draft]) => id !== list && draft.dirty)) event.preventDefault();
 });
 
 async function init() {
-  if (!Object.hasOwn(allowed, player) || !allowed[player].includes(list)) {
-    $('status').textContent = 'Choose Edit on a player list first.';
+  if (!Object.hasOwn(allowed, player)) {
+    $('status').textContent = 'Choose Edit on a player profile first.';
     return;
   }
-  initAppearance();
-  const names = { blathers: 'Blathers', djjdk: 'DJ JDK', disastrum: 'Disastrum', kayceenoelle: 'KayceeNoelle' };
-  const titles = { 'geometry-dash': 'Geometry Dash', 'fnaf-challenges': 'FNaF Challenges', celeste: 'Celeste', 'beat-saber': 'Beat Saber' };
-  $('title').textContent = 'Edit ' + names[player] + ' · ' + titles[list];
-  const back = $('back');
-  back.href = '../#/player/' + player + '/' + list;
-  back.textContent = 'Back to list';
-  back.addEventListener('click', event => {
-    if (!document.referrer || history.length < 2 || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const previous = new URL(document.referrer);
-    const home = new URL('../', location.href);
-    if (previous.origin !== home.origin || ![home.pathname, home.pathname + 'index.html'].includes(previous.pathname)) return;
-    event.preventDefault();
-    history.back();
-  });
   try {
-    if (editorApi) applyList(await api(listPath));
-    else {
-      const response = await fetch('../players/' + player + '/' + list + '.json', { cache: 'no-cache' });
-      if (!response.ok) throw new Error('Could not load this list.');
-      applyList({ document: await response.json() });
-      $('status').textContent = 'Draft preview. Saving and YouTube autofill will be available once the editor service is connected.';
-    }
-    $('lookup').disabled = $('manual').disabled = false;
+    const result = await api(appearancePath);
+    profile = result.document;
+    $('new-list-game').replaceChildren(...Object.entries(gameNames).map(([id, name]) => new Option(name, id)));
+    $('back').textContent = 'Back to profile';
+    $('create-list').disabled = false;
+    const initial = profile.lists.some(entry => entry.id === list) ? list : profile.lists[0]?.id;
+    list = null;
+    await switchList(initial);
+    initAppearance();
   } catch (error) {
     $('status').textContent = error.message;
   }
