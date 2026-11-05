@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "kayceenoelle",
+  "name": "KayceeNoelle",
+  "description": "Ranked Celeste clears, Beat Saber passes, and Geometry Dash completions.",
+  "editable": false,
+  "lists": [
+    {
+      "id": "celeste",
+      "title": "Celeste List",
+      "file": "celeste.json"
+    },
+    {
+      "id": "beat-saber",
+      "title": "Beat Saber List",
+      "file": "beat-saber.json"
+    },
+    {
+      "id": "geometry-dash",
+      "title": "Geometry Dash List",
+      "file": "geometry-dash.json"
+    }
+  ]
+}

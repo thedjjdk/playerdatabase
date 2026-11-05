@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "title": "Celeste List",
+  "description": "KayceeNoelle’s uploaded Celeste clears, ordered from hardest to easiest.",
+  "sourceUrl": "https://www.youtube.com/playlist?list=PLsyQY43ZW9nDvkIdG04QK4kYhuSj69iJo",
+  "levels": [
+    {
+      "rank": 1,
+      "name": "Nowhere to Stand Clear | Celeste",
+      "videoUrl": "https://youtu.be/QzOAF282mmE"
+    },
+    {
+      "rank": 2,
+      "name": "silly2k3 (new hardest) | Celeste",
+      "videoUrl": "https://youtu.be/fFQizCVlMQQ"
+    },
+    {
+      "rank": 3,
+      "name": "Scarlett Sundown Clear | Celeste",
+      "videoUrl": "https://youtu.be/XtkxQJ942jA"
+    },
+    {
+      "rank": 4,
+      "name": "Forsaken Undercity Clear | Celeste",
+      "videoUrl": "https://youtu.be/L-bExXcuVo8"
+    },
+    {
+      "rank": 5,
+      "name": "Pinball Purgatory PT.2 (Full Clear) All Berries | Celeste",
+      "videoUrl": "https://youtu.be/e8tu022Xvys"
+    },
+    {
+      "rank": 6,
+      "name": "Pinball Purgatory Clear | Celeste",
+      "videoUrl": "https://youtu.be/GKqYMhwQrmI"
+    },
+    {
+      "rank": 7,
+      "name": "I PLAY CELESTE??? | Celestial Resort L-Side CLEAR",
+      "videoUrl": "https://youtu.be/VUwRHpLccUw"
+    },
+    {
+      "rank": 8,
+      "name": "Forsaken City Z-Side Clear (Celeste)",
+      "videoUrl": "https://youtu.be/Ly3DUHQlr_A"
+    },
+    {
+      "rank": 9,
+      "name": "Rift Fortress Clear | Celeste",
+      "videoUrl": "https://youtu.be/cGqandcvL68"
+    },
+    {
+      "rank": 10,
+      "name": "Temple on the Earth Clear | Celeste",
+      "videoUrl": "https://youtu.be/J-x4aKWmM3o"
+    },
+    {
+      "rank": 11,
+      "name": "Amber Terminus C-Side Clear | Celeste",
+      "videoUrl": "https://youtu.be/p-I4YeovzBw"
+    },
+    {
+      "rank": 12,
+      "name": "Ultra Difficult Clear (previous hardest speed clear) | Celeste",
+      "videoUrl": "https://youtu.be/XfBvmxUHruw"
+    },
+    {
+      "rank": 13,
+      "name": "Hellwind | Celeste",
+      "videoUrl": "https://youtu.be/ta6T99x-lBE"
+    },
+    {
+      "rank": 14,
+      "name": "Jaronin' | Celeste",
+      "videoUrl": "https://youtu.be/doL4thtxDVA"
+    }
+  ],
+  "sourceLabel": "View YouTube playlist"
+}

@@ -187,7 +187,7 @@
     applyTheme('#aeb4bc');
   }
   function tabsMarkup(pid, profile, active) {
-    return `<div class="wide-tabs" role="tablist" aria-label="Player lists">${profile.lists.map(entry=>`<button type="button" role="tab" aria-selected="${entry.id===active}" data-player-tab="${esc(entry.id)}" data-player-id="${esc(pid)}">${esc(entry.title)}</button>`).join('')}<button type="button" data-list-editor data-player-id="${esc(pid)}" data-list-id="${esc(active)}">Edit</button></div>`;
+    return `<div class="wide-tabs" role="tablist" aria-label="Player lists">${profile.lists.map(entry=>`<button type="button" role="tab" aria-selected="${entry.id===active}" data-player-tab="${esc(entry.id)}" data-player-id="${esc(pid)}">${esc(entry.title)}</button>`).join('')}${profile.editable===false?'':`<button type="button" data-list-editor data-player-id="${esc(pid)}" data-list-id="${esc(active)}">Edit</button>`}</div>`;
   }
   function playerAvatar(player) {
     const initial = esc(player.name.slice(0, 1).toUpperCase());
@@ -207,7 +207,7 @@
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);
-    return `<aside class="sidebar"><section class="panel"><h2>About this list</h2><p>${esc(doc.description||'Personal challenge rankings.')}</p>${src?`<a href="${esc(src)}" target="_blank" rel="noopener noreferrer">View original spreadsheet ↗</a>`:''}</section><section class="panel"><h2>List Statistics</h2><div class="bulletrows"><div><span>Ranked entries</span><strong>${(doc.levels||[]).length.toLocaleString()}</strong></div><div><span>Player</span><strong>${esc(profile.name)}</strong></div></div></section>${profile.lists.length>1?`<section class="panel"><h2>Other Lists</h2><div class="tierlinks">${profile.lists.map(list=>`<a class="tierchip" href="${esc(playerRoute(profile.id,list.id))}">${esc(list.title)}</a>`).join('')}</div></section>`:''}</aside>`;
+    return `<aside class="sidebar"><section class="panel"><h2>About this list</h2><p>${esc(doc.description||'Personal challenge rankings.')}</p>${src?`<a href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(doc.sourceLabel||'View original spreadsheet')} ↗</a>`:''}</section><section class="panel"><h2>List Statistics</h2><div class="bulletrows"><div><span>Ranked entries</span><strong>${(doc.levels||[]).length.toLocaleString()}</strong></div><div><span>Player</span><strong>${esc(profile.name)}</strong></div></div></section>${profile.lists.length>1?`<section class="panel"><h2>Other Lists</h2><div class="tierlinks">${profile.lists.map(list=>`<a class="tierchip" href="${esc(playerRoute(profile.id,list.id))}">${esc(list.title)}</a>`).join('')}</div></section>`:''}</aside>`;
   }
   function levelVideo(item) { return safeLink(item.videoUrl); }
   function postedDate(item) {
@@ -307,7 +307,7 @@
       ${item.rankLabel && item.rankLabel !== String(item.rank) ? `<p class="statline"><strong>Original ranking label:</strong> ${esc(item.rankLabel)}</p>` : ''}
       ${item.name.includes('*') ? `<p class="statline"><strong>Source notation:</strong> Asterisk(s) are retained as written in the source spreadsheet.</p>` : ''}
       ${proof ? `<p class="statline"><a href="${esc(proof)}" target="_blank" rel="noopener noreferrer">Watch source video ↗</a></p>` : ''}
-      ${source ? `<p class="statline"><a href="${esc(source)}" target="_blank" rel="noopener noreferrer">View original spreadsheet${item.sourceRow?` (row ${esc(item.sourceRow)})`:''} ↗</a></p>` : ''}
+      ${source ? `<p class="statline"><a href="${esc(source)}" target="_blank" rel="noopener noreferrer">${esc(doc.sourceLabel||'View original spreadsheet')}${item.sourceRow?` (row ${esc(item.sourceRow)})`:''} ↗</a></p>` : ''}
       </section>`;
     shell(`<main class="container">${playerIntro(profile)}${tabsMarkup(profile.id,profile,entry.id)}<div class="layout"><div class="content">${body}</div>${sidebar(profile,doc)}</div></main>`);
   }

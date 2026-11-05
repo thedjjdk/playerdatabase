@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "players": [
     {"id": "blathers", "name": "Blathers", "folder": "blathers", "accent": "#a1aab6", "avatar": "avatar.webp", "backgroundTint": "#78bdf4"},
-    {"id": "disastrum", "name": "Disastrum", "folder": "disastrum", "avatar": "avatar.webp", "backgroundTint": "#a83136"}
+    {"id": "disastrum", "name": "Disastrum", "folder": "disastrum", "avatar": "avatar.webp", "backgroundTint": "#a83136"},
+    {"id": "kayceenoelle", "name": "KayceeNoelle", "folder": "kayceenoelle", "avatar": "avatar.webp", "backgroundTint": "#25bba5"}
   ]
 }
