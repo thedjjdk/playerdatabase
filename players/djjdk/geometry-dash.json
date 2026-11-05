@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "title": "Geometry Dash List",
+  "description": "Geometry Dash completions and verifications ranked by DJ JDK.",
+  "levels": [
+    {
+      "rank": 1,
+      "name": "Zettabyte",
+      "videoUrl": "https://youtu.be/bQrGMYJZh4Y"
+    },
+    {
+      "rank": 2,
+      "name": "Without U",
+      "videoUrl": "https://youtu.be/E83F_fJM6No",
+      "difficulty": "extreme-demon"
+    },
+    {
+      "rank": 3,
+      "name": "Acu",
+      "videoUrl": "https://youtu.be/h1tJHDGBpEU",
+      "difficulty": "extreme-demon"
+    },
+    {
+      "rank": 4,
+      "name": "Light It Up",
+      "videoUrl": "https://youtu.be/rJiQRf_-wjo",
+      "difficulty": "extreme-demon"
+    },
+    {
+      "rank": 5,
+      "name": "Rubber VRoom",
+      "videoUrl": "https://youtu.be/jX-6fSsoGhs",
+      "difficulty": "insane-demon"
+    }
+  ]
+}

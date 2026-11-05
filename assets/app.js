@@ -203,7 +203,7 @@
     return `<img class="player-demon-face" src="assets/${difficulty}${suffix}.png" alt="${label}" title="${label}">`;
   }
   function playerIntro(profile) {
-    return `<div class="pageintro"><a href="#/" class="inline-back" data-player-back>‹ Back</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1><p class="player-subheading">${esc(profile.description||'Personal ranked lists')}</p></div></div></div>`;
+    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1><p class="player-subheading">${esc(profile.description||'Personal ranked lists')}</p></div></div></div>`;
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);

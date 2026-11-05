@@ -1,7 +1,7 @@
 import { editorApi } from './config.js?v=review-1';
 
 const $ = id => document.getElementById(id);
-const allowed = { blathers: ['geometry-dash'], disastrum: ['geometry-dash', 'fnaf-challenges'], kayceenoelle: ['celeste', 'beat-saber', 'geometry-dash'] };
+const allowed = { blathers: ['geometry-dash'], djjdk: ['geometry-dash'], disastrum: ['geometry-dash', 'fnaf-challenges'], kayceenoelle: ['celeste', 'beat-saber', 'geometry-dash'] };
 const query = new URLSearchParams(location.search);
 const player = query.get('player');
 const list = query.get('list');
@@ -68,6 +68,7 @@ function move(from, to) {
 function render() {
   const listEl = $('levels');
   listEl.replaceChildren();
+  $('placement').max = String(rows.length + 1);
   rows.forEach((row, i) => {
     const li = text('li', '', 'editor-row');
     li.dataset.position = i;
@@ -152,31 +153,39 @@ function parseVideo(value) {
   } catch { return ''; }
 }
 
-function add(row) {
-  rows.push(row);
+function add(row, position) {
+  const index = position == null ? rows.length : position - 1;
+  rows.splice(index, 0, row);
+  $('placement').value = '';
   changed();
   render();
-  $('levels').lastElementChild.scrollIntoView({ block: 'nearest' });
+  const entry = $('levels').children[index];
+  entry.scrollIntoView({ block: 'nearest' });
+  entry.querySelector('details input').focus({ preventScroll: true });
 }
 
-$('manual').addEventListener('click', () => add({ name: '' }));
+$('manual').addEventListener('click', () => {
+  const placement = $('placement');
+  if (placement.reportValidity()) add({ name: '' }, placement.valueAsNumber || null);
+});
 $('import').addEventListener('submit', async event => {
   event.preventDefault();
   const input = $('video-url');
   const id = parseVideo(input.value.trim());
   if (!id) { $('status').textContent = 'Enter a valid YouTube video link.'; return; }
-  $('lookup').disabled = true;
+  $('lookup').disabled = $('manual').disabled = true;
+  const position = $('placement').valueAsNumber || null;
   const videoUrl = 'https://youtu.be/' + id;
   try {
     const metadata = editorApi ? await api('/metadata?' + new URLSearchParams({ id })) : { videoUrl };
-    add(metadata);
+    add({ ...metadata, videoUrl }, position);
     $('status').textContent = editorApi ? 'Video added to your draft. Review the imported details.' : 'Video added to your draft. Enter its details manually while the save service is offline.';
   } catch (error) {
-    add({ name: '', videoUrl });
+    add({ name: '', videoUrl }, position);
     $('status').textContent = error.message;
   } finally {
     input.value = '';
-    $('lookup').disabled = false;
+    $('lookup').disabled = $('manual').disabled = false;
   }
 });
 
@@ -242,7 +251,7 @@ async function init() {
     $('status').textContent = 'Choose Edit on a player list first.';
     return;
   }
-  const names = { blathers: 'Blathers', disastrum: 'Disastrum', kayceenoelle: 'KayceeNoelle' };
+  const names = { blathers: 'Blathers', djjdk: 'DJ JDK', disastrum: 'Disastrum', kayceenoelle: 'KayceeNoelle' };
   const titles = { 'geometry-dash': 'Geometry Dash', 'fnaf-challenges': 'FNaF Challenges', celeste: 'Celeste', 'beat-saber': 'Beat Saber' };
   $('title').textContent = 'Edit ' + names[player] + ' · ' + titles[list];
   const back = $('back');

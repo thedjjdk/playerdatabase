@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "djjdk",
+  "name": "DJ JDK",
+  "description": "DJ JDK’s Geometry Dash rankings.",
+  "lists": [
+    {
+      "id": "geometry-dash",
+      "title": "Geometry Dash List",
+      "file": "geometry-dash.json"
+    }
+  ]
+}

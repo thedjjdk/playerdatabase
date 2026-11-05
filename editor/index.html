@@ -7,7 +7,7 @@
   <title>Edit player list</title>
   <link rel="stylesheet" href="../assets/style.css?v=player-art-2">
   <link rel="stylesheet" href="editor.css?v=save-draft-1">
-  <script type="module" src="editor.js?v=auto-merge-1"></script>
+  <script type="module" src="editor.js?v=add-placement-1"></script>
 </head>
 <body>
 <main class="container editor">
@@ -19,6 +19,8 @@
     <form id="import">
       <label for="video-url">Add a level from YouTube</label>
       <input id="video-url" type="url" placeholder="https://youtu.be/…" required>
+      <label for="placement">Placement</label>
+      <input id="placement" type="number" min="1" step="1" placeholder="End of list">
       <button type="submit" disabled id="lookup">Add video</button>
       <button type="button" disabled id="manual">Add manually</button>
     </form>
