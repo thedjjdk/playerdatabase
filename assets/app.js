@@ -297,43 +297,30 @@
   }
   function celesteMeterRank(value) {
     const rank = String(value || '').trim().toLowerCase();
-    if (!rank) return { state: 'unrated', tier: '' };
     const plus = rank.match(/(?:\bgm|grand\s*master)\s*\+\s*(\d+)/);
-    const tier = plus ? 'GM+' + plus[1]
-      : /\bgm\b|grand\s*master/.test(rank) ? 'GM'
-      : /beginner/.test(rank) ? 'Beg'
-      : /intermediate/.test(rank) ? 'Int'
-      : /advanced/.test(rank) ? 'Adv'
-      : /expert/.test(rank) ? 'Exp' : '';
-    const state = plus || /\bshattered\b/.test(rank) ? 'shattered'
-      : /cracked/.test(rank) ? 'cracked'
-      : /\bred\b/.test(rank) ? 'red'
-      : /\byellow\b/.test(rank) ? 'yellow'
-      : /\bgreen\b/.test(rank) ? 'green' : 'unrated';
-    return { state, tier };
+    if (plus) return plus[1] === '1' ? { state: 'cracked', tier: 'GM+1' }
+      : plus[1] === '2' ? { state: 'shattered', tier: 'GM+2' }
+      : { state: 'unrated', tier: '' };
+    if (/cracked\s*(?:grand\s*master|gm\b)/.test(rank)) return { state: 'red', tier: 'Cracked GM' };
+    if (/\bgm\b|grand\s*master/.test(rank)) return { state: 'orange', tier: 'GM' };
+    const tiers = [
+      ['beginner', 'blue', 'Beginner'], ['intermediate', 'green', 'Intermediate'],
+      ['advanced', 'lime', 'Advanced'], ['expert', 'yellow', 'Expert'],
+      ['shattered', 'shattered', 'GM+2'], ['cracked', 'cracked', 'GM+1'],
+      ['blue', 'blue', 'Beginner'], ['green', 'green', 'Intermediate'],
+      ['lime', 'lime', 'Advanced'], ['yellow', 'yellow', 'Expert'],
+      ['orange', 'orange', 'GM'], ['red', 'red', 'Cracked GM']
+    ];
+    for (const [word, state, tier] of tiers) {
+      if (new RegExp('\\b' + word + '\\b').test(rank)) return { state, tier };
+    }
+    return { state: 'unrated', tier: '' };
   }
-  function celesteMeter(rank, profile) {
+  function celesteMeter(rank) {
     const { state, tier } = celesteMeterRank(rank);
-    const green = checkedColor(profile.backgroundRight || profile.backgroundTint || '#25bba5');
-    const pink = checkedColor(profile.backgroundLeft || profile.backgroundTint || '#ea7e9c');
-    const stateNames = { green: 'Green', yellow: 'Yellow', red: 'Red', cracked: 'Cracked', shattered: 'Shattered' };
-    const label = rank ? 'Celeste rank: ' + rank + (stateNames[state] ? ' (' + stateNames[state] + ')' : '') : 'Celeste rank not set';
-    const active = state !== 'unrated';
-    const shattered = state === 'shattered';
-    const cracked = state === 'cracked' || shattered;
-    const needles = {
-      green: 'M61 88 L23 70 L68 78 Q73 85 66 89 Z',
-      yellow: 'M59 84 L64 37 L69 84 Q65 91 59 84 Z',
-      red: 'M59 79 L108 69 L67 88 Q59 92 59 79 Z',
-      cracked: 'M59 80 L112 80 L66 89 Q58 92 59 80 Z',
-      shattered: 'M59 84 Q64 77 69 84 L66 101 L62 101 Z'
-    };
-    const outer = shattered
-      ? 'M8 94 Q5 91 7 83 L15 65 L25 73 L34 62 L29 52 L42 45 L46 34 Q75 14 98 43 Q117 62 121 84 Q123 91 119 94 Z'
-      : 'M8 94 Q4 90 7 82 C15 47 37 25 64 25 S113 47 121 82 Q124 90 120 94 Z';
-    const smoke = shattered ? '<path d="M21 60 C6 45 34 42 21 25 M33 47 C45 33 24 29 36 13" fill="none" stroke="#11131a" stroke-width="6" stroke-linecap="round"/><circle cx="17" cy="16" r="3" fill="#11131a"/><circle cx="45" cy="23" r="3" fill="#11131a"/>' : '';
-    const cracks = cracked ? '<g fill="none" stroke="#3a2330" stroke-width="1.7" opacity=".8"><path d="M94 45 L88 55 L97 62 L87 70 L102 80 M98 62 L109 57 M88 55 L78 49 M87 70 L78 81 M78 28 L71 41 L83 46 L79 59"/><path d="M106 74 L114 78 M41 41 L54 53 L50 63"/></g>' : '';
-    return `<span class="celeste-meter" role="img" aria-label="${esc(label)}" title="${esc(label)}"><svg viewBox="0 0 128 104" aria-hidden="true" focusable="false">${smoke}<path d="${outer}" fill="#f4eddb" stroke="#08090c" stroke-width="7" stroke-linejoin="round"/><g opacity="${active ? 1 : 0.35}"><path d="M15 84 Q19 64 33 49 L55 75 Q50 79 50 84 Z" fill="${green}"/><path d="M39 44 Q64 32 89 44 L69 70 Q64 68 59 70 Z" fill="#edc84b"/><path d="M95 49 Q109 64 114 84 L78 84 Q78 79 73 75 Z" fill="${pink}"/></g><path d="M25 54 Q30 48 37 44 M44 40 Q64 32 83 39" fill="none" stroke="#fff" stroke-width="3" opacity=".55" stroke-linecap="round"/>${cracks}${shattered ? '<path d="M8 68 L17 55 L27 61 L30 72 L42 67 L48 80 L39 86 L24 84 Z" fill="var(--surface)" stroke="#08090c" stroke-width="2"/>' : ''}${active ? `<path d="${needles[state]}" fill="#121522" stroke="#2b2432" stroke-width="1.4"/><circle cx="64" cy="84" r="5" fill="#171925"/>` : '<text x="64" y="83" text-anchor="middle" fill="#585567" font-size="20" font-weight="900">?</text>'}</svg><span class="celeste-meter-tier" aria-hidden="true">${esc(tier || stateNames[state] || 'Unrated')}</span></span>`;
+    if (state === 'unrated') return '';
+    const label = 'Celeste rank: ' + rank;
+    return `<span class="celeste-meter" role="img" aria-label="${esc(label)}" title="${esc(label)}"><img src="assets/celeste-${state}.png" alt="" aria-hidden="true" width="66" height="62"><span class="celeste-meter-tier" aria-hidden="true">${esc(tier)}</span></span>`;
   }
   function difficultyBadge(item, profile, game) {
     if (game === 'geometry-dash') return demonFace(item.difficulty, profile);
@@ -610,5 +597,6 @@
   setTheme(state.theme);
   boot();
 })();
+
 
 

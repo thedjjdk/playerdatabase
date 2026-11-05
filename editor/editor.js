@@ -120,7 +120,7 @@ function fieldControl(row, key, label, kind, max, title) {
   if (max) { input.min = '0'; input.max = String(max); input.step = 'any'; }
   if (key === 'gameRank' && game === 'celeste') {
     input.setAttribute('list', 'celeste-rank-options');
-    input.placeholder = 'e.g. Green GM+1';
+    input.placeholder = 'e.g. Grandmaster or GM+1';
   }
   input.value = row[key] ?? '';
   input.addEventListener('input', () => {
@@ -390,4 +390,5 @@ async function init() {
   }
 }
 init();
+
 
