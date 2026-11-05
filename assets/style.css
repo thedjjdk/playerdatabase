@@ -1399,3 +1399,7 @@ body::after {background-image:var(--player-pixel-pattern-right,var(--laylist-pix
  .player-title-wrap .player-avatar-small {width:72px;height:72px;font-size:32px}
  .player-title-wrap h1 {font-size:32px}
 }
+
+.difficulty-duotone {position:relative;display:inline-block}
+.difficulty-duotone img {position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.difficulty-duotone img:last-child {mask-image:linear-gradient(to right,transparent 20%,#000 80%);-webkit-mask-image:linear-gradient(to right,transparent 20%,#000 80%)}
