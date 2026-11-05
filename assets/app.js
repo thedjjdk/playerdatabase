@@ -227,7 +227,7 @@
       ${thumbnail ? (video
         ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
-      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> - ${esc(name)}</span>${demonFace(item.difficulty, profile)}</h2>
+      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> — ${esc(name)}</span>${demonFace(item.difficulty, profile)}</h2>
       <p class="creator">${item.completionDate ? `Completed on <strong>${esc(item.completionDate)}</strong>` : item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : item.videoPublishedDate ? `Completed by <strong>${esc(postedDate(item))}</strong>` : 'Completion date unavailable'}</p>
       <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${item.attempts ? ` · ${esc(item.attempts)} attempts` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
@@ -298,7 +298,7 @@
     ];
     const body = `<div class="backrow"><a href="${esc(playerRoute(profile.id,entry.id))}" class="backbutton" data-player-back>‹ Back</a><div class="prevnext">
       <button type="button" ${prev?'':'disabled'} data-rank-nav="${prev?prev.rank:''}">‹ Previous</button><button type="button" ${next?'':'disabled'} data-rank-nav="${next?next.rank:''}">Next ›</button></div></div>
-      <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} - ${esc(item.name)}</span>${demonFace(item.difficulty, profile)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
+      <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} — ${esc(item.name)}</span>${demonFace(item.difficulty, profile)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
       ${detailVideo(item)}
       <div class="facts detail-grid">${facts.map(([value,label])=>`<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>
       <p class="statline"><strong>Enjoyment rating:</strong> ${item.enjoyment == null ? 'Not provided' : `${esc(item.enjoyment)}/10`}</p>
