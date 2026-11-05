@@ -9,8 +9,8 @@
     {
       "rank": 1,
       "rankLabel": "1",
-      "name": "Zodiac*",
-      "difficulty": "extreme-demon",
+      "name": "Zodiac",
+      "difficulty": "insane-demon",
       "completionYear": 2022,
       "enjoyment": 8.5,
       "attempts": "33,000",
@@ -29,15 +29,16 @@
       "attempts": "37,000",
       "worstFail": 84,
       "timeTaken": "~1 month, ~22-23 days",
-      "videoUrl": null,
+      "videoUrl": "https://youtu.be/iYT9ksuHlvk",
       "videoTitle": null,
-      "sourceRow": 9
+      "sourceRow": 9,
+      "difficulty": "extreme-demon"
     },
     {
       "rank": 3,
       "rankLabel": "3",
-      "name": "Omega Interface*",
-      "difficulty": "extreme-demon",
+      "name": "Omega Interface",
+      "difficulty": "insane-demon",
       "completionYear": 2021,
       "enjoyment": 8,
       "attempts": "27,986",
@@ -50,8 +51,8 @@
     {
       "rank": 4,
       "rankLabel": "(4)4",
-      "name": "Knights of Thunder*",
-      "difficulty": "extreme-demon",
+      "name": "Knights of Thunder",
+      "difficulty": "insane-demon",
       "completionYear": 2023,
       "enjoyment": 9.5,
       "attempts": "16,919",
@@ -78,8 +79,8 @@
     {
       "rank": 6,
       "rankLabel": "(4)6",
-      "name": "Spectrum Cyclone*",
-      "difficulty": "extreme-demon",
+      "name": "Spectrum Cyclone",
+      "difficulty": "insane-demon",
       "completionYear": 2021,
       "enjoyment": 9,
       "attempts": "23,960",
@@ -106,8 +107,8 @@
     {
       "rank": 8,
       "rankLabel": "(6)8",
-      "name": "Generic Wave*",
-      "difficulty": "extreme-demon",
+      "name": "Generic Wave",
+      "difficulty": "insane-demon",
       "completionYear": 2020,
       "enjoyment": 8,
       "attempts": "19,074",
@@ -120,8 +121,8 @@
     {
       "rank": 9,
       "rankLabel": "(6)9",
-      "name": "Catalyze*",
-      "difficulty": "extreme-demon",
+      "name": "Catalyze",
+      "difficulty": "insane-demon",
       "completionYear": 2020,
       "enjoyment": 8.5,
       "attempts": "63,981",
@@ -141,7 +142,7 @@
       "attempts": "29,213",
       "worstFail": 98,
       "timeTaken": "3 weeks, ~14 days",
-      "videoUrl": null,
+      "videoUrl": "https://youtu.be/-7RCUNdqMpY",
       "videoTitle": "Chromatic Haze 100%!! Extreme Demon by Cirtrax and Gizbro",
       "sourceRow": 25
     },
@@ -240,7 +241,8 @@
       "timeTaken": "~10 weeks, 20-30 days",
       "videoUrl": "https://youtu.be/CLIHaf-Cd-w",
       "videoTitle": null,
-      "sourceRow": 39
+      "sourceRow": 39,
+      "difficulty": "extreme-demon"
     },
     {
       "rank": 18,
@@ -280,7 +282,7 @@
       "attempts": "11,976",
       "worstFail": 84,
       "timeTaken": "~2 weeks, ~9 days",
-      "videoUrl": null,
+      "videoUrl": "https://youtu.be/3Sj3-j0-uMA",
       "videoTitle": "Audio Expulsion 100%!! Extreme Demon by Goodsmile & Others (Geometry Dash Stream Highlights)",
       "sourceRow": 45
     },
@@ -378,7 +380,7 @@
       "attempts": "4,475",
       "worstFail": 84,
       "timeTaken": "~1-2 weeks, 4 days",
-      "videoUrl": null,
+      "videoUrl": "https://youtu.be/l6eviR5LyKQ",
       "videoTitle": "AWESOME or AWFUL? Epsilon by Team Proxima (Extreme Demon) Geometry Dash",
       "sourceRow": 59
     },
@@ -392,7 +394,7 @@
       "attempts": "5,933",
       "worstFail": 92,
       "timeTaken": "7 days, all playing",
-      "videoUrl": null,
+      "videoUrl": "https://youtu.be/QrywItbgavc",
       "videoTitle": "Artifice 100% by F3lixsram & More (Extreme Demon Stream Highlights) Geometry Dash",
       "sourceRow": 61
     },
@@ -462,7 +464,7 @@
       "attempts": "2,300",
       "worstFail": 54,
       "timeTaken": "5 days, 5 days",
-      "videoUrl": null,
+      "videoUrl": "https://youtu.be/H-5nD-HOtPk",
       "videoTitle": "Ecstasy 100%!! (Extreme Flashy Demon) Fluke from 54% - YouTube",
       "sourceRow": 71
     },
@@ -477,7 +479,8 @@
       "timeTaken": "1 week, 2.5 playing",
       "videoUrl": null,
       "videoTitle": "Ecstasy 100%!! (Extreme Flashy Demon) Fluke from 54% - YouTube",
-      "sourceRow": 73
+      "sourceRow": 73,
+      "difficulty": "extreme-demon"
     },
     {
       "rank": 35,
@@ -531,7 +534,7 @@
       "attempts": "6,402",
       "worstFail": 88,
       "timeTaken": "~1.5 yrs, ~12 days",
-      "videoUrl": null,
+      "videoUrl": "https://youtu.be/0H0PznbEcbE",
       "videoTitle": "Torsion 100%!! (ARBY'S DEMON) Geometry Dash Extreme Demon by Raivolt",
       "sourceRow": 81
     },
@@ -636,14 +639,14 @@
     {
       "rank": 46,
       "rankLabel": "46",
-      "name": "Unearthed*",
-      "difficulty": "extreme-demon",
+      "name": "Unearthed",
+      "difficulty": "insane-demon",
       "completionYear": 2019,
       "enjoyment": 4.5,
       "attempts": "4,217",
       "worstFail": 95,
       "timeTaken": "14 days, ~13 playing",
-      "videoUrl": "https://www.twitch.tv/videos/513744452",
+      "videoUrl": "https://youtu.be/lfIFYbYrOqw",
       "videoTitle": null,
       "sourceRow": 97
     },
@@ -762,8 +765,8 @@
     {
       "rank": 55,
       "rankLabel": "55",
-      "name": "Incipient*",
-      "difficulty": "extreme-demon",
+      "name": "Incipient",
+      "difficulty": "insane-demon",
       "completionYear": 2022,
       "enjoyment": 1,
       "attempts": "3,505",
@@ -818,7 +821,7 @@
     {
       "rank": 59,
       "rankLabel": "59",
-      "name": "Golden Shade*",
+      "name": "Golden Shade",
       "completionYear": 2021,
       "enjoyment": 8,
       "attempts": "2,300",
@@ -826,7 +829,8 @@
       "timeTaken": "1-2 days, 1-2 days",
       "videoUrl": "https://youtu.be/o1ixCZlNdAw",
       "videoTitle": null,
-      "sourceRow": 123
+      "sourceRow": 123,
+      "difficulty": "insane-demon"
     },
     {
       "rank": 60,
@@ -859,7 +863,7 @@
     {
       "rank": 62,
       "rankLabel": "62",
-      "name": "The Chain*",
+      "name": "The Chain",
       "completionYear": 2022,
       "enjoyment": 3.5,
       "attempts": "1,400",
@@ -867,7 +871,8 @@
       "timeTaken": "2-3 days, 2 playing",
       "videoUrl": "https://www.twitch.tv/videos/1679532808",
       "videoTitle": null,
-      "sourceRow": 129
+      "sourceRow": 129,
+      "difficulty": "insane-demon"
     },
     {
       "rank": 63,
@@ -942,8 +947,8 @@
     {
       "rank": 68,
       "rankLabel": "68",
-      "name": "Precipitance*",
-      "difficulty": "extreme-demon",
+      "name": "Precipitance",
+      "difficulty": "insane-demon",
       "completionYear": 2022,
       "enjoyment": 7.5,
       "attempts": "1,526",
@@ -978,13 +983,14 @@
       "timeTaken": null,
       "videoUrl": "https://www.twitch.tv/videos/1088171567",
       "videoTitle": null,
-      "sourceRow": 145
+      "sourceRow": 145,
+      "difficulty": "extreme-demon"
     },
     {
       "rank": 71,
       "rankLabel": "71",
-      "name": "Thanatophobia*",
-      "difficulty": "extreme-demon",
+      "name": "Thanatophobia",
+      "difficulty": "insane-demon",
       "completionYear": 2020,
       "enjoyment": 6.5,
       "attempts": "2,000",
@@ -997,7 +1003,7 @@
     {
       "rank": 72,
       "rankLabel": "72",
-      "name": "Excessive Compliment**",
+      "name": "Excessive Compliment",
       "completionYear": 2019,
       "enjoyment": 8,
       "attempts": "3,803",
@@ -1005,7 +1011,8 @@
       "timeTaken": "~1-3 weeks, idk",
       "videoUrl": "https://www.twitch.tv/videos/466307629",
       "videoTitle": null,
-      "sourceRow": 149
+      "sourceRow": 149,
+      "difficulty": "insane-demon"
     },
     {
       "rank": 73,
@@ -1018,7 +1025,8 @@
       "timeTaken": "2 days",
       "videoUrl": "https://youtu.be/R98XupaBP_c",
       "videoTitle": null,
-      "sourceRow": 151
+      "sourceRow": 151,
+      "difficulty": "extreme-demon"
     },
     {
       "rank": 74,
@@ -1044,7 +1052,7 @@
       "attempts": "1,249",
       "worstFail": 75,
       "timeTaken": "2 days",
-      "videoUrl": null,
+      "videoUrl": "https://youtu.be/uuWMUtpUlOE",
       "videoTitle": null,
       "sourceRow": 155
     },
@@ -1065,7 +1073,7 @@
     {
       "rank": 77,
       "rankLabel": "77",
-      "name": "Chimera**",
+      "name": "Chimera",
       "completionYear": 2022,
       "enjoyment": 7,
       "attempts": "964",
@@ -1073,12 +1081,13 @@
       "timeTaken": "1 day for both",
       "videoUrl": "https://www.twitch.tv/videos/1597659284",
       "videoTitle": null,
-      "sourceRow": 159
+      "sourceRow": 159,
+      "difficulty": "insane-demon"
     },
     {
       "rank": 78,
       "rankLabel": "78",
-      "name": "CraZy III*",
+      "name": "CraZy III",
       "difficulty": "insane-demon",
       "completionYear": 2021,
       "enjoyment": 8,
@@ -1120,8 +1129,8 @@
     {
       "rank": 81,
       "rankLabel": "81",
-      "name": "Buff This*",
-      "difficulty": "extreme-demon",
+      "name": "Buff This",
+      "difficulty": "insane-demon",
       "completionYear": 2023,
       "enjoyment": 6,
       "attempts": "422",
@@ -1134,7 +1143,7 @@
     {
       "rank": 82,
       "rankLabel": "82",
-      "name": "Master Duel*",
+      "name": "Master Duel",
       "completionYear": 2020,
       "enjoyment": 8.5,
       "attempts": "1,680",
@@ -1142,7 +1151,8 @@
       "timeTaken": "~2 weeks, 2 days",
       "videoUrl": "https://youtu.be/kM-hymKaW-c",
       "videoTitle": null,
-      "sourceRow": 169
+      "sourceRow": 169,
+      "difficulty": "insane-demon"
     }
   ]
 }
