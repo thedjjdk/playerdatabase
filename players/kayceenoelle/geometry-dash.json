@@ -2,5 +2,12 @@
   "schemaVersion": 1,
   "title": "Geometry Dash List",
   "description": "KayceeNoelle’s Geometry Dash list is ready for entries.",
-  "levels": []
+  "levels": [
+    {
+      "rank": 1,
+      "name": "JUNIPER NEVER CLEAR",
+      "videoUrl": "https://youtu.be/wa7B52tNgoU?si",
+      "difficulty": "extreme-demon"
+    }
+  ]
 }
