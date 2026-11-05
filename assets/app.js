@@ -109,7 +109,8 @@
     const color = checkedColor(accent || (state.activeProfile?.accent || '#aeb4bc'));
     // Inline properties override the base stylesheet's light-mode fallback.
     const tint = state.activeProfile?.backgroundTint;
-    document.body.style.setProperty('--player-pixel-pattern',playerPixelPattern(tint));
+    document.body.style.setProperty('--player-pixel-pattern', playerPixelPattern(state.activeProfile?.backgroundLeft || tint));
+    document.body.style.setProperty('--player-pixel-pattern-right', playerPixelPattern(state.activeProfile?.backgroundRight || tint));
     document.body.style.setProperty('--wordmark-tint', /^#[0-9a-f]{6}$/i.test(tint || '') ? tint : color);
     document.body.style.setProperty('--accent',color);
     document.body.style.setProperty('--accent-strong',color);
