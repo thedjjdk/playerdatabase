@@ -7,7 +7,7 @@
   <title>Edit player list</title>
   <link rel="stylesheet" href="../assets/style.css?v=manage-lists-1">
   <link rel="stylesheet" href="editor.css?v=save-draft-1">
-  <script type="module" src="editor.js?v=manage-lists-1"></script>
+  <script type="module" src="editor.js?v=celeste-meters-1"></script>
 </head>
 <body>
 <main class="container editor">
@@ -43,6 +43,21 @@
       <button type="button" id="cancel-list">Cancel</button>
     </form>
   </dialog>
+  <datalist id="celeste-rank-options">
+    <option value="Green"></option>
+    <option value="Yellow"></option>
+    <option value="Red"></option>
+    <option value="Cracked"></option>
+    <option value="Shattered"></option>
+    <option value="Green Grandmaster"></option>
+    <option value="Yellow Grandmaster"></option>
+    <option value="Red Grandmaster"></option>
+    <option value="Cracked Grandmaster"></option>
+    <option value="Green GM+1"></option>
+    <option value="Yellow GM+1"></option>
+    <option value="Red GM+1"></option>
+    <option value="Green GM+2"></option>
+  </datalist>
   <ol id="levels"></ol>
   <button type="button" disabled id="save">Save changes</button>
   <dialog id="confirm">
@@ -60,4 +75,5 @@
 </main>
 </body>
 </html>
+
 

@@ -118,6 +118,10 @@ function fieldControl(row, key, label, kind, max, title) {
     for (const [value, name] of [["","Unspecified"],["easy","Easy"],["normal","Normal"],["hard","Hard"],["harder","Harder"],["insane","Insane"],["easy-demon","Easy Demon"],["medium-demon","Medium Demon"],["hard-demon","Hard Demon"],["insane-demon","Insane Demon"],["extreme-demon","Extreme Demon"]]) input.add(new Option(name, value));
   } else input.type = kind;
   if (max) { input.min = '0'; input.max = String(max); input.step = 'any'; }
+  if (key === 'gameRank' && game === 'celeste') {
+    input.setAttribute('list', 'celeste-rank-options');
+    input.placeholder = 'e.g. Green GM+1';
+  }
   input.value = row[key] ?? '';
   input.addEventListener('input', () => {
     row[key] = kind === 'number' && input.value !== '' ? input.valueAsNumber : input.value;
@@ -386,3 +390,4 @@ async function init() {
   }
 }
 init();
+

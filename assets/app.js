@@ -295,6 +295,51 @@
     }
     return `<img class="player-demon-face" src="assets/${difficulty}.png" alt="${label}" title="${label}" data-difficulty-tint="${difficulty}" data-left-color="${left}" data-right-color="${right}">`;
   }
+  function celesteMeterRank(value) {
+    const rank = String(value || '').trim().toLowerCase();
+    if (!rank) return { state: 'unrated', tier: '' };
+    const plus = rank.match(/(?:\bgm|grand\s*master)\s*\+\s*(\d+)/);
+    const tier = plus ? 'GM+' + plus[1]
+      : /\bgm\b|grand\s*master/.test(rank) ? 'GM'
+      : /beginner/.test(rank) ? 'Beg'
+      : /intermediate/.test(rank) ? 'Int'
+      : /advanced/.test(rank) ? 'Adv'
+      : /expert/.test(rank) ? 'Exp' : '';
+    const state = plus || /\bshattered\b/.test(rank) ? 'shattered'
+      : /cracked/.test(rank) ? 'cracked'
+      : /\bred\b/.test(rank) ? 'red'
+      : /\byellow\b/.test(rank) ? 'yellow'
+      : /\bgreen\b/.test(rank) ? 'green' : 'unrated';
+    return { state, tier };
+  }
+  function celesteMeter(rank, profile) {
+    const { state, tier } = celesteMeterRank(rank);
+    const green = checkedColor(profile.backgroundRight || profile.backgroundTint || '#25bba5');
+    const pink = checkedColor(profile.backgroundLeft || profile.backgroundTint || '#ea7e9c');
+    const stateNames = { green: 'Green', yellow: 'Yellow', red: 'Red', cracked: 'Cracked', shattered: 'Shattered' };
+    const label = rank ? 'Celeste rank: ' + rank + (stateNames[state] ? ' (' + stateNames[state] + ')' : '') : 'Celeste rank not set';
+    const active = state !== 'unrated';
+    const shattered = state === 'shattered';
+    const cracked = state === 'cracked' || shattered;
+    const needles = {
+      green: 'M61 88 L23 70 L68 78 Q73 85 66 89 Z',
+      yellow: 'M59 84 L64 37 L69 84 Q65 91 59 84 Z',
+      red: 'M59 79 L108 69 L67 88 Q59 92 59 79 Z',
+      cracked: 'M59 80 L112 80 L66 89 Q58 92 59 80 Z',
+      shattered: 'M59 84 Q64 77 69 84 L66 101 L62 101 Z'
+    };
+    const outer = shattered
+      ? 'M8 94 Q5 91 7 83 L15 65 L25 73 L34 62 L29 52 L42 45 L46 34 Q75 14 98 43 Q117 62 121 84 Q123 91 119 94 Z'
+      : 'M8 94 Q4 90 7 82 C15 47 37 25 64 25 S113 47 121 82 Q124 90 120 94 Z';
+    const smoke = shattered ? '<path d="M21 60 C6 45 34 42 21 25 M33 47 C45 33 24 29 36 13" fill="none" stroke="#11131a" stroke-width="6" stroke-linecap="round"/><circle cx="17" cy="16" r="3" fill="#11131a"/><circle cx="45" cy="23" r="3" fill="#11131a"/>' : '';
+    const cracks = cracked ? '<g fill="none" stroke="#3a2330" stroke-width="1.7" opacity=".8"><path d="M94 45 L88 55 L97 62 L87 70 L102 80 M98 62 L109 57 M88 55 L78 49 M87 70 L78 81 M78 28 L71 41 L83 46 L79 59"/><path d="M106 74 L114 78 M41 41 L54 53 L50 63"/></g>' : '';
+    return `<span class="celeste-meter" role="img" aria-label="${esc(label)}" title="${esc(label)}"><svg viewBox="0 0 128 104" aria-hidden="true" focusable="false">${smoke}<path d="${outer}" fill="#f4eddb" stroke="#08090c" stroke-width="7" stroke-linejoin="round"/><g opacity="${active ? 1 : 0.35}"><path d="M15 84 Q19 64 33 49 L55 75 Q50 79 50 84 Z" fill="${green}"/><path d="M39 44 Q64 32 89 44 L69 70 Q64 68 59 70 Z" fill="#edc84b"/><path d="M95 49 Q109 64 114 84 L78 84 Q78 79 73 75 Z" fill="${pink}"/></g><path d="M25 54 Q30 48 37 44 M44 40 Q64 32 83 39" fill="none" stroke="#fff" stroke-width="3" opacity=".55" stroke-linecap="round"/>${cracks}${shattered ? '<path d="M8 68 L17 55 L27 61 L30 72 L42 67 L48 80 L39 86 L24 84 Z" fill="var(--surface)" stroke="#08090c" stroke-width="2"/>' : ''}${active ? `<path d="${needles[state]}" fill="#121522" stroke="#2b2432" stroke-width="1.4"/><circle cx="64" cy="84" r="5" fill="#171925"/>` : '<text x="64" y="83" text-anchor="middle" fill="#585567" font-size="20" font-weight="900">?</text>'}</svg><span class="celeste-meter-tier" aria-hidden="true">${esc(tier || stateNames[state] || 'Unrated')}</span></span>`;
+  }
+  function difficultyBadge(item, profile, game) {
+    if (game === 'geometry-dash') return demonFace(item.difficulty, profile);
+    if (game === 'celeste') return celesteMeter(item.gameRank, profile);
+    return '';
+  }
   function playerIntro(profile) {
     return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div></div>`;
   }
@@ -313,7 +358,8 @@
     return entry?.game || entry?.id;
   }
   function renderCard(profile, listId, item, index) {
-    const gd = listGame(profile.lists.find(entry => entry.id === listId)) === 'geometry-dash';
+    const game = listGame(profile.lists.find(entry => entry.id === listId));
+    const gd = game === 'geometry-dash';
     const rank = Number.isInteger(item.rank) ? item.rank : index+1;
     const link = playerRoute(profile.id, listId, rank);
     const video = levelVideo(item);
@@ -324,7 +370,7 @@
       ${thumbnail ? (video
         ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
-      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> – ${esc(name)}</span>${gd ? demonFace(item.difficulty, profile) : ''}</h2>
+      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> – ${esc(name)}</span>${difficultyBadge(item, profile, game)}</h2>
       <p class="creator">${item.completionDate ? `Completed on <strong>${esc(item.completionDate)}</strong>` : item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : item.videoPublishedDate ? `Completed by <strong>${esc(postedDate(item))}</strong>` : 'Completion date unavailable'}</p>
       <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${gd ? (item.attempts ? ` · ${esc(item.attempts)} attempts` : '') : (item.timeTaken ? ` · Game Time: ${esc(item.timeTaken)}` : '')}${!gd && item.gameRank ? ` · Rank: ${esc(item.gameRank)}` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
@@ -377,7 +423,8 @@
   }
   function detailView(profile, entry, doc, rank) {
     const levels = doc.levels;
-    const gd = listGame(entry) === 'geometry-dash';
+    const game = listGame(entry);
+    const gd = game === 'geometry-dash';
     const index = levels.findIndex(x => x.rank === rank);
     if (index < 0) {showError('Level not found', `No level with rank #${rank} exists in this list.`);return;}
     const item = levels[index];
@@ -397,7 +444,7 @@
     ];
     const body = `<div class="backrow"><a href="${esc(playerRoute(profile.id,entry.id))}" class="backbutton" data-player-back>‹ Back</a><div class="prevnext">
       <button type="button" ${prev?'':'disabled'} data-rank-nav="${prev?prev.rank:''}">‹ Previous</button><button type="button" ${next?'':'disabled'} data-rank-nav="${next?next.rank:''}">Next ›</button></div></div>
-      <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} – ${esc(item.name)}</span>${gd ? demonFace(item.difficulty, profile) : ''}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
+      <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} – ${esc(item.name)}</span>${difficultyBadge(item, profile, game)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
       ${detailVideo(item)}
       <div class="facts detail-grid">${facts.map(([value,label])=>`<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>
       <p class="statline"><strong>Enjoyment rating:</strong> ${item.enjoyment == null ? 'Not provided' : `${esc(item.enjoyment)}/10`}</p>
@@ -563,4 +610,5 @@
   setTheme(state.theme);
   boot();
 })();
+
 
