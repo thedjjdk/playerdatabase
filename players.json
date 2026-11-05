@@ -27,7 +27,9 @@
       "id": "djjdk",
       "name": "DJ JDK",
       "folder": "djjdk",
-      "avatar": "avatar.webp"
+      "avatar": "avatar.webp",
+      "accent": "#00c6fe",
+      "backgroundTint": "#00c6fe"
     }
   ]
 }
