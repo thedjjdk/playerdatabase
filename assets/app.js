@@ -313,10 +313,10 @@
       timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric'
     });
   }
-  function completionInfo(item) {
+  function completionInfo(item, profile = state.activeProfile) {
     if (item.completionDate) return { prefix: 'Completed on', label: 'COMPLETION DATE', value: displayDate(item.completionDate), year: String(item.completionDate).slice(0, 4) };
     if (item.completionYear) return { prefix: 'Completed in', label: 'COMPLETION YEAR', value: String(item.completionYear), year: String(item.completionYear) };
-    if (item.videoPublishedDate) return { prefix: 'Completed by', label: 'COMPLETED BY', value: displayDate(item.videoPublishedDate), year: String(item.videoPublishedDate).slice(0, 4) };
+    if (item.videoPublishedDate) return { prefix: profile?.id === 'djjdk' ? 'Completed on' : 'Completed by', label: profile?.id === 'djjdk' ? 'COMPLETION DATE' : 'COMPLETED BY', value: displayDate(item.videoPublishedDate), year: String(item.videoPublishedDate).slice(0, 4) };
     return { prefix: '', label: 'COMPLETION DATE', value: 'Not provided', year: '' };
   }
   function sourceLabel(doc) {
@@ -333,7 +333,7 @@
     const video = levelVideo(item);
     const thumbnail = thumbnailFor(item,profile);
     const name = item.name || `Entry ${rank}`;
-    const completion = completionInfo(item);
+    const completion = completionInfo(item, profile);
     return `<article class="listcard">
       <a class="card-stretched" href="${esc(link)}" aria-label="View ${esc(name)} details"></a>
       ${thumbnail ? (video
@@ -402,7 +402,7 @@
     const source = safeLink(doc.sourceUrl);
     const proof = levelVideo(item);
     const attr = (key, fallback='Not provided') => item[key] != null && item[key] !== '' ? esc(item[key]) : fallback;
-    const completion = completionInfo(item);
+    const completion = completionInfo(item, profile);
     const facts = [
       [ `#${esc(item.rank)}`, 'LIST RANK' ],
       [ esc(completion.value), completion.label ],
