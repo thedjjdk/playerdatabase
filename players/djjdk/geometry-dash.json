@@ -108,6 +108,16 @@
       "rank": 10
     },
     {
+      "rank": 11,
+      "name": "CastleMania (All Paths)",
+      "attempts": "2544",
+      "enjoyment": 8.2,
+      "completionDate": "2020-11-08",
+      "completionYear": 2020,
+      "videoUrl": "https://youtu.be/S2ih4foG_kI",
+      "difficulty": "insane-demon"
+    },
+    {
       "name": "Spacelocked II",
       "videoUrl": "https://youtu.be/0rQ80nl-Gl8",
       "difficulty": "insane-demon",
@@ -115,10 +125,10 @@
       "enjoyment": 4,
       "worstFail": 84,
       "videoPublishedDate": "2021-02-12",
-      "rank": 11
+      "rank": 12
     },
     {
-      "rank": 12,
+      "rank": 13,
       "name": "bomb the rave",
       "attempts": "1133",
       "enjoyment": 6,
@@ -136,7 +146,7 @@
       "enjoyment": 8,
       "worstFail": 97,
       "videoPublishedDate": "2020-09-08",
-      "rank": 13
+      "rank": 14
     },
     {
       "name": "Rupture",
@@ -146,7 +156,7 @@
       "enjoyment": 0,
       "worstFail": 92,
       "videoPublishedDate": "2021-02-06",
-      "rank": 14
+      "rank": 15
     },
     {
       "name": "Windy Landscape",
@@ -156,7 +166,7 @@
       "enjoyment": 6,
       "worstFail": 88,
       "videoPublishedDate": "2022-09-18",
-      "rank": 15
+      "rank": 16
     },
     {
       "name": "Game Time",
@@ -166,7 +176,7 @@
       "enjoyment": 9,
       "worstFail": 99,
       "videoPublishedDate": "2021-01-19",
-      "rank": 16
+      "rank": 17
     }
   ]
 }
