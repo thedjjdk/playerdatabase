@@ -9,5 +9,10 @@
       "title": "Geometry Dash List",
       "file": "geometry-dash.json"
     }
-  ]
+  ],
+  "backgroundInvertLight": false,
+  "backgroundInvertDark": false,
+  "backgroundOpacity": 10,
+  "backgroundImage": "background.webp",
+  "backgroundImageVersion": "39a5268d26e5cf4de2348e546418ce8d0b15ede0b1a33f97ce4eb215bef3e47f"
 }
