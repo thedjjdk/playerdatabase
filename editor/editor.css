@@ -31,3 +31,16 @@
 .editor dialog label {margin:10px 0}
 .editor #save-colors:enabled {border-color:var(--accent);font-weight:750}
 .editor :is(input,select):focus-visible {outline:2px solid var(--accent);outline-offset:2px}
+
+
+.editor-row {position:relative;padding-bottom:52px}
+.editor .placement-trash {position:absolute;right:8px;bottom:8px;width:36px;height:36px;min-height:36px;padding:7px;display:grid;place-items:center;color:var(--muted)}
+.placement-trash svg {width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.editor .placement-trash:hover {color:var(--text);border-color:var(--accent)}
+.deletion-notice {display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px dashed var(--accent);background:var(--surface);margin-bottom:14px}
+.deletion-notice[hidden] {display:none}
+#list-order {list-style:none;padding:0;margin:12px 0}
+.list-order-row {display:flex;align-items:center;gap:8px;margin:8px 0}
+.list-order-row span {flex:1;min-width:0;overflow-wrap:anywhere}
+.editor #save-list-order:enabled {border-color:var(--accent);font-weight:750}
+@media(max-width:540px) {.deletion-notice {align-items:stretch;flex-direction:column}}

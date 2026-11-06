@@ -24,7 +24,9 @@ $('theme-toggle').addEventListener('click', () => {
 });
 const drafts = new Map();
 const gameNames = { 'geometry-dash': 'Geometry Dash', celeste: 'Celeste', 'beat-saber': 'Beat Saber', 'fnaf-challenges': 'FNaF' };
-let rows = [], revision = '', dirty = false, drag, dragFrame;
+let rows = [], deletedRows = [], revision = '', dirty = false, drag, dragFrame;
+let listOrder = [], orderBaseline = '[]';
+const orderChanged = () => JSON.stringify(listOrder) !== orderBaseline;
 function fields() {
   return [
     ['name', 'Level name', 'text'], ['videoUrl', 'Video link', 'url'],
@@ -122,6 +124,7 @@ function applyList(data) {
   revision = data.revision;
   baseline = JSON.stringify(data.document);
   dirty = false;
+  deletedRows = [];
   render();
 }
 
@@ -205,11 +208,32 @@ function render() {
     for (const [key, label, kind, max] of fields()) controls.append(fieldControl(row, key, label, kind, max, title));
     details.append(controls);
     if (row.videoPublishedDate) details.append(text('p', 'Video posted ' + row.videoPublishedDate));
-    li.append(head, details);
+    const trash = text('button', '', 'placement-trash');
+    trash.type = 'button';
+    trash.title = 'Delete placement';
+    trash.setAttribute('aria-label', 'Delete placement ' + (row.name || 'new placement'));
+    trash.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></svg>';
+    trash.addEventListener('click', () => {
+      deletedRows.push({ row, index: rows.indexOf(row) });
+      rows.splice(rows.indexOf(row), 1);
+      changed();
+      render();
+      $('deletion-notice').scrollIntoView({ block: 'nearest' });
+    });
+    li.append(head, details, trash);
     listEl.append(li);
   });
   $('save').disabled = !dirty;
+  $('deletion-notice').hidden = deletedRows.length === 0;
+  $('deletion-count').textContent = deletedRows.length + ' placement' + (deletedRows.length === 1 ? '' : 's') + ' removed from this draft. Save with your Player ID to apply.';
 }
+$('undo-delete').addEventListener('click', () => {
+  const removed = deletedRows.pop();
+  if (!removed) return;
+  rows.splice(Math.min(removed.index, rows.length), 0, removed.row);
+  changed();
+  render();
+});
 
 function updateDragTarget() {
   const row = document.elementFromPoint(drag.x, drag.y)?.closest('.editor-row');
@@ -256,11 +280,12 @@ $('create-placement').addEventListener('click', () => {
 });
 
 function rememberDraft() {
-  if (list) drafts.set(list, { rows, revision, dirty, baseline });
+  if (list) drafts.set(list, { rows, deletedRows, revision, dirty, baseline });
 }
 
 function refreshListSelector() {
-  $('list-select').replaceChildren(...profile.lists.map(entry => new Option(entry.title, entry.id)));
+  const ordered = listOrder.length ? listOrder.map(id => profile.lists.find(entry => entry.id === id)).filter(Boolean) : profile.lists;
+  $('list-select').replaceChildren(...ordered.map(entry => new Option(entry.title, entry.id)));
   $('list-select').value = list;
 }
 
@@ -277,7 +302,7 @@ async function switchList(id) {
     game = entry.game || entry.id;
     if (data) applyList(data);
     else {
-      ({ rows, revision, dirty, baseline } = drafts.get(id));
+      ({ rows, deletedRows, revision, dirty, baseline } = drafts.get(id));
       render();
     }
     $('title').textContent = 'Edit ' + profile.name;
@@ -298,7 +323,75 @@ async function switchList(id) {
 }
 $('list-select').addEventListener('change', event => switchList(event.target.value));
 
-$('create-list').addEventListener('click', () => $('new-list-dialog').showModal());
+function initListOrder() {
+  listOrder = profile.lists.map(entry => entry.id);
+  orderBaseline = JSON.stringify(listOrder);
+  renderListOrder();
+}
+function renderListOrder() {
+  $('list-order').replaceChildren(...listOrder.map((id, i) => {
+    const row = text('li', '', 'list-order-row');
+    row.append(text('span', profile.lists.find(entry => entry.id === id).title));
+    for (const [direction, offset, icon] of [['earlier', -1, '↑'], ['later', 1, '↓']]) {
+      const button = text('button', icon);
+      button.type = 'button';
+      button.setAttribute('aria-label', 'Move ' + profile.lists.find(entry => entry.id === id).title + ' ' + direction);
+      button.disabled = i + offset < 0 || i + offset >= listOrder.length;
+      button.addEventListener('click', () => {
+        listOrder.splice(i + offset, 0, listOrder.splice(i, 1)[0]);
+        renderListOrder();
+        refreshListSelector();
+      });
+      row.append(button);
+    }
+    return row;
+  }));
+  $('save-list-order').disabled = !orderChanged();
+  $('create-list').disabled = orderChanged();
+}
+$('save-list-order').addEventListener('click', () => {
+  $('order-save-status').textContent = '';
+  $('list-order-dialog').showModal();
+});
+$('cancel-order').addEventListener('click', () => $('list-order-dialog').close());
+$('list-order-dialog').addEventListener('close', () => { $('order-code').value = ''; });
+$('list-order-dialog').addEventListener('cancel', event => {
+  if ($('list-order-form').querySelector('[type="submit"]').disabled) event.preventDefault();
+});
+$('list-order-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!orderChanged()) return;
+  const submit = event.submitter;
+  submit.disabled = $('cancel-order').disabled = true;
+  $('order-save-status').textContent = 'Saving list order to GitHub…';
+  try {
+    const latest = await api(appearancePath);
+    if (JSON.stringify(latest.document.lists.map(entry => entry.id)) !== orderBaseline) {
+      throw new Error('The profile lists changed elsewhere. Reload before saving the tab order.');
+    }
+    const result = await api('/list-order?' + new URLSearchParams({ player }), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: $('order-code').value.trim(), revision: latest.revision, order: listOrder })
+    });
+    if (!result.unchanged && result.reviewState !== 'merged') throw new Error('GitHub could not merge the list order. Your draft is still open.');
+    profile = result.document;
+    appearanceRevision = result.revision;
+    initListOrder();
+    refreshListSelector();
+    $('status').textContent = 'List order saved to GitHub. The public tabs update after deployment.';
+    $('list-order-dialog').close();
+  } catch (error) {
+    $('order-save-status').textContent = error.message;
+  } finally {
+    $('order-code').value = '';
+    submit.disabled = $('cancel-order').disabled = false;
+  }
+});
+
+
+$('create-list').addEventListener('click', () => {
+  if (!orderChanged()) $('new-list-dialog').showModal();
+});
 $('cancel-list').addEventListener('click', () => $('new-list-dialog').close());
 $('new-list-dialog').addEventListener('close', () => { $('new-list-code').value = ''; });
 $('new-list-form').addEventListener('submit', async event => {
@@ -317,6 +410,7 @@ $('new-list-form').addEventListener('submit', async event => {
     });
     if (result.reviewState !== 'merged') throw new Error('The list could not publish automatically. Try again.');
     profile = result.document;
+    initListOrder();
     await switchList(profile.lists.at(-1).id);
     $('new-list-dialog').close();
     $('new-list-form').reset();
@@ -335,7 +429,7 @@ $('save').addEventListener('click', () => {
   }
   $('save-credentials').hidden = !editorApi;
   $('save-credentials').disabled = !editorApi;
-  $('save-status').textContent = editorApi ? '' : 'Saving is unavailable until a save service is connected. Your draft is still open.';
+  $('save-status').textContent = editorApi ? (deletedRows.length ? 'This save includes ' + deletedRows.length + ' deleted placement(s). Enter this player’s ID to apply all changes.' : '') : 'Saving is unavailable until a save service is connected. Your draft is still open.';
   $('confirm').showModal();
 });
 $('cancel').addEventListener('click', () => $('confirm').close());
@@ -358,7 +452,7 @@ $('confirm-form').addEventListener('submit', async event => {
     revision = latest.revision;
     const result = await api(listPath(), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, revision, levels: rows })
+      body: JSON.stringify({ code, revision, levels: rows, deletedRanks: deletedRows.map(entry => entry.row.originalRank).filter(Number.isInteger) })
     });
     if (result.reviewState === 'merged') {
       applyList(result);
@@ -387,7 +481,7 @@ $('confirm-form').addEventListener('submit', async event => {
   }
 });
 window.addEventListener('beforeunload', event => {
-  if (dirty || colorsChanged() || [...drafts.entries()].some(([id, draft]) => id !== list && draft.dirty)) event.preventDefault();
+  if (dirty || orderChanged() || colorsChanged() || [...drafts.entries()].some(([id, draft]) => id !== list && draft.dirty)) event.preventDefault();
 });
 
 async function init() {
@@ -402,7 +496,7 @@ async function init() {
     applyEditorTheme();
     $('new-list-game').replaceChildren(...Object.entries(gameNames).map(([id, name]) => new Option(name, id)));
     $('back').textContent = '‹ Back to profile';
-    $('create-list').disabled = false;
+    initListOrder();
     const initial = profile.lists.some(entry => entry.id === list) ? list : profile.lists[0]?.id;
     list = null;
     await switchList(initial);
@@ -413,6 +507,7 @@ async function init() {
 }
 applyEditorTheme();
 init();
+
 
 
 

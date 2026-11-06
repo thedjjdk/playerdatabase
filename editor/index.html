@@ -8,8 +8,8 @@
   <meta name="robots" content="noindex">
   <title>Edit player list</title>
   <link rel="stylesheet" href="../assets/style.css?v=profile-polish-1">
-  <link rel="stylesheet" href="editor.css?v=profile-polish-1">
-  <script type="module" src="editor.js?v=profile-polish-1"></script>
+  <link rel="stylesheet" href="editor.css?v=delete-order-1">
+  <script type="module" src="editor.js?v=delete-order-1"></script>
 </head>
 <body>
 <main class="container editor">
@@ -23,6 +23,21 @@
     <button type="button" id="create-list" disabled>Create New List</button>
     <button type="button" id="create-placement" disabled>Create New Placement</button>
   </section>
+  <section class="singlepanel" aria-labelledby="list-order-heading">
+    <h2 id="list-order-heading">List tab order</h2>
+    <p>Move lists up or down to set their order on your profile. The first list opens by default.</p>
+    <ol id="list-order"></ol>
+    <button type="button" id="save-list-order" disabled>Save list order</button>
+  </section>
+  <dialog id="list-order-dialog">
+    <form id="list-order-form">
+      <h2>Save list tab order</h2>
+      <p id="order-save-status" role="status"></p>
+      <label>Player ID (16 digits) <input id="order-code" type="password" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" autocomplete="off" required></label>
+      <button type="submit">Confirm and save</button>
+      <button type="button" id="cancel-order">Cancel</button>
+    </form>
+  </dialog>
   <section class="singlepanel" aria-labelledby="profile-colors-heading">
     <h2 id="profile-colors-heading">Profile colors</h2>
     <p>These colors apply to the pixel art, links, and difficulty faces on every list in this profile.</p>
@@ -55,6 +70,7 @@
     <option value="GM+1"></option>
     <option value="GM+2"></option>
   </datalist>
+  <div id="deletion-notice" class="deletion-notice" role="status" hidden><span id="deletion-count"></span><button type="button" id="undo-delete">Undo last deletion</button></div>
   <ol id="levels"></ol>
   <button type="button" disabled id="save">Save changes</button>
   <dialog id="confirm">
@@ -72,6 +88,7 @@
 </main>
 </body>
 </html>
+
 
 
 
