@@ -53,6 +53,17 @@
       "enjoyment": 7,
       "worstFail": 98,
       "videoPublishedDate": "2023-08-21"
+    },
+    {
+      "rank": 6,
+      "name": "MURDER IN MY MIND",
+      "attempts": "2222",
+      "enjoyment": 6,
+      "worstFail": 90,
+      "completionDate": "2022-08-31",
+      "completionYear": 2022,
+      "videoUrl": "https://www.youtube.com/watch?v=NaCiBFbCZ2M",
+      "difficulty": "insane-demon"
     }
   ]
 }
