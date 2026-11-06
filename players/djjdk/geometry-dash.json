@@ -99,16 +99,6 @@
       "difficulty": "insane-demon"
     },
     {
-      "name": "Rupture",
-      "videoUrl": "https://youtu.be/_rcQkXt5Qt0",
-      "difficulty": "insane-demon",
-      "attempts": "1,320",
-      "enjoyment": 0,
-      "worstFail": 92,
-      "videoPublishedDate": "2021-02-06",
-      "rank": 10
-    },
-    {
       "name": "Spacelocked II",
       "videoUrl": "https://youtu.be/0rQ80nl-Gl8",
       "difficulty": "insane-demon",
@@ -116,7 +106,7 @@
       "enjoyment": 4,
       "worstFail": 84,
       "videoPublishedDate": "2021-02-12",
-      "rank": 11
+      "rank": 10
     },
     {
       "name": "Game Time",
@@ -126,7 +116,7 @@
       "enjoyment": 9,
       "worstFail": 99,
       "videoPublishedDate": "2021-01-19",
-      "rank": 12
+      "rank": 11
     },
     {
       "name": "Periodic Elements",
@@ -136,7 +126,7 @@
       "enjoyment": 6.5,
       "worstFail": 58,
       "videoPublishedDate": "2021-02-26",
-      "rank": 13
+      "rank": 12
     },
     {
       "name": "Windy Landscape",
@@ -146,6 +136,16 @@
       "enjoyment": 6,
       "worstFail": 88,
       "videoPublishedDate": "2022-09-18",
+      "rank": 13
+    },
+    {
+      "name": "Acropolis",
+      "videoUrl": "https://youtu.be/2v4VgbhT0F8",
+      "difficulty": "insane-demon",
+      "attempts": "5,001",
+      "enjoyment": 5,
+      "worstFail": 69,
+      "videoPublishedDate": "2020-06-25",
       "rank": 14
     },
     {
@@ -159,13 +159,13 @@
       "rank": 15
     },
     {
-      "name": "Acropolis",
-      "videoUrl": "https://youtu.be/2v4VgbhT0F8",
+      "name": "Rupture",
+      "videoUrl": "https://youtu.be/_rcQkXt5Qt0",
       "difficulty": "insane-demon",
-      "attempts": "5,001",
-      "enjoyment": 5,
-      "worstFail": 69,
-      "videoPublishedDate": "2020-06-25",
+      "attempts": "1,320",
+      "enjoyment": 0,
+      "worstFail": 92,
+      "videoPublishedDate": "2021-02-06",
       "rank": 16
     }
   ]
