@@ -2,7 +2,7 @@ import '../assets/profile-theme.js?v=profile-polish-1';
 import { editorApi } from './config.js?v=review-1';
 
 const $ = id => document.getElementById(id);
-const allowed = { blathers: ['geometry-dash'], djjdk: ['geometry-dash'], disastrum: ['geometry-dash', 'fnaf-challenges'], kayceenoelle: ['celeste', 'beat-saber', 'geometry-dash'] };
+const allowed = { ajax: ['geometry-dash'], blathers: ['geometry-dash'], djjdk: ['geometry-dash'], disastrum: ['geometry-dash', 'fnaf-challenges'], kayceenoelle: ['celeste', 'beat-saber', 'geometry-dash'] };
 const query = new URLSearchParams(location.search);
 const player = query.get('player');
 let list = query.get('list');
@@ -596,8 +596,3 @@ async function init() {
 }
 applyEditorTheme();
 init();
-
-
-
-
-

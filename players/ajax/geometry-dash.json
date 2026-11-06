@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "title": "Geometry Dash List",
+  "description": "AJaX\u2019s Geometry Dash completions, ranked hardest to easiest.",
+  "levels": [
+    {
+      "rank": 1,
+      "rankLabel": "1",
+      "name": "Omicron",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=RxCjoQWwfEo",
+      "videoTitle": "GOD AWFUL || Omicron 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-05-31",
+      "attempts": "18,377",
+      "worstFail": 81,
+      "enjoyment": 2.2
+    },
+    {
+      "rank": 2,
+      "rankLabel": "2",
+      "name": "211",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=lRTTrU02PaA",
+      "videoTitle": "211completion",
+      "videoPublishedDate": "2026-08-26"
+    },
+    {
+      "rank": 3,
+      "rankLabel": "3",
+      "name": "Infernal Abyss",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=SNhREcLyc3A",
+      "videoTitle": "OVERHATED? || Infernal Abyss 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-02-18",
+      "attempts": "8,534",
+      "worstFail": 87,
+      "enjoyment": 6.0
+    },
+    {
+      "rank": 4,
+      "rankLabel": "4",
+      "name": "Blade of Justice",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=b2C-rsQwhpM",
+      "videoTitle": "Blade of Justice 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-01-15",
+      "attempts": "19,442",
+      "worstFail": 87,
+      "enjoyment": 8.2
+    },
+    {
+      "rank": 5,
+      "rankLabel": "5",
+      "name": "Moment",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=cI-WAkehO3A",
+      "videoTitle": "Moment 100% (Extreme Demon)",
+      "videoPublishedDate": "2023-09-26",
+      "attempts": "13,257",
+      "worstFail": 76,
+      "enjoyment": 3.0
+    },
+    {
+      "rank": 6,
+      "rankLabel": "6",
+      "name": "Idols",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=hl452kbtx_k",
+      "videoTitle": "20 EXTREMES || Idols 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-07-16",
+      "attempts": "9,609",
+      "worstFail": 86,
+      "enjoyment": 8.5
+    },
+    {
+      "rank": 7,
+      "rankLabel": "7",
+      "name": "Prismatic Haze",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=oN4WA3Nbtto",
+      "videoTitle": "FINALLY || Prismatic Haze 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-01-27",
+      "attempts": "20,624",
+      "worstFail": 97,
+      "enjoyment": 1.3,
+      "completionDate": "2025-10-14",
+      "completionYear": 2025
+    },
+    {
+      "rank": 8,
+      "rankLabel": "8",
+      "name": "Overtime",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=Cgo0nKMhVxk",
+      "videoTitle": "JANK || Overtime 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-03-30",
+      "attempts": "9,554",
+      "worstFail": 97,
+      "enjoyment": 6.2
+    },
+    {
+      "rank": 9,
+      "rankLabel": "9",
+      "name": "Falling Up",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=ECrT6ZjKTzk",
+      "videoTitle": "WHY || Falling Up 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-02-09",
+      "attempts": "7,318",
+      "worstFail": 98,
+      "enjoyment": 2.3
+    },
+    {
+      "rank": 10,
+      "rankLabel": "10",
+      "name": "Retention",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=oXQjrX9PI2I",
+      "videoTitle": "Retention 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-01-21",
+      "attempts": "10,494",
+      "worstFail": 89,
+      "enjoyment": 7.6
+    },
+    {
+      "rank": 11,
+      "rankLabel": "11",
+      "name": "8O X",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=f1RzYpoO_nc",
+      "videoTitle": "8O X (Extreme Demon) 100%",
+      "videoPublishedDate": "2023-02-27",
+      "attempts": "5,847",
+      "worstFail": 97,
+      "enjoyment": 6.0
+    },
+    {
+      "rank": 12,
+      "rankLabel": "12",
+      "name": "Without U",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=P-T9tDAodRA",
+      "videoTitle": "AMAZING!! || Without U 100% (Extreme Demon)",
+      "videoPublishedDate": "2026-02-14",
+      "attempts": "4,189",
+      "worstFail": 87,
+      "enjoyment": 8.4
+    },
+    {
+      "rank": 13,
+      "rankLabel": "13",
+      "name": "Cataclysm",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=uBUKD39U11U",
+      "videoTitle": "A YEAR IN THE MAKING - Cataclysm 100%",
+      "videoPublishedDate": "2023-01-21",
+      "attempts": "16,674",
+      "worstFail": 73,
+      "enjoyment": 3.5
+    }
+  ]
+}

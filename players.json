@@ -45,6 +45,18 @@
       "games": [
         "geometry-dash"
       ]
+    },
+    {
+      "id": "ajax",
+      "name": "AJaX",
+      "folder": "ajax",
+      "avatar": "avatar.webp",
+      "backgroundTint": "#bd82b6",
+      "backgroundLeft": "#78516c",
+      "backgroundRight": "#bd82b6",
+      "games": [
+        "geometry-dash"
+      ]
     }
   ]
 }

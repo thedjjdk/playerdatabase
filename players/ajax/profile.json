@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "ajax",
+  "name": "AJaX",
+  "avatar": "avatar.webp",
+  "backgroundTint": "#bd82b6",
+  "backgroundLeft": "#78516c",
+  "backgroundRight": "#bd82b6",
+  "lists": [
+    {
+      "id": "geometry-dash",
+      "title": "Geometry Dash List",
+      "file": "geometry-dash.json"
+    }
+  ]
+}
