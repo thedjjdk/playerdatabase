@@ -10,7 +10,7 @@
       "file": "geometry-dash.json"
     }
   ],
-  "backgroundInvertLight": false,
+  "backgroundInvertLight": true,
   "backgroundInvertDark": false,
   "backgroundOpacity": 10,
   "backgroundImage": "background.webp",
