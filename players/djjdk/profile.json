@@ -9,5 +9,7 @@
       "title": "Geometry Dash List",
       "file": "geometry-dash.json"
     }
-  ]
+  ],
+  "backgroundImage": "background.webp",
+  "backgroundImageVersion": "c36d4fc3f87a901fc94b5ac5b8e79433249b792f6e7088ccd1cac998b9ec3188"
 }
