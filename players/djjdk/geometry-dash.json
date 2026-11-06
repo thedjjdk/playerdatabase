@@ -64,6 +64,17 @@
       "completionYear": 2022,
       "videoUrl": "https://www.youtube.com/watch?v=NaCiBFbCZ2M",
       "difficulty": "insane-demon"
+    },
+    {
+      "rank": 7,
+      "name": "Reverie",
+      "attempts": "~1400",
+      "enjoyment": 8.5,
+      "worstFail": 92,
+      "completionDate": "2022-01-07",
+      "completionYear": 2022,
+      "videoUrl": "https://youtu.be/agLW4Yj9RFU",
+      "difficulty": "insane-demon"
     }
   ]
 }
