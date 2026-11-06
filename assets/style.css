@@ -1443,3 +1443,8 @@ body :is(.listcard:hover,.listcard:focus-visible,.player-result:hover,.player-re
 body :is(.tabs,.wide-tabs) button:is(:hover,[aria-selected=true]) {background:var(--panel-fill-raised)!important}
 body :is(.sitehead,.mobile-menu,.language-menu,.reviewcard,.review-note,.statsbox,.grind-suggest) {background:var(--panel-fill)!important}
 .sitehead::before {background:none!important}
+
+/* Keep hover and keyboard focus visibly brighter than selected/default fills. */
+body {--control-hover:color-mix(in srgb,color-mix(in srgb,var(--surface2) 78%,var(--text)) 75%,transparent)}
+body :is(.tabs,.wide-tabs) button:not(:disabled):is(:hover,:focus-visible),
+body :is(.ghostbutton,.game-filters button,.editor button:not(#save),.pagebtn,.appearance-button,.mobileicon,.detail-actions a,.backbutton):not(:disabled):is(:hover,:focus-visible) {background:var(--control-hover)!important;border-color:var(--accent-strong);color:var(--text)}
