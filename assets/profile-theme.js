@@ -64,7 +64,7 @@
       layer.setAttribute('aria-hidden', 'true');
       document.body.prepend(layer);
     }
-    applyImageMask(layer, source, options.light ? profile?.backgroundInvertLight === true : profile?.backgroundInvertDark === true);
+    applyImageMask(layer, source, options.light ? profile?.backgroundInvertLight !== true : profile?.backgroundInvertDark === true);
   }
   function apply(profile, theme, options = {}) {
 

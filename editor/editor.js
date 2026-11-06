@@ -1,4 +1,4 @@
-import '../assets/profile-theme.js?v=background-controls-2';
+import '../assets/profile-theme.js?v=background-controls-4';
 import { editorApi } from './config.js?v=review-1';
 
 const $ = id => document.getElementById(id);
@@ -21,7 +21,7 @@ function applyEditorTheme() {
   $('theme-toggle').textContent = theme === 'light' ? 'Dark mode' : 'Light mode';
   if ($('background-preview-image')) {
     const source = backgroundDraft ? (backgroundDraft.remove ? '' : backgroundObjectUrl) : window.PlayerListsTheme.imageUrl(profile, '../');
-    window.PlayerListsTheme.applyImageMask($('background-preview-image'), source, theme === 'light' ? $('background-invert-light').checked : $('background-invert-dark').checked);
+    window.PlayerListsTheme.applyImageMask($('background-preview-image'), source, theme === 'light' ? !$('background-invert-light').checked : $('background-invert-dark').checked);
   }
 }
 $('theme-toggle').addEventListener('click', () => {
@@ -149,7 +149,7 @@ function refreshBackground() {
   $('background-preview-label').textContent = 'Background preview · ' + percentage + ' opacity';
   $('background-preview').hidden = !source;
   for (const id of ['background-invert-light','background-invert-dark']) $(id).disabled = !backgroundReady || backgroundLoading;
-  window.PlayerListsTheme.applyImageMask($('background-preview-image'), source, theme === 'light' ? $('background-invert-light').checked : $('background-invert-dark').checked);
+  window.PlayerListsTheme.applyImageMask($('background-preview-image'), source, theme === 'light' ? !$('background-invert-light').checked : $('background-invert-dark').checked);
   $('remove-background').disabled = !source || backgroundLoading;
   $('reset-background').disabled = !backgroundChanged() || backgroundLoading;
   $('save-background').disabled = !backgroundChanged() || backgroundLoading;

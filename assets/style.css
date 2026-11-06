@@ -1435,7 +1435,7 @@ body::before,body::after {z-index:1!important}
 .background-preview-image {position:absolute;inset:0;opacity:var(--profile-background-opacity,.15);background:linear-gradient(90deg,var(--profile-left),var(--profile-right));mask-size:cover;mask-position:center;mask-repeat:no-repeat;mask-mode:luminance;-webkit-mask-size:cover;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;z-index:-1}
 .background-preview p {font-weight:750;color:var(--text);text-align:center}
 /* Translucent gray fills keep text, images and controls fully opaque. */
-body {--panel-fill:color-mix(in srgb,var(--surface) 60%,transparent);--panel-fill-raised:color-mix(in srgb,var(--surface2) 60%,transparent)}
+body {--panel-fill:color-mix(in srgb,var(--surface) 75%,transparent);--panel-fill-raised:color-mix(in srgb,var(--surface2) 75%,transparent)}
 body :is(.singlepanel,.panel,.listcard,.list-empty,.player-search-box,.player-results,.player-directory,.fact,.data-note,.video-area-empty,.editor-row,.background-preview,.appearance-popover,.difficulty-popover,.game-options,.deletion-notice,dialog) {background:var(--panel-fill)!important}
 body :is(.tabs,.wide-tabs) {background:var(--panel-fill)!important}
 body :is(.filter,.select,.ghostbutton,.game-filters button,.editor input:not([type=range]):not([type=checkbox]):not([type=color]),.editor select,.editor button:not(#save)) {background:var(--panel-fill-raised)!important}
