@@ -68,6 +68,7 @@
     const accent = readableAccent(right, light);
     const properties = {
       '--profile-left': left, '--profile-right': right,
+      '--profile-background-opacity': (Number.isInteger(profile?.backgroundOpacity) && profile.backgroundOpacity >= 5 && profile.backgroundOpacity <= 50 ? profile.backgroundOpacity : 15) / 100,
       '--player-pixel-pattern': profile ? pixelPattern(left) : '',
       '--player-pixel-pattern-right': profile ? pixelPattern(right) : '',
       '--wordmark-tint': accent, '--accent': accent, '--accent-strong': accent,
@@ -80,4 +81,3 @@
   }
   window.PlayerListsTheme = { colors, readableAccent, imageUrl, apply };
 })();
-

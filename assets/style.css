@@ -1428,9 +1428,9 @@ body::after {background-image:var(--player-pixel-pattern-right,var(--laylist-pix
 
 /* The photo is a luminance mask: every visible tone uses the profile's two colors. */
 body {isolation:isolate}
-#profile-background {position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.15;background:linear-gradient(90deg,var(--profile-left),var(--profile-right));mask-size:cover;mask-position:center;mask-repeat:no-repeat;mask-mode:luminance;-webkit-mask-size:cover;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat}
+#profile-background {position:fixed;inset:0;z-index:0;pointer-events:none;opacity:var(--profile-background-opacity,.15);background:linear-gradient(90deg,var(--profile-left),var(--profile-right));mask-size:cover;mask-position:center;mask-repeat:no-repeat;mask-mode:luminance;-webkit-mask-size:cover;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat}
 body::before,body::after {z-index:1!important}
 #app,.editor {position:relative;z-index:2}
 .background-preview {position:relative;isolation:isolate;min-height:150px;overflow:hidden;border:1px solid var(--border);background:var(--page);margin:12px 0;padding:20px;display:grid;place-items:center}
-.background-preview-image {position:absolute;inset:0;opacity:.15;background:linear-gradient(90deg,var(--profile-left),var(--profile-right));mask-size:cover;mask-position:center;mask-repeat:no-repeat;mask-mode:luminance;-webkit-mask-size:cover;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;z-index:-1}
+.background-preview-image {position:absolute;inset:0;opacity:var(--profile-background-opacity,.15);background:linear-gradient(90deg,var(--profile-left),var(--profile-right));mask-size:cover;mask-position:center;mask-repeat:no-repeat;mask-mode:luminance;-webkit-mask-size:cover;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;z-index:-1}
 .background-preview p {font-weight:750;color:var(--text);text-align:center}

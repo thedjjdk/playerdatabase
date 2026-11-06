@@ -63,3 +63,6 @@
 .background-buttons {display:flex;flex-wrap:wrap;gap:8px}
 .editor input[type="file"] {padding:10px;min-width:0}
 .editor #save-background:enabled {border-color:var(--accent);font-weight:750}
+
+.background-opacity-label {margin-top:16px;font-weight:750}
+.editor input[type="range"] {padding:0;accent-color:var(--accent);cursor:pointer}

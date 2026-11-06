@@ -7,9 +7,9 @@
   <meta name="theme-color" content="#1b1e22">
   <meta name="robots" content="noindex">
   <title>Edit player list</title>
-  <link rel="stylesheet" href="../assets/style.css?v=background-image-1">
-  <link rel="stylesheet" href="editor.css?v=background-image-1">
-  <script type="module" src="editor.js?v=background-image-1"></script>
+  <link rel="stylesheet" href="../assets/style.css?v=background-opacity-1">
+  <link rel="stylesheet" href="editor.css?v=background-opacity-1">
+  <script type="module" src="editor.js?v=background-opacity-1"></script>
 </head>
 <body>
 <main class="container editor">
@@ -51,9 +51,11 @@
   </section>
   <section class="singlepanel" aria-labelledby="background-heading">
     <h2 id="background-heading">Background image</h2>
-    <p>Your image sits behind the pixel art at 15% opacity and uses both profile colors. PNG, JPG, or WebP, up to 10 MB. Saving applies it to every list in this profile.</p>
+    <p>Your image sits behind the pixel art and uses both profile colors. Choose an opacity from 5% to 50%. PNG, JPG, or WebP, up to 10 MB. Saving applies it to every list in this profile.</p>
     <label>Upload background <input type="file" id="background-file" accept="image/png,image/jpeg,image/webp" disabled></label>
-    <div class="background-preview" id="background-preview" hidden><div class="background-preview-image" id="background-preview-image"></div><p>Background preview · 15% opacity</p></div>
+    <label class="background-opacity-label" for="background-opacity">Image opacity: <output id="background-opacity-value" for="background-opacity">15%</output></label>
+    <input type="range" id="background-opacity" min="5" max="50" step="1" value="15" disabled>
+    <div class="background-preview" id="background-preview" hidden><div class="background-preview-image" id="background-preview-image"></div><p id="background-preview-label">Background preview · 15% opacity</p></div>
     <div class="background-buttons"><button type="button" id="remove-background" disabled>Remove image</button><button type="button" id="reset-background" disabled>Discard image changes</button><button type="button" id="save-background" disabled>Save background image</button></div>
     <p id="background-status" role="status"></p>
   </section>
