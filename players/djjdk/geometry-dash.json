@@ -97,6 +97,76 @@
       "completionYear": 2021,
       "videoUrl": "https://youtu.be/Wet5V-GRbvA",
       "difficulty": "insane-demon"
+    },
+    {
+      "name": "Rupture",
+      "videoUrl": "https://youtu.be/_rcQkXt5Qt0",
+      "difficulty": "insane-demon",
+      "attempts": "1,320",
+      "enjoyment": 0,
+      "worstFail": 92,
+      "videoPublishedDate": "2021-02-06",
+      "rank": 10
+    },
+    {
+      "name": "Spacelocked II",
+      "videoUrl": "https://youtu.be/0rQ80nl-Gl8",
+      "difficulty": "insane-demon",
+      "attempts": "1,346",
+      "enjoyment": 4,
+      "worstFail": 84,
+      "videoPublishedDate": "2021-02-12",
+      "rank": 11
+    },
+    {
+      "name": "Game Time",
+      "videoUrl": "https://youtu.be/aBl7JY4nRcA",
+      "difficulty": "insane-demon",
+      "attempts": "694",
+      "enjoyment": 9,
+      "worstFail": 99,
+      "videoPublishedDate": "2021-01-19",
+      "rank": 12
+    },
+    {
+      "name": "Periodic Elements",
+      "videoUrl": "https://youtu.be/dGbwZBBiyho",
+      "difficulty": "insane-demon",
+      "attempts": "1,964",
+      "enjoyment": 6.5,
+      "worstFail": 58,
+      "videoPublishedDate": "2021-02-26",
+      "rank": 13
+    },
+    {
+      "name": "Windy Landscape",
+      "videoUrl": "https://youtu.be/ZheOyWq9e4A",
+      "difficulty": "insane-demon",
+      "attempts": "1,133",
+      "enjoyment": 6,
+      "worstFail": 88,
+      "videoPublishedDate": "2022-09-18",
+      "rank": 14
+    },
+    {
+      "name": "CraZy II",
+      "videoUrl": "https://youtu.be/Oz2DBUE7WpQ",
+      "difficulty": "insane-demon",
+      "attempts": "1,560",
+      "enjoyment": 8,
+      "worstFail": 97,
+      "videoPublishedDate": "2020-09-08",
+      "rank": 15
+    },
+    {
+      "name": "Acropolis",
+      "videoUrl": "https://youtu.be/2v4VgbhT0F8",
+      "difficulty": "insane-demon",
+      "attempts": "5,001",
+      "enjoyment": 5,
+      "worstFail": 69,
+      "videoPublishedDate": "2020-06-25",
+      "rank": 16
     }
   ]
 }
