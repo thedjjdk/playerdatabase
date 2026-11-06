@@ -3,15 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#1b1e22">
   <meta name="robots" content="noindex">
   <title>Edit player list</title>
-  <link rel="stylesheet" href="../assets/style.css?v=manage-lists-1">
-  <link rel="stylesheet" href="editor.css?v=save-draft-1">
-  <script type="module" src="editor.js?v=celeste-originals-2"></script>
+  <link rel="stylesheet" href="../assets/style.css?v=profile-polish-1">
+  <link rel="stylesheet" href="editor.css?v=profile-polish-1">
+  <script type="module" src="editor.js?v=profile-polish-1"></script>
 </head>
 <body>
 <main class="container editor">
-  <a id="back" href="../">Back to Player Lists</a>
+  <div class="editor-topbar"><a id="back" class="inline-back" href="../">‹ Back to player search</a><button type="button" id="theme-toggle">Light mode</button></div>
   <h1 id="title">Edit player list</h1>
   <p>Drag the handle or use the arrow buttons to change placement. Changes stay in this tab until you save.</p>
   <p id="status" role="status"></p>
@@ -23,7 +25,7 @@
   </section>
   <section class="singlepanel" aria-labelledby="profile-colors-heading">
     <h2 id="profile-colors-heading">Profile colors</h2>
-    <p>These colors apply to the pixel art on every list in this profile.</p>
+    <p>These colors apply to the pixel art, links, and difficulty faces on every list in this profile.</p>
     <form id="profile-colors" class="editor-fields">
       <label>Left side <input type="color" id="profile-left" disabled></label>
       <label>Right side <input type="color" id="profile-right" disabled></label>
@@ -70,6 +72,7 @@
 </main>
 </body>
 </html>
+
 
 
 

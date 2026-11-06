@@ -1412,3 +1412,12 @@ body::after {background-image:var(--player-pixel-pattern-right,var(--laylist-pix
  .celeste-meter img {width:58px;height:54px}
 }
 
+
+
+/* Shared profile polish: readable accents and consistent navigation. */
+.backbutton {color:var(--accent-strong)}
+.listcard:hover {border-color:var(--accent-strong);background:var(--surface2)}
+.list-filter-area :is(.filter,.select) {color:var(--text);background:var(--surface2);border-color:var(--border)}
+@media(max-width:540px) {.player-title-wrap h1 {font-size:clamp(24px,7vw,32px);overflow-wrap:anywhere}.player-title-wrap>div {min-width:0}}
+
+.detail-grid {grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}

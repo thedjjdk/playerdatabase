@@ -87,37 +87,8 @@
       btn.setAttribute('aria-label',btn.title);
     }
   }
-  const pixelPatterns = new Map();
-  function playerPixelPattern(tint) {
-    if (!/^#[0-9a-f]{6}$/i.test(tint || '')) return '';
-    if (!pixelPatterns.has(tint)) {
-      const pattern = getComputedStyle(document.documentElement).getPropertyValue('--laylist-pixel-pattern');
-      const encoded = pattern.match(/base64,([A-Za-z0-9+/=]+)/)?.[1];
-      if (!encoded) return '';
-      const rgb = tint.slice(1).match(/../g).map(channel => parseInt(channel, 16));
-      const svg = atob(encoded).replace(/fill="#([0-9a-f]{2})\1\1"/gi, (_, gray) => {
-        // Match Layout List: the #4e4e4e tile receives the exact tint.
-        const shade = parseInt(gray, 16) / 0x4e;
-        return 'fill="#' + rgb.map(channel => Math.min(255, Math.round(channel * shade)).toString(16).padStart(2, '0')).join('') + '"';
-      });
-      pixelPatterns.set(tint, `url(data:image/svg+xml;base64,${btoa(svg)})`);
-    }
-    return pixelPatterns.get(tint);
-  }
-  function applyTheme(accent) {
-    document.body.classList.toggle('light-mode',state.theme === 'light');
-    const color = checkedColor(accent || (state.activeProfile?.accent || '#aeb4bc'));
-    // Inline properties override the base stylesheet's light-mode fallback.
-    const tint = state.activeProfile?.backgroundTint;
-    document.body.style.setProperty('--player-pixel-pattern', playerPixelPattern(state.activeProfile?.backgroundLeft || tint));
-    document.body.style.setProperty('--player-pixel-pattern-right', playerPixelPattern(state.activeProfile?.backgroundRight || tint));
-    document.body.style.setProperty('--wordmark-tint', /^#[0-9a-f]{6}$/i.test(tint || '') ? tint : color);
-    document.body.style.setProperty('--accent',color);
-    document.body.style.setProperty('--accent-strong',color);
-    document.body.style.setProperty('--accent-button',color);
-    document.body.style.setProperty('--accent-button-hover',`color-mix(in srgb, ${color} 82%, white)`);
-    document.documentElement.style.colorScheme = state.theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content',state.theme === 'light' ? '#fff' : '#1b1e22');
+  function applyTheme() {
+    window.PlayerListsTheme.apply(state.activeProfile, state.theme);
   }
   function playerRoute(pid, listId = '', rank = null) {
     let url = `#/player/${pid}`;
@@ -204,7 +175,7 @@
       </div></section>
       <section class="player-directory" aria-labelledby="directory-heading"><h2 id="directory-heading">Players A–Z</h2><div class="player-results" id="player-results" role="listbox" aria-labelledby="directory-heading"></div></section></main>`);
     refreshResults();
-    applyTheme('#aeb4bc');
+    applyTheme();
   }
   function tabsMarkup(pid, profile, active) {
     return `<div class="wide-tabs" role="tablist" aria-label="Player lists">${profile.lists.map(entry=>`<button type="button" role="tab" aria-selected="${entry.id===active}" data-player-tab="${esc(entry.id)}" data-player-id="${esc(pid)}">${esc(entry.title)}</button>`).join('')}${profile.editable===false?'':`<button type="button" data-list-editor data-player-id="${esc(pid)}" data-list-id="${esc(active)}">Edit</button>`}</div>`;
@@ -213,7 +184,7 @@
     const initial = esc(player.name.slice(0, 1).toUpperCase());
     const image = player.avatar === 'avatar.webp' && validId(player.id)
       ? `<img src="players/${player.id}/avatar.webp" alt="" data-player-avatar>` : '';
-    return `<span class="player-avatar-small" aria-hidden="true" style="--accent:${checkedColor(player.accent)}">${initial}${image}</span>`;
+    return `<span class="player-avatar-small" aria-hidden="true" style="--accent:${window.PlayerListsTheme.colors(player).right}">${initial}${image}</span>`;
   }
   function colorDifficultyPixels(pixels, width, left, right) {
     for (let offset = 0; offset < pixels.length; offset += 4) {
@@ -332,14 +303,24 @@
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);
-    return `<aside class="sidebar"><section class="panel"><h2>About this list</h2><p>${esc(doc.description||'Personal challenge rankings.')}</p>${src?`<a href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(doc.sourceLabel||'View original spreadsheet')} ↗</a>`:''}</section><section class="panel"><h2>List Statistics</h2><div class="bulletrows"><div><span>Ranked entries</span><strong>${(doc.levels||[]).length.toLocaleString()}</strong></div><div><span>Player</span><strong>${esc(profile.name)}</strong></div></div></section>${profile.lists.length>1?`<section class="panel"><h2>Other Lists</h2><div class="tierlinks">${profile.lists.map(list=>`<a class="tierchip" href="${esc(playerRoute(profile.id,list.id))}">${esc(list.title)}</a>`).join('')}</div></section>`:''}</aside>`;
+    return `<aside class="sidebar"><section class="panel"><h2>About this list</h2><p>${esc(doc.description||'Personal challenge rankings.')}</p>${src?`<a href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(sourceLabel(doc))} ↗</a>`:''}</section><section class="panel"><h2>List statistics</h2><div class="bulletrows"><div><span>Ranked entries</span><strong>${(doc.levels||[]).length.toLocaleString()}</strong></div><div><span>Player</span><strong>${esc(profile.name)}</strong></div></div></section>${profile.lists.length>1?`<section class="panel"><h2>Other lists</h2><div class="tierlinks">${profile.lists.map(list=>`<a class="tierchip" href="${esc(playerRoute(profile.id,list.id))}">${esc(list.title)}</a>`).join('')}</div></section>`:''}</aside>`;
   }
   function levelVideo(item) { return safeLink(item.videoUrl); }
-  function postedDate(item) {
-    return item.videoPublishedDate
-      ? new Date(`${item.videoPublishedDate}T00:00:00Z`).toLocaleDateString('en-US', {
-        timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric'
-      }) : '';
+  function displayDate(value) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))) return String(value || '');
+    const date = new Date(value + 'T00:00:00Z');
+    return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleDateString('en-US', {
+      timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric'
+    });
+  }
+  function completionInfo(item) {
+    if (item.completionDate) return { prefix: 'Completed on', label: 'COMPLETION DATE', value: displayDate(item.completionDate), year: String(item.completionDate).slice(0, 4) };
+    if (item.completionYear) return { prefix: 'Completed in', label: 'COMPLETION YEAR', value: String(item.completionYear), year: String(item.completionYear) };
+    if (item.videoPublishedDate) return { prefix: 'Completed by', label: 'COMPLETED BY', value: displayDate(item.videoPublishedDate), year: String(item.videoPublishedDate).slice(0, 4) };
+    return { prefix: '', label: 'COMPLETION DATE', value: 'Not provided', year: '' };
+  }
+  function sourceLabel(doc) {
+    return doc.sourceLabel || (String(doc.sourceUrl).includes('youtube.com/playlist') ? 'View YouTube playlist' : 'View source');
   }
   function listGame(entry) {
     return entry?.game || entry?.id;
@@ -352,25 +333,26 @@
     const video = levelVideo(item);
     const thumbnail = thumbnailFor(item,profile);
     const name = item.name || `Entry ${rank}`;
+    const completion = completionInfo(item);
     return `<article class="listcard">
       <a class="card-stretched" href="${esc(link)}" aria-label="View ${esc(name)} details"></a>
       ${thumbnail ? (video
         ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
       <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> – ${esc(name)}</span>${difficultyBadge(item, profile, game)}</h2>
-      <p class="creator">${item.completionDate ? `Completed on <strong>${esc(item.completionDate)}</strong>` : item.completionYear ? `Completed in <strong>${esc(item.completionYear)}</strong>` : item.videoPublishedDate ? `Completed by <strong>${esc(postedDate(item))}</strong>` : 'Completion date unavailable'}</p>
+      <p class="creator">${completion.prefix ? `${completion.prefix} <strong>${esc(completion.value)}</strong>` : 'Completion date unavailable'}</p>
       <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${gd ? (item.attempts ? ` · ${esc(item.attempts)} attempts` : '') : (item.timeTaken ? ` · Game Time: ${esc(item.timeTaken)}` : '')}${!gd && item.gameRank ? ` · Rank: ${esc(item.gameRank)}` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
   function filteredLevels() {
     const items = Array.isArray(state.activeList?.levels) ? [...state.activeList.levels] : [];
     const q = state.listSearch.trim().toLocaleLowerCase();
     let list = items.filter(v => {
-      if (state.year!=='all' && String(v.completionYear||'')!==state.year) return false;
-      return !q || [v.name,v.completionYear,v.videoTitle].some(x=>String(x||'').toLocaleLowerCase().includes(q));
+      if (state.year!=='all' && completionInfo(v).year!==state.year) return false;
+      return !q || [v.name,completionInfo(v).year,v.videoTitle].some(x=>String(x||'').toLocaleLowerCase().includes(q));
     });
     if (state.order === 'reverse') list.reverse();
     else if (state.order === 'name') list.sort((a,b)=>String(a.name).localeCompare(String(b.name)));
-    else if (state.order === 'year') list.sort((a,b)=>(Number(b.completionYear)||0)-(Number(a.completionYear)||0) || (Number(a.rank)||0)-(Number(b.rank)||0));
+    else if (state.order === 'year') list.sort((a,b)=>String(b.completionDate || b.completionYear || b.videoPublishedDate || '').localeCompare(String(a.completionDate || a.completionYear || a.videoPublishedDate || '')) || (Number(a.rank)||0)-(Number(b.rank)||0));
     return list;
   }
   function updateCardList() {
@@ -390,7 +372,7 @@
     applyDifficultyColors();
   }
   function listView(profile, entry, doc) {
-    const years = [...new Set(doc.levels.map(x=>x.completionYear).filter(Boolean))].sort((a,b)=>b-a);
+    const years = [...new Set(doc.levels.map(x=>completionInfo(x).year).filter(Boolean))].sort((a,b)=>b-a);
     const content = `<p class="list-description-inline">${esc(doc.description||'Personal ranked list.')}</p>
       <div class="list-toolbar"><div class="list-filter-area">
       <input class="filter" type="search" id="level-search" aria-label="Search levels" placeholder="Search levels..." value="${esc(state.listSearch)}" autocomplete="off">
@@ -403,9 +385,9 @@
   function detailVideo(item) {
     const video = levelVideo(item);
     const thumb = thumbnailFor(item,state.activeProfile);
-    if (video && thumb) return `<a class="videoarea detail-video-link" target="_blank" rel="noopener noreferrer" href="${esc(video)}" title="Watch the original video"><img data-thumbnail src="${esc(thumb)}" alt="${esc(item.name)} thumbnail"><span class="videoempty">Open source video ↗</span></a>`;
+    if (video && thumb) return `<a class="videoarea detail-video-link" target="_blank" rel="noopener noreferrer" href="${esc(video)}" title="Watch the original video"><img data-thumbnail src="${esc(thumb)}" alt="${esc(item.name)} thumbnail"><span class="videoempty">Watch video ↗</span></a>`;
     if (thumb) return `<div class="videoarea"><img data-thumbnail src="${esc(thumb)}" alt="${esc(item.name)} thumbnail"></div>`;
-    if (video) return `<div class="video-area-empty"><a href="${esc(video)}" target="_blank" rel="noopener noreferrer">Open source video ↗</a></div>`;
+    if (video) return `<div class="video-area-empty"><a href="${esc(video)}" target="_blank" rel="noopener noreferrer">Watch video ↗</a></div>`;
     return `<div class="video-area-empty">No direct video link was provided for this entry.</div>`;
   }
   function detailView(profile, entry, doc, rank) {
@@ -420,27 +402,25 @@
     const source = safeLink(doc.sourceUrl);
     const proof = levelVideo(item);
     const attr = (key, fallback='Not provided') => item[key] != null && item[key] !== '' ? esc(item[key]) : fallback;
+    const completion = completionInfo(item);
     const facts = [
       [ `#${esc(item.rank)}`, 'LIST RANK' ],
-      item.completionDate ? [esc(item.completionDate), 'COMPLETION DATE']
-        : item.videoPublishedDate && !item.completionYear
-        ? [esc(postedDate(item)), 'COMPLETED BY']
-        : [attr('completionYear'), 'COMPLETION YEAR'],
+      [ esc(completion.value), completion.label ],
       [ gd ? attr('attempts') : attr('timeTaken'), gd ? 'ATTEMPTS' : 'GAME TIME' ],
-      [ item.worstFail != null ? `${esc(item.worstFail)}%` : 'Not provided', 'WORST FAIL' ]
+      ...(gd ? [[ item.worstFail != null ? `${esc(item.worstFail)}%` : 'Not provided', 'WORST FAIL' ]] : [])
     ];
-    const body = `<div class="backrow"><a href="${esc(playerRoute(profile.id,entry.id))}" class="backbutton" data-player-back>‹ Back</a><div class="prevnext">
+    const body = `<div class="backrow"><a href="${esc(playerRoute(profile.id,entry.id))}" class="backbutton">‹ Back to list</a><div class="prevnext">
       <button type="button" ${prev?'':'disabled'} data-rank-nav="${prev?prev.rank:''}">‹ Previous</button><button type="button" ${next?'':'disabled'} data-rank-nav="${next?next.rank:''}">Next ›</button></div></div>
       <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} – ${esc(item.name)}</span>${difficultyBadge(item, profile, game)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
       ${detailVideo(item)}
       <div class="facts detail-grid">${facts.map(([value,label])=>`<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>
       <p class="statline"><strong>Enjoyment rating:</strong> ${item.enjoyment == null ? 'Not provided' : `${esc(item.enjoyment)}/10`}</p>
       ${gd ? `<p class="statline"><strong>Time taken:</strong> ${attr('timeTaken')}</p>` : `<p class="statline"><strong>Rank:</strong> ${attr('gameRank')}</p>`}
-      ${item.videoTitle ? `<p class="statline"><strong>Video reference in the spreadsheet:</strong> ${esc(item.videoTitle)}</p>` : ''}
+      ${item.videoTitle ? `<p class="statline"><strong>Video title:</strong> ${esc(item.videoTitle)}</p>` : ''}
       ${item.rankLabel && item.rankLabel !== String(item.rank) ? `<p class="statline"><strong>Original ranking label:</strong> ${esc(item.rankLabel)}</p>` : ''}
       ${item.name.includes('*') ? `<p class="statline"><strong>Source notation:</strong> Asterisk(s) are retained as written in the source spreadsheet.</p>` : ''}
-      ${proof ? `<p class="statline"><a href="${esc(proof)}" target="_blank" rel="noopener noreferrer">Watch source video ↗</a></p>` : ''}
-      ${source ? `<p class="statline"><a href="${esc(source)}" target="_blank" rel="noopener noreferrer">${esc(doc.sourceLabel||'View original spreadsheet')}${item.sourceRow?` (row ${esc(item.sourceRow)})`:''} ↗</a></p>` : ''}
+      ${proof ? `<p class="statline"><a href="${esc(proof)}" target="_blank" rel="noopener noreferrer">Watch video ↗</a></p>` : ''}
+      ${source ? `<p class="statline"><a href="${esc(source)}" target="_blank" rel="noopener noreferrer">${esc(sourceLabel(doc))}${item.sourceRow?` (row ${esc(item.sourceRow)})`:''} ↗</a></p>` : ''}
       </section>`;
     shell(`<main class="container">${playerIntro(profile)}${tabsMarkup(profile.id,profile,entry.id)}<div class="layout"><div class="content">${body}</div>${sidebar(profile,doc)}</div></main>`);
   }
@@ -453,12 +433,13 @@
     const {player} = state.route;
     const folder = validId(player.folder) ? player.folder : player.id;
     try {
+      state.activeProfile = player;
       shell(`<main class="container"><div class="pageintro"><h1>${esc(player.name)}</h1></div><div class="singlepanel">Loading player data…</div></main>`);
       const profile = await fetchJson(`players/${folder}/profile.json`);
       if (seq !== state.request) return;
       if (!profile || profile.id !== player.id || !Array.isArray(profile.lists)) throw new Error('Player profile is invalid.');
       state.activeProfile = {...profile, accent: checkedColor(player.accent), backgroundTint: player.backgroundTint, avatar: player.avatar};
-      applyTheme(player.accent);
+      applyTheme();
       let entry = profile.lists.find(x=>x.id===state.route.listId);
       if (!entry) entry = profile.lists[0];
       if (!entry || !validId(entry.id) || (!entry.data && !validJsonName(entry.file))) throw new Error('No valid lists are configured for this player.');
@@ -567,8 +548,7 @@
     const anchor=e.target.closest('a[href^="#/"]');
     if (!anchor || e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
-    if (anchor.hasAttribute('data-player-back') && history.state?.playerListsBack) history.back();
-    else routeTo(anchor.getAttribute('href'));
+    routeTo(anchor.getAttribute('href'));
   });
   window.addEventListener('hashchange',routeView);
   window.addEventListener('resize',fitPlayerResults);
@@ -597,6 +577,7 @@
   setTheme(state.theme);
   boot();
 })();
+
 
 
 

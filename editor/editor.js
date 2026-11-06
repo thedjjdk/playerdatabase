@@ -1,3 +1,4 @@
+import '../assets/profile-theme.js?v=profile-polish-1';
 import { editorApi } from './config.js?v=review-1';
 
 const $ = id => document.getElementById(id);
@@ -6,6 +7,21 @@ const query = new URLSearchParams(location.search);
 const player = query.get('player');
 let list = query.get('list');
 let profile, game, baseline = '';
+let directoryPlayer;
+let theme = 'dark';
+try { theme = localStorage.getItem('player-lists-theme') === 'light' ? 'light' : 'dark'; } catch (_) {}
+function applyEditorTheme() {
+  window.PlayerListsTheme.apply({ ...directoryPlayer, ...profile, ...(savedColors ? { backgroundLeft: $('profile-left').value, backgroundRight: $('profile-right').value } : {}) }, theme);
+  $('theme-toggle').textContent = theme === 'light' ? 'Dark mode' : 'Light mode';
+}
+$('theme-toggle').addEventListener('click', () => {
+  theme = theme === 'light' ? 'dark' : 'light';
+  try { localStorage.setItem('player-lists-theme', theme); } catch (_) {}
+  document.body.classList.add('theme-switching');
+  applyEditorTheme();
+  document.body.getBoundingClientRect();
+  document.body.classList.remove('theme-switching');
+});
 const drafts = new Map();
 const gameNames = { 'geometry-dash': 'Geometry Dash', celeste: 'Celeste', 'beat-saber': 'Beat Saber', 'fnaf-challenges': 'FNaF' };
 let rows = [], revision = '', dirty = false, drag, dragFrame;
@@ -49,11 +65,13 @@ async function initAppearance() {
         return response.json();
       })
     ]);
-    const fallback = directory.players.find(entry => entry.id === player)?.backgroundTint || '#4e4e4e';
-    $('profile-left').value = appearance.document.backgroundLeft || fallback;
-    $('profile-right').value = appearance.document.backgroundRight || fallback;
+    directoryPlayer = directory.players.find(entry => entry.id === player);
+    const colors = window.PlayerListsTheme.colors({ ...directoryPlayer, ...appearance.document });
+    $('profile-left').value = colors.left;
+    $('profile-right').value = colors.right;
     appearanceRevision = appearance.revision;
     savedColors = currentColors();
+    applyEditorTheme();
     $('profile-left').disabled = $('profile-right').disabled = $('profile-code').disabled = false;
   } catch (error) {
     $('colors-status').textContent = error.message;
@@ -62,6 +80,7 @@ async function initAppearance() {
 
 $('profile-colors').addEventListener('input', () => {
   $('save-colors').disabled = !colorsChanged();
+  applyEditorTheme();
 });
 $('profile-colors').addEventListener('submit', async event => {
   event.preventDefault();
@@ -122,10 +141,11 @@ function fieldControl(row, key, label, kind, max, title) {
     input.setAttribute('list', 'celeste-rank-options');
     input.placeholder = 'e.g. Grandmaster or GM+1';
   }
+  input.name = key;
   input.value = row[key] ?? '';
   input.addEventListener('input', () => {
     row[key] = kind === 'number' && input.value !== '' ? input.valueAsNumber : input.value;
-    if (key === 'name') title.textContent = '#' + (rows.indexOf(row) + 1) + ' ' + (row.name || 'New level');
+    if (key === 'name') title.textContent = '#' + (rows.indexOf(row) + 1) + ' – ' + (row.name || 'New placement');
     changed();
   });
   wrap.append(input);
@@ -156,7 +176,7 @@ function render() {
       dragFrame = requestAnimationFrame(scrollDrag);
       listEl.setPointerCapture(event.pointerId);
     });
-    const title = text('strong', '#' + (i + 1) + ' ' + (row.name || 'New level'));
+    const title = text('strong', '#' + (i + 1) + ' – ' + (row.name || 'New placement'));
     head.append(handle, title);
     for (const [direction, offset, icon] of [['up', -1, '↑'], ['down', 1, '↓']]) {
       const button = text('button', icon);
@@ -232,7 +252,7 @@ $('create-placement').addEventListener('click', () => {
   render();
   const entry = $('levels').lastElementChild;
   entry.scrollIntoView({ block: 'nearest' });
-  entry.querySelector('details input').focus({ preventScroll: true });
+  entry.querySelector('input[name="name"]').focus({ preventScroll: true });
 });
 
 function rememberDraft() {
@@ -378,8 +398,10 @@ async function init() {
   try {
     const result = await api(appearancePath);
     profile = result.document;
+    directoryPlayer = (await fetch('../players.json', { cache: 'no-cache' }).then(response => response.json())).players.find(entry => entry.id === player);
+    applyEditorTheme();
     $('new-list-game').replaceChildren(...Object.entries(gameNames).map(([id, name]) => new Option(name, id)));
-    $('back').textContent = 'Back to profile';
+    $('back').textContent = '‹ Back to profile';
     $('create-list').disabled = false;
     const initial = profile.lists.some(entry => entry.id === list) ? list : profile.lists[0]?.id;
     list = null;
@@ -389,6 +411,8 @@ async function init() {
     $('status').textContent = error.message;
   }
 }
+applyEditorTheme();
 init();
+
 
 
