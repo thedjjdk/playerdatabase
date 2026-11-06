@@ -66,3 +66,7 @@
 
 .background-opacity-label {margin-top:16px;font-weight:750}
 .editor input[type="range"] {padding:0;accent-color:var(--accent);cursor:pointer}
+
+.background-switches {display:flex;flex-wrap:wrap;gap:12px 24px;margin:14px 0}
+.background-switches label {display:flex;align-items:center;gap:9px}
+.editor .background-switches input {width:20px;height:20px;min-height:0;accent-color:var(--accent);flex:none}

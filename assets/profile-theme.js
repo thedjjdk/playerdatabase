@@ -46,6 +46,14 @@
     const version = /^[a-f0-9]{64}$/.test(profile.backgroundImageVersion || '') ? '?v=' + profile.backgroundImageVersion : '';
     return prefix + 'players/' + profile.id + '/background.webp' + version;
   }
+  function applyImageMask(layer, source, inverted) {
+    const mask = source ? `url(${JSON.stringify(source)})` : 'none';
+    layer.style.maskImage = inverted && source ? `linear-gradient(white,white), ${mask}` : mask;
+    layer.style.webkitMaskImage = layer.style.maskImage;
+    layer.style.maskMode = inverted ? 'alpha, luminance' : 'luminance';
+    layer.style.maskComposite = inverted ? 'exclude' : 'add';
+    layer.style.webkitMaskComposite = inverted ? 'xor' : 'source-over';
+  }
   function applyBackground(profile, options) {
     const source = Object.hasOwn(options, 'backgroundUrl') ? options.backgroundUrl : imageUrl(profile, options.prefix || '');
     let layer = document.getElementById('profile-background');
@@ -56,9 +64,7 @@
       layer.setAttribute('aria-hidden', 'true');
       document.body.prepend(layer);
     }
-    const mask = `url(${JSON.stringify(source)})`;
-    layer.style.maskImage = mask;
-    layer.style.webkitMaskImage = mask;
+    applyImageMask(layer, source, options.light ? profile?.backgroundInvertLight === true : profile?.backgroundInvertDark === true);
   }
   function apply(profile, theme, options = {}) {
 
@@ -75,9 +81,9 @@
       '--accent-button': accent, '--accent-button-hover': `color-mix(in srgb, ${accent} 82%, ${light ? 'black' : 'white'})`
     };
     for (const [key, value] of Object.entries(properties)) document.body.style.setProperty(key, value);
-    applyBackground(profile, options);
+    applyBackground(profile, { ...options, light });
     document.documentElement.style.colorScheme = light ? 'light' : 'dark';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#fff' : '#1b1e22');
   }
-  window.PlayerListsTheme = { colors, readableAccent, imageUrl, apply };
+  window.PlayerListsTheme = { colors, readableAccent, imageUrl, applyImageMask, apply };
 })();

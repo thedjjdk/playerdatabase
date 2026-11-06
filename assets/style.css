@@ -1433,4 +1433,12 @@ body::before,body::after {z-index:1!important}
 #app,.editor {position:relative;z-index:2}
 .background-preview {position:relative;isolation:isolate;min-height:150px;overflow:hidden;border:1px solid var(--border);background:var(--page);margin:12px 0;padding:20px;display:grid;place-items:center}
 .background-preview-image {position:absolute;inset:0;opacity:var(--profile-background-opacity,.15);background:linear-gradient(90deg,var(--profile-left),var(--profile-right));mask-size:cover;mask-position:center;mask-repeat:no-repeat;mask-mode:luminance;-webkit-mask-size:cover;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;z-index:-1}
-.background-preview p {font-weight:750;color:var(--text);text-align:center}
+.background-preview p {font-weight:750;color:var(--text);text-align:center}\n/* Translucent gray fills keep text, images and controls fully opaque. */
+body {--panel-fill:color-mix(in srgb,var(--surface) 60%,transparent);--panel-fill-raised:color-mix(in srgb,var(--surface2) 60%,transparent)}
+body :is(.singlepanel,.panel,.listcard,.list-empty,.player-search-box,.player-results,.player-directory,.fact,.data-note,.video-area-empty,.editor-row,.background-preview,.appearance-popover,.difficulty-popover,.game-options,.deletion-notice,dialog) {background:var(--panel-fill)!important}
+body :is(.tabs,.wide-tabs) {background:var(--panel-fill)!important}
+body :is(.filter,.select,.ghostbutton,.game-filters button,.editor input:not([type=range]):not([type=checkbox]):not([type=color]),.editor select,.editor button:not(#save)) {background:var(--panel-fill-raised)!important}
+body :is(.listcard:hover,.listcard:focus-visible,.player-result:hover,.player-result:focus-visible,.player-result.is-highlighted) {background:var(--panel-fill-raised)!important}
+body :is(.tabs,.wide-tabs) button:is(:hover,[aria-selected=true]) {background:var(--panel-fill-raised)!important}
+body :is(.sitehead,.mobile-menu,.language-menu,.reviewcard,.review-note,.statsbox,.grind-suggest) {background:var(--panel-fill)!important}
+.sitehead::before {background:none!important}

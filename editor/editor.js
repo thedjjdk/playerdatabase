@@ -1,4 +1,4 @@
-import '../assets/profile-theme.js?v=background-opacity-1';
+import '../assets/profile-theme.js?v=background-controls-2';
 import { editorApi } from './config.js?v=review-1';
 
 const $ = id => document.getElementById(id);
@@ -12,13 +12,17 @@ let backgroundDraft = null, backgroundObjectUrl = '';
 let savedBackground = '';
 let backgroundReady = false, backgroundLoading = false;
 const opacityOf = profile => Number.isInteger(profile?.backgroundOpacity) && profile.backgroundOpacity >= 5 && profile.backgroundOpacity <= 50 ? profile.backgroundOpacity : 15;
-const backgroundSnapshot = profile => JSON.stringify([profile.backgroundImage, profile.backgroundImageVersion, opacityOf(profile)]);
-const backgroundChanged = () => !!backgroundDraft || (backgroundReady && Number($('background-opacity').value) !== opacityOf(profile));
+const backgroundSnapshot = profile => JSON.stringify([profile.backgroundImage, profile.backgroundImageVersion, opacityOf(profile), profile.backgroundInvertLight === true, profile.backgroundInvertDark === true]);
+const backgroundChanged = () => !!backgroundDraft || (backgroundReady && (Number($('background-opacity').value) !== opacityOf(profile) || $('background-invert-light').checked !== (profile.backgroundInvertLight === true) || $('background-invert-dark').checked !== (profile.backgroundInvertDark === true)));
 let theme = 'dark';
 try { theme = localStorage.getItem('player-lists-theme') === 'light' ? 'light' : 'dark'; } catch (_) {}
 function applyEditorTheme() {
-  window.PlayerListsTheme.apply({ ...directoryPlayer, ...profile, ...(backgroundReady ? { backgroundOpacity: Number($('background-opacity').value) } : {}), ...(savedColors ? { backgroundLeft: $('profile-left').value, backgroundRight: $('profile-right').value } : {}) }, theme, { prefix: '../', ...(backgroundDraft ? { backgroundUrl: backgroundDraft.remove ? '' : backgroundObjectUrl } : {}) });
+  window.PlayerListsTheme.apply({ ...directoryPlayer, ...profile, ...(backgroundReady ? { backgroundOpacity: Number($('background-opacity').value), backgroundInvertLight:$('background-invert-light').checked, backgroundInvertDark:$('background-invert-dark').checked } : {}), ...(savedColors ? { backgroundLeft: $('profile-left').value, backgroundRight: $('profile-right').value } : {}) }, theme, { prefix: '../', ...(backgroundDraft ? { backgroundUrl: backgroundDraft.remove ? '' : backgroundObjectUrl } : {}) });
   $('theme-toggle').textContent = theme === 'light' ? 'Dark mode' : 'Light mode';
+  if ($('background-preview-image')) {
+    const source = backgroundDraft ? (backgroundDraft.remove ? '' : backgroundObjectUrl) : window.PlayerListsTheme.imageUrl(profile, '../');
+    window.PlayerListsTheme.applyImageMask($('background-preview-image'), source, theme === 'light' ? $('background-invert-light').checked : $('background-invert-dark').checked);
+  }
 }
 $('theme-toggle').addEventListener('click', () => {
   theme = theme === 'light' ? 'dark' : 'light';
@@ -83,6 +87,10 @@ async function initAppearance() {
     profile.backgroundImage = appearance.document.backgroundImage;
     profile.backgroundImageVersion = appearance.document.backgroundImageVersion;
     profile.backgroundOpacity = appearance.document.backgroundOpacity;
+    profile.backgroundInvertLight = appearance.document.backgroundInvertLight === true;
+    profile.backgroundInvertDark = appearance.document.backgroundInvertDark === true;
+    $('background-invert-light').checked = profile.backgroundInvertLight;
+    $('background-invert-dark').checked = profile.backgroundInvertDark;
     $('background-opacity').value = opacityOf(profile);
     savedBackground = backgroundSnapshot(profile);
     backgroundReady = true;
@@ -140,8 +148,8 @@ function refreshBackground() {
   $('background-opacity').setAttribute('aria-valuetext', percentage);
   $('background-preview-label').textContent = 'Background preview · ' + percentage + ' opacity';
   $('background-preview').hidden = !source;
-  $('background-preview-image').style.maskImage = source ? `url(${JSON.stringify(source)})` : 'none';
-  $('background-preview-image').style.webkitMaskImage = source ? `url(${JSON.stringify(source)})` : 'none';
+  for (const id of ['background-invert-light','background-invert-dark']) $(id).disabled = !backgroundReady || backgroundLoading;
+  window.PlayerListsTheme.applyImageMask($('background-preview-image'), source, theme === 'light' ? $('background-invert-light').checked : $('background-invert-dark').checked);
   $('remove-background').disabled = !source || backgroundLoading;
   $('reset-background').disabled = !backgroundChanged() || backgroundLoading;
   $('save-background').disabled = !backgroundChanged() || backgroundLoading;
@@ -195,7 +203,8 @@ $('remove-background').addEventListener('click', () => {
   refreshBackground();
 });
 $('background-opacity').addEventListener('input', () => { $('background-status').textContent = backgroundChanged() ? 'Opacity preview ready. Save with your Player ID to publish it.' : ''; refreshBackground(); });
-$('reset-background').addEventListener('click', () => { clearBackgroundDraft(); $('background-opacity').value = opacityOf(profile); $('background-status').textContent = ''; refreshBackground(); });
+for (const id of ['background-invert-light','background-invert-dark']) $(id).addEventListener('change', () => { $('background-status').textContent = backgroundChanged() ? 'Background preview ready. Save with your Player ID to publish it.' : ''; refreshBackground(); });
+$('reset-background').addEventListener('click', () => { clearBackgroundDraft(); $('background-opacity').value = opacityOf(profile); $('background-invert-light').checked = profile.backgroundInvertLight === true; $('background-invert-dark').checked = profile.backgroundInvertDark === true; $('background-status').textContent = ''; refreshBackground(); });
 $('save-background').addEventListener('click', () => {
   if (!backgroundChanged()) return;
   $('background-save-status').textContent = backgroundDraft?.remove ? 'Enter your Player ID to remove the profile background.' : 'Enter your Player ID to save this background to your profile.';
@@ -216,12 +225,14 @@ $('background-form').addEventListener('submit', async event => {
     if (backgroundSnapshot(latest.document) !== savedBackground) throw new Error('The background changed elsewhere. Reload before saving again.');
     const result = await api('/background?' + new URLSearchParams({player}), {
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({code:$('background-code').value.trim(),revision:latest.revision,...backgroundDraft,opacity:Number($('background-opacity').value)})
+      body:JSON.stringify({code:$('background-code').value.trim(),revision:latest.revision,...backgroundDraft,opacity:Number($('background-opacity').value),invertLight:$('background-invert-light').checked,invertDark:$('background-invert-dark').checked})
     });
     if (!result.unchanged && result.reviewState !== 'merged') throw new Error('GitHub could not merge the background change. Your draft is still open.');
     profile.backgroundImage = result.document.backgroundImage;
     profile.backgroundImageVersion = result.document.backgroundImageVersion;
     profile.backgroundOpacity = result.document.backgroundOpacity;
+    profile.backgroundInvertLight = result.document.backgroundInvertLight === true;
+    profile.backgroundInvertDark = result.document.backgroundInvertDark === true;
     $('background-opacity').value = opacityOf(profile);
     savedBackground = backgroundSnapshot(profile);
     appearanceRevision = result.revision;
