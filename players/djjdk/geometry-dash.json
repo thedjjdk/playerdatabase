@@ -75,6 +75,28 @@
       "completionYear": 2022,
       "videoUrl": "https://youtu.be/agLW4Yj9RFU",
       "difficulty": "insane-demon"
+    },
+    {
+      "rank": 8,
+      "name": "Shitty Digital Descent",
+      "attempts": "~1637",
+      "enjoyment": 7,
+      "worstFail": 95,
+      "completionDate": "2022-10-27",
+      "completionYear": 2022,
+      "videoUrl": "https://youtu.be/zbvN5YEuUaE",
+      "difficulty": "insane-demon"
+    },
+    {
+      "rank": 9,
+      "name": "bomb the rave",
+      "attempts": "1133",
+      "enjoyment": 6,
+      "worstFail": 98,
+      "completionDate": "2021-12-24",
+      "completionYear": 2021,
+      "videoUrl": "https://youtu.be/Wet5V-GRbvA",
+      "difficulty": "insane-demon"
     }
   ]
 }
