@@ -1448,3 +1448,12 @@ body :is(.sitehead,.mobile-menu,.language-menu,.reviewcard,.review-note,.statsbo
 body {--control-hover:color-mix(in srgb,color-mix(in srgb,var(--surface2) 78%,var(--text)) 75%,transparent)}
 body :is(.tabs,.wide-tabs) button:not(:disabled):is(:hover,:focus-visible),
 body :is(.ghostbutton,.game-filters button,.editor button:not(#save),.pagebtn,.appearance-button,.mobileicon,.detail-actions a,.backbutton):not(:disabled):is(:hover,:focus-visible) {background:var(--control-hover)!important;border-color:var(--accent-strong);color:var(--text)}
+
+/* Placement hover follows the profile's left and right colors. */
+body .listcard {transition:box-shadow .18s ease,border-color .18s ease,background .17s ease}
+body .listcard:is(:hover,:focus-within,:focus-visible) {
+  border-style:solid;
+  border-color:color-mix(in srgb,var(--profile-right,var(--accent)) 22%,transparent)!important;
+  box-shadow:-4px 0 18px -6px color-mix(in srgb,var(--profile-left,var(--accent)) 42%,transparent),4px 0 18px -6px color-mix(in srgb,var(--profile-right,var(--accent)) 42%,transparent);
+}
+@media(prefers-reduced-motion:reduce) {body .listcard {transition:none}}
