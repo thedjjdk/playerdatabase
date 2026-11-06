@@ -57,3 +57,9 @@
 .editor .game-create {border-top:1px solid var(--border);font-weight:750;position:sticky;bottom:0}
 #new-list-dialog {overflow:visible}
 @media(max-height:650px) {#new-list-dialog {max-height:calc(100dvh - 24px);overflow:auto}.game-options {position:relative;max-height:180px}}
+
+
+.background-preview[hidden] {display:none}
+.background-buttons {display:flex;flex-wrap:wrap;gap:8px}
+.editor input[type="file"] {padding:10px;min-width:0}
+.editor #save-background:enabled {border-color:var(--accent);font-weight:750}

@@ -1,4 +1,4 @@
-import '../assets/profile-theme.js?v=profile-polish-1';
+import '../assets/profile-theme.js?v=background-image-1';
 import { editorApi } from './config.js?v=review-1';
 
 const $ = id => document.getElementById(id);
@@ -8,10 +8,13 @@ const player = query.get('player');
 let list = query.get('list');
 let profile, game, baseline = '';
 let directoryPlayer;
+let backgroundDraft = null, backgroundObjectUrl = '';
+let savedBackground = '';
+let backgroundReady = false, backgroundLoading = false;
 let theme = 'dark';
 try { theme = localStorage.getItem('player-lists-theme') === 'light' ? 'light' : 'dark'; } catch (_) {}
 function applyEditorTheme() {
-  window.PlayerListsTheme.apply({ ...directoryPlayer, ...profile, ...(savedColors ? { backgroundLeft: $('profile-left').value, backgroundRight: $('profile-right').value } : {}) }, theme);
+  window.PlayerListsTheme.apply({ ...directoryPlayer, ...profile, ...(savedColors ? { backgroundLeft: $('profile-left').value, backgroundRight: $('profile-right').value } : {}) }, theme, { prefix: '../', ...(backgroundDraft ? { backgroundUrl: backgroundDraft.remove ? '' : backgroundObjectUrl } : {}) });
   $('theme-toggle').textContent = theme === 'light' ? 'Dark mode' : 'Light mode';
 }
 $('theme-toggle').addEventListener('click', () => {
@@ -74,6 +77,11 @@ async function initAppearance() {
     $('profile-right').value = colors.right;
     appearanceRevision = appearance.revision;
     savedColors = currentColors();
+    profile.backgroundImage = appearance.document.backgroundImage;
+    profile.backgroundImageVersion = appearance.document.backgroundImageVersion;
+    savedBackground = JSON.stringify([profile.backgroundImage, profile.backgroundImageVersion]);
+    backgroundReady = true;
+    refreshBackground();
     applyEditorTheme();
     $('profile-left').disabled = $('profile-right').disabled = $('profile-code').disabled = false;
   } catch (error) {
@@ -115,6 +123,104 @@ $('profile-colors').addEventListener('submit', async event => {
     $('profile-code').value = '';
     $('profile-left').disabled = $('profile-right').disabled = $('profile-code').disabled = false;
     $('save-colors').disabled = !colorsChanged();
+  }
+});
+
+function refreshBackground() {
+  const source = backgroundDraft ? (backgroundDraft.remove ? '' : backgroundObjectUrl) : window.PlayerListsTheme.imageUrl(profile, '../');
+  $('background-file').disabled = !backgroundReady || backgroundLoading;
+  $('background-preview').hidden = !source;
+  $('background-preview-image').style.maskImage = source ? `url(${JSON.stringify(source)})` : 'none';
+  $('background-preview-image').style.webkitMaskImage = source ? `url(${JSON.stringify(source)})` : 'none';
+  $('remove-background').disabled = !source || backgroundLoading;
+  $('reset-background').disabled = !backgroundDraft || backgroundLoading;
+  $('save-background').disabled = !backgroundDraft || backgroundLoading;
+  applyEditorTheme();
+}
+function clearBackgroundDraft() {
+  if (backgroundObjectUrl) URL.revokeObjectURL(backgroundObjectUrl);
+  backgroundObjectUrl = '';
+  backgroundDraft = null;
+  $('background-file').value = '';
+}
+$('background-file').addEventListener('change', async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  backgroundLoading = true;
+  refreshBackground();
+  $('background-status').textContent = 'Preparing image…';
+  let bitmap;
+  try {
+    if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size > 10 * 1024 * 1024) throw new Error('Choose a PNG, JPG, or WebP image of at most 10 MB.');
+    bitmap = await createImageBitmap(file);
+    if (!bitmap.width || !bitmap.height || bitmap.width * bitmap.height > 25000000) throw new Error('Choose an image smaller than 25 megapixels.');
+    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    let blob;
+    for (const quality of [.82, .65, .45]) {
+      blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', quality));
+      if (blob && blob.size <= 1048576) break;
+    }
+    if (!blob || blob.type !== 'image/webp' || blob.size > 1048576) throw new Error('This image is too detailed to save. Choose a smaller image.');
+    const data = await new Promise((resolve,reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(blob); });
+    clearBackgroundDraft();
+    backgroundObjectUrl = URL.createObjectURL(blob);
+    backgroundDraft = { image: data.split(',')[1] };
+    $('background-status').textContent = 'Image preview ready. Save with your Player ID to publish it.';
+  } catch (error) {
+    $('background-status').textContent = error.message;
+  } finally {
+    bitmap?.close();
+    backgroundLoading = false;
+    refreshBackground();
+  }
+});
+$('remove-background').addEventListener('click', () => {
+  clearBackgroundDraft();
+  if (profile.backgroundImage) backgroundDraft = { remove: true };
+  $('background-status').textContent = backgroundDraft ? 'Image removal is a draft until you save with your Player ID.' : '';
+  refreshBackground();
+});
+$('reset-background').addEventListener('click', () => { clearBackgroundDraft(); $('background-status').textContent = ''; refreshBackground(); });
+$('save-background').addEventListener('click', () => {
+  if (!backgroundDraft) return;
+  $('background-save-status').textContent = backgroundDraft.remove ? 'Enter your Player ID to remove the profile background.' : 'Enter your Player ID to save this background to your profile.';
+  $('background-dialog').showModal();
+});
+$('cancel-background').addEventListener('click', () => $('background-dialog').close());
+$('background-dialog').addEventListener('close', () => { $('background-code').value = ''; });
+$('background-dialog').addEventListener('cancel', event => { if (backgroundLoading) event.preventDefault(); });
+$('background-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (!backgroundDraft || backgroundLoading) return;
+  const submit = event.submitter;
+  backgroundLoading = true;
+  submit.disabled = $('cancel-background').disabled = true;
+  $('background-save-status').textContent = 'Saving background to GitHub…';
+  try {
+    const latest = await api(appearancePath);
+    if (JSON.stringify([latest.document.backgroundImage, latest.document.backgroundImageVersion]) !== savedBackground) throw new Error('The background changed elsewhere. Reload before saving again.');
+    const result = await api('/background?' + new URLSearchParams({player}), {
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({code:$('background-code').value.trim(),revision:latest.revision,...backgroundDraft})
+    });
+    if (!result.unchanged && result.reviewState !== 'merged') throw new Error('GitHub could not merge the background change. Your draft is still open.');
+    profile.backgroundImage = result.document.backgroundImage;
+    profile.backgroundImageVersion = result.document.backgroundImageVersion;
+    savedBackground = JSON.stringify([profile.backgroundImage,profile.backgroundImageVersion]);
+    appearanceRevision = result.revision;
+    clearBackgroundDraft();
+    $('background-status').textContent = 'Background saved. It will appear after deployment.';
+    $('background-dialog').close();
+  } catch (error) { $('background-save-status').textContent = error.message; }
+  finally {
+    backgroundLoading = false;
+    submit.disabled = $('cancel-background').disabled = false;
+    $('background-code').value = '';
+    refreshBackground();
   }
 });
 
@@ -567,7 +673,7 @@ $('confirm-form').addEventListener('submit', async event => {
   }
 });
 window.addEventListener('beforeunload', event => {
-  if (dirty || orderChanged() || colorsChanged() || [...drafts.entries()].some(([id, draft]) => id !== list && draft.dirty)) event.preventDefault();
+  if (dirty || backgroundDraft || backgroundLoading || orderChanged() || colorsChanged() || [...drafts.entries()].some(([id, draft]) => id !== list && draft.dirty)) event.preventDefault();
 });
 
 async function init() {
@@ -596,3 +702,9 @@ async function init() {
 }
 applyEditorTheme();
 init();
+
+
+
+
+
+

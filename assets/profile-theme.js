@@ -41,7 +41,27 @@
     }
     return patterns.get(tint);
   }
-  function apply(profile, theme) {
+  function imageUrl(profile, prefix = '') {
+    if (!profile || !/^[a-z0-9-]+$/.test(profile.id || '') || profile.backgroundImage !== 'background.webp') return '';
+    const version = /^[a-f0-9]{64}$/.test(profile.backgroundImageVersion || '') ? '?v=' + profile.backgroundImageVersion : '';
+    return prefix + 'players/' + profile.id + '/background.webp' + version;
+  }
+  function applyBackground(profile, options) {
+    const source = Object.hasOwn(options, 'backgroundUrl') ? options.backgroundUrl : imageUrl(profile, options.prefix || '');
+    let layer = document.getElementById('profile-background');
+    if (!source) { layer?.remove(); return; }
+    if (!layer) {
+      layer = document.createElement('div');
+      layer.id = 'profile-background';
+      layer.setAttribute('aria-hidden', 'true');
+      document.body.prepend(layer);
+    }
+    const mask = `url(${JSON.stringify(source)})`;
+    layer.style.maskImage = mask;
+    layer.style.webkitMaskImage = mask;
+  }
+  function apply(profile, theme, options = {}) {
+
     const light = theme === 'light';
     const { left, right } = colors(profile || {});
     document.body.classList.toggle('light-mode', light);
@@ -54,8 +74,10 @@
       '--accent-button': accent, '--accent-button-hover': `color-mix(in srgb, ${accent} 82%, ${light ? 'black' : 'white'})`
     };
     for (const [key, value] of Object.entries(properties)) document.body.style.setProperty(key, value);
+    applyBackground(profile, options);
     document.documentElement.style.colorScheme = light ? 'light' : 'dark';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#fff' : '#1b1e22');
   }
-  window.PlayerListsTheme = { colors, readableAccent, apply };
+  window.PlayerListsTheme = { colors, readableAccent, imageUrl, apply };
 })();
+
