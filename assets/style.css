@@ -1421,3 +1421,7 @@ body::after {background-image:var(--player-pixel-pattern-right,var(--laylist-pix
 @media(max-width:540px) {.player-title-wrap h1 {font-size:clamp(24px,7vw,32px);overflow-wrap:anywhere}.player-title-wrap>div {min-width:0}}
 
 .detail-grid {grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+
+
+.home-contact {grid-column:1/-1;margin-top:26px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;text-align:center}
+.home-contact strong {color:var(--text);font-weight:800}

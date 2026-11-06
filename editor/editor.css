@@ -44,3 +44,16 @@
 .list-order-row span {flex:1;min-width:0;overflow-wrap:anywhere}
 .editor #save-list-order:enabled {border-color:var(--accent);font-weight:750}
 @media(max-width:540px) {.deletion-notice {align-items:stretch;flex-direction:column}}
+
+
+.game-picker {position:relative;margin:10px 0}
+.game-picker-input {display:flex;gap:0}
+.editor .game-picker-input input {min-width:0;flex:1}
+.editor #toggle-games {flex:none;width:40px}
+.game-options {position:absolute;left:0;right:0;z-index:5;max-height:240px;overflow:auto;background:var(--surface);border:1px solid var(--border);box-shadow:0 8px 22px #0005}
+.game-options[hidden],#new-game-field[hidden] {display:none}
+.editor .game-option {display:block;width:100%;text-align:left;border:0;padding:10px 12px;overflow-wrap:anywhere;background:var(--surface)}
+.editor .game-option:hover,.editor .game-option[aria-selected="true"] {background:var(--surface2);color:var(--accent-strong)}
+.editor .game-create {border-top:1px solid var(--border);font-weight:750;position:sticky;bottom:0}
+#new-list-dialog {overflow:visible}
+@media(max-height:650px) {#new-list-dialog {max-height:calc(100dvh - 24px);overflow:auto}.game-options {position:relative;max-height:180px}}

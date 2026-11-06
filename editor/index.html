@@ -8,8 +8,8 @@
   <meta name="robots" content="noindex">
   <title>Edit player list</title>
   <link rel="stylesheet" href="../assets/style.css?v=profile-polish-1">
-  <link rel="stylesheet" href="editor.css?v=delete-order-1">
-  <script type="module" src="editor.js?v=delete-order-1"></script>
+  <link rel="stylesheet" href="editor.css?v=game-categories-1">
+  <script type="module" src="editor.js?v=game-categories-1"></script>
 </head>
 <body>
 <main class="container editor">
@@ -53,7 +53,13 @@
     <form id="new-list-form">
       <h2>Create New List</h2>
       <label>List name <input id="new-list-title" maxlength="60" required></label>
-      <label>Game <select id="new-list-game"></select></label>
+      <div class="game-picker" id="game-picker">
+        <label for="game-search">Game</label>
+        <div class="game-picker-input"><input id="game-search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="game-options" autocomplete="off" placeholder="Type or choose a game…" required><button type="button" id="toggle-games" aria-label="Show game categories" aria-controls="game-options" aria-expanded="false">▾</button></div>
+        <input type="hidden" id="new-list-game">
+        <div id="game-options" class="game-options" role="listbox" aria-label="Game categories" hidden></div>
+      </div>
+      <label id="new-game-field" hidden>New game title <input id="new-game-title" maxlength="60" disabled></label>
       <label>Player ID <input id="new-list-code" type="password" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" autocomplete="off" required></label>
       <p id="new-list-status" role="status"></p>
       <button type="submit">Create list</button>
@@ -88,6 +94,7 @@
 </main>
 </body>
 </html>
+
 
 
 

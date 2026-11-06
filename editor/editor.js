@@ -23,7 +23,8 @@ $('theme-toggle').addEventListener('click', () => {
   document.body.classList.remove('theme-switching');
 });
 const drafts = new Map();
-const gameNames = { 'geometry-dash': 'Geometry Dash', celeste: 'Celeste', 'beat-saber': 'Beat Saber', 'fnaf-challenges': 'FNaF' };
+let gameCategories = [{id:'beat-saber',title:'Beat Saber'},{id:'celeste',title:'Celeste'},{id:'fnaf-challenges',title:'FNaF'},{id:'geometry-dash',title:'Geometry Dash'}];
+let gameMatches = [], gameHighlight = 0;
 let rows = [], deletedRows = [], revision = '', dirty = false, drag, dragFrame;
 let listOrder = [], orderBaseline = '[]';
 const orderChanged = () => JSON.stringify(listOrder) !== orderBaseline;
@@ -389,13 +390,94 @@ $('list-order-form').addEventListener('submit', async event => {
 });
 
 
-$('create-list').addEventListener('click', () => {
-  if (!orderChanged()) $('new-list-dialog').showModal();
+function closeGames() {
+  $('game-options').hidden = true;
+  $('game-search').setAttribute('aria-expanded', 'false');
+  $('toggle-games').setAttribute('aria-expanded', 'false');
+  $('game-search').removeAttribute('aria-activedescendant');
+}
+function chooseGame(entry) {
+  $('new-list-game').value = entry.id;
+  $('game-search').value = entry.title;
+  $('game-search').setCustomValidity('');
+  const creating = entry.id === '__create__';
+  $('new-game-field').hidden = !creating;
+  $('new-game-title').disabled = !creating;
+  $('new-game-title').required = creating;
+  closeGames();
+  if (creating) $('new-game-title').focus();
+}
+function showGames(all = false) {
+  const query = all ? '' : $('game-search').value.trim().toLocaleLowerCase();
+  gameMatches = gameCategories.filter(entry => entry.title.toLocaleLowerCase().includes(query));
+  gameMatches.push({ id: '__create__', title: 'Create New Game Category' });
+  gameHighlight = Math.max(0, Math.min(gameHighlight, gameMatches.length - 1));
+  $('game-options').replaceChildren(...gameMatches.map((entry, index) => {
+    const option = text('button', entry.title, entry.id === '__create__' ? 'game-option game-create' : 'game-option');
+    option.type = 'button';
+    option.id = 'game-option-' + index;
+    option.setAttribute('role', 'option');
+    option.setAttribute('aria-selected', String(index === gameHighlight));
+    option.addEventListener('click', () => {
+      if (entry.id === '__create__') $('new-game-title').value = $('new-list-game').value ? '' : $('game-search').value.trim();
+      chooseGame(entry);
+    });
+    return option;
+  }));
+  $('game-options').hidden = false;
+  $('game-search').setAttribute('aria-expanded', 'true');
+  $('toggle-games').setAttribute('aria-expanded', 'true');
+  $('game-search').setAttribute('aria-activedescendant', 'game-option-' + gameHighlight);
+}
+$('toggle-games').addEventListener('click', () => {
+  if (!$('game-options').hidden) closeGames();
+  else { gameHighlight = 0; showGames(true); $('game-search').focus(); }
+});
+$('game-search').addEventListener('input', () => {
+  $('game-search').setCustomValidity('');
+  const exact = gameCategories.find(entry => entry.title.toLocaleLowerCase() === $('game-search').value.trim().toLocaleLowerCase());
+  $('new-list-game').value = exact?.id || '';
+  $('new-game-field').hidden = true;
+  $('new-game-title').disabled = true;
+  $('new-game-title').required = false;
+  gameHighlight = 0;
+  showGames();
+});
+$('game-search').addEventListener('keydown', event => {
+  if (['ArrowDown', 'ArrowUp'].includes(event.key)) {
+    event.preventDefault();
+    if ($('game-options').hidden) showGames(true);
+    else {
+      gameHighlight = (gameHighlight + (event.key === 'ArrowDown' ? 1 : -1) + gameMatches.length) % gameMatches.length;
+      $('game-options').querySelectorAll('[role="option"]').forEach((option, index) => option.setAttribute('aria-selected', String(index === gameHighlight)));
+      $('game-search').setAttribute('aria-activedescendant', 'game-option-' + gameHighlight);
+      document.getElementById('game-option-' + gameHighlight).scrollIntoView({ block: 'nearest' });
+    }
+  } else if (event.key === 'Enter' && !$('game-options').hidden) {
+    event.preventDefault();
+    if (gameMatches[gameHighlight].id === '__create__') $('new-game-title').value = $('new-list-game').value ? '' : $('game-search').value.trim();
+    chooseGame(gameMatches[gameHighlight]);
+  } else if (event.key === 'Escape' && !$('game-options').hidden) {
+    event.preventDefault();event.stopPropagation();closeGames();
+  }
+});
+$('game-picker').addEventListener('focusout', event => { if (!$('game-picker').contains(event.relatedTarget)) closeGames(); });
+$('new-list-dialog').addEventListener('click', event => { if (!$('game-picker').contains(event.target)) closeGames(); });
+$('create-list').addEventListener('click', async () => {
+  if (orderChanged()) return;
+  $('new-list-status').textContent = '';
+  $('new-list-dialog').showModal();
+  try { gameCategories = (await api('/games')).games; } catch (error) { $('new-list-status').textContent = 'Could not refresh game categories. ' + error.message; }
 });
 $('cancel-list').addEventListener('click', () => $('new-list-dialog').close());
-$('new-list-dialog').addEventListener('close', () => { $('new-list-code').value = ''; });
+$('new-list-dialog').addEventListener('close', () => { $('new-list-code').value = ''; closeGames(); });
 $('new-list-form').addEventListener('submit', async event => {
   event.preventDefault();
+  if (!$('new-list-game').value) {
+    $('game-search').setCustomValidity('Choose a game or select Create New Game Category.');
+    $('game-search').reportValidity();
+    return;
+  }
   const submit = event.submitter;
   submit.disabled = $('cancel-list').disabled = true;
   $('new-list-status').textContent = 'Creating list…';
@@ -405,7 +487,8 @@ $('new-list-form').addEventListener('submit', async event => {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         code: $('new-list-code').value, revision: latest.revision,
-        title: $('new-list-title').value, game: $('new-list-game').value
+        title: $('new-list-title').value, game: $('new-list-game').value,
+        ...($('new-list-game').value === '__create__' ? { gameTitle: $('new-game-title').value } : {})
       })
     });
     if (result.reviewState !== 'merged') throw new Error('The list could not publish automatically. Try again.');
@@ -414,6 +497,9 @@ $('new-list-form').addEventListener('submit', async event => {
     await switchList(profile.lists.at(-1).id);
     $('new-list-dialog').close();
     $('new-list-form').reset();
+    $('new-game-field').hidden = true;
+    $('new-game-title').disabled = true;
+    $('new-game-title').required = false;
   } catch (error) {
     $('new-list-status').textContent = error.message;
   } finally {
@@ -494,7 +580,10 @@ async function init() {
     profile = result.document;
     directoryPlayer = (await fetch('../players.json', { cache: 'no-cache' }).then(response => response.json())).players.find(entry => entry.id === player);
     applyEditorTheme();
-    $('new-list-game').replaceChildren(...Object.entries(gameNames).map(([id, name]) => new Option(name, id)));
+    try { gameCategories = (await api('/games')).games; } catch (_) {
+      for (const entry of profile.lists) if (entry.gameTitle && !gameCategories.some(game => game.id === entry.game)) gameCategories.push({ id: entry.game, title: entry.gameTitle });
+      gameCategories.sort((a,b) => a.title.localeCompare(b.title, 'en', {sensitivity:'base'}));
+    }
     $('back').textContent = '‹ Back to profile';
     initListOrder();
     const initial = profile.lists.some(entry => entry.id === list) ? list : profile.lists[0]?.id;
@@ -507,6 +596,7 @@ async function init() {
 }
 applyEditorTheme();
 init();
+
 
 
 

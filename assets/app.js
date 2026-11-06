@@ -171,9 +171,10 @@
       <div class="player-search-wrap"><div class="player-search-box">${ICON_SEARCH}<input type="search" id="player-search" placeholder="Search for a player..." autocomplete="off" aria-label="Search players" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="player-results" value="${esc(state.search)}"></div>
       </div><p class="home-helper">Search by name or filter by game.</p>
       <div class="game-filters" role="group" aria-label="Filter players by game">
-        ${Object.entries(games).map(([id, name]) => `<button type="button" data-game-filter="${id}" aria-pressed="${state.game === id}">${name}</button>`).join('')}
+        ${Object.entries(games).sort((a,b)=>a[1].localeCompare(b[1], 'en', {sensitivity:'base'})).map(([id, name]) => `<button type="button" data-game-filter="${id}" aria-pressed="${state.game === id}">${name}</button>`).join('')}
       </div></section>
-      <section class="player-directory" aria-labelledby="directory-heading"><h2 id="directory-heading">Players A–Z</h2><div class="player-results" id="player-results" role="listbox" aria-labelledby="directory-heading"></div></section></main>`);
+      <section class="player-directory" aria-labelledby="directory-heading"><h2 id="directory-heading">Players A–Z</h2><div class="player-results" id="player-results" role="listbox" aria-labelledby="directory-heading"></div></section>
+      <p class="home-contact">Want your own list profile? Reach out to <strong>djjdk</strong> on Discord.</p></main>`);
     refreshResults();
     applyTheme();
   }
@@ -566,8 +567,15 @@
       await Promise.allSettled(state.directory.map(async player => {
         const profile = await fetchJson(`players/${player.folder}/profile.json`);
         player.games = [...new Set(profile.lists.map(entry => listGame(entry)))];
+        for (const entry of profile.lists) {
+          if (/^game-[a-z0-9-]{1,70}$/.test(entry.game || '') && typeof entry.gameTitle === 'string') games[entry.game] = entry.gameTitle;
+        }
       }));
-      if (state.route?.type === 'home') refreshResults();
+      if (state.route?.type === 'home') {
+        const filters = document.querySelector('.game-filters');
+        if (filters) filters.innerHTML = Object.entries(games).sort((a,b)=>a[1].localeCompare(b[1], 'en', {sensitivity:'base'})).map(([id,name])=>`<button type="button" data-game-filter="${esc(id)}" aria-pressed="${state.game === id}">${esc(name)}</button>`).join('');
+        refreshResults();
+      }
     } catch(e) {
       state.route={type:'home'};
       state.activeProfile=null;
@@ -577,6 +585,7 @@
   setTheme(state.theme);
   boot();
 })();
+
 
 
 
