@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "title": "Geometry Dash List",
-  "description": "AJaX\u2019s Geometry Dash completions, ranked hardest to easiest.",
+  "description": "AJaX’s Geometry Dash completions, ranked hardest to easiest.",
   "levels": [
     {
       "rank": 1,
@@ -27,6 +27,19 @@
     {
       "rank": 3,
       "rankLabel": "3",
+      "name": "Black Blizzard",
+      "creator": "KrmaL",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://www.youtube.com/watch?v=2px_kIOouxE",
+      "videoTitle": "BLACK BLIZZARD | KrmaL | Tidal Wave 12 Demons of Christmas #12",
+      "videoPublishedDate": "2025-12-25",
+      "attempts": "21,821",
+      "worstFail": 98,
+      "enjoyment": 9.7
+    },
+    {
+      "rank": 4,
+      "rankLabel": "4",
       "name": "Infernal Abyss",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=SNhREcLyc3A",
@@ -34,11 +47,11 @@
       "videoPublishedDate": "2026-02-18",
       "attempts": "8,534",
       "worstFail": 87,
-      "enjoyment": 6.0
+      "enjoyment": 6
     },
     {
-      "rank": 4,
-      "rankLabel": "4",
+      "rank": 5,
+      "rankLabel": "5",
       "name": "Blade of Justice",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=b2C-rsQwhpM",
@@ -49,8 +62,8 @@
       "enjoyment": 8.2
     },
     {
-      "rank": 5,
-      "rankLabel": "5",
+      "rank": 6,
+      "rankLabel": "6",
       "name": "Moment",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=cI-WAkehO3A",
@@ -58,11 +71,11 @@
       "videoPublishedDate": "2023-09-26",
       "attempts": "13,257",
       "worstFail": 76,
-      "enjoyment": 3.0
+      "enjoyment": 3
     },
     {
-      "rank": 6,
-      "rankLabel": "6",
+      "rank": 7,
+      "rankLabel": "7",
       "name": "Idols",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=hl452kbtx_k",
@@ -73,8 +86,8 @@
       "enjoyment": 8.5
     },
     {
-      "rank": 7,
-      "rankLabel": "7",
+      "rank": 8,
+      "rankLabel": "8",
       "name": "Prismatic Haze",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=oN4WA3Nbtto",
@@ -87,8 +100,8 @@
       "completionYear": 2025
     },
     {
-      "rank": 8,
-      "rankLabel": "8",
+      "rank": 9,
+      "rankLabel": "9",
       "name": "Overtime",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=Cgo0nKMhVxk",
@@ -99,8 +112,8 @@
       "enjoyment": 6.2
     },
     {
-      "rank": 9,
-      "rankLabel": "9",
+      "rank": 10,
+      "rankLabel": "10",
       "name": "Falling Up",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=ECrT6ZjKTzk",
@@ -111,8 +124,8 @@
       "enjoyment": 2.3
     },
     {
-      "rank": 10,
-      "rankLabel": "10",
+      "rank": 11,
+      "rankLabel": "11",
       "name": "Retention",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=oXQjrX9PI2I",
@@ -123,8 +136,8 @@
       "enjoyment": 7.6
     },
     {
-      "rank": 11,
-      "rankLabel": "11",
+      "rank": 12,
+      "rankLabel": "12",
       "name": "8O X",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=f1RzYpoO_nc",
@@ -132,11 +145,11 @@
       "videoPublishedDate": "2023-02-27",
       "attempts": "5,847",
       "worstFail": 97,
-      "enjoyment": 6.0
+      "enjoyment": 6
     },
     {
-      "rank": 12,
-      "rankLabel": "12",
+      "rank": 13,
+      "rankLabel": "13",
       "name": "Without U",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=P-T9tDAodRA",
@@ -147,8 +160,8 @@
       "enjoyment": 8.4
     },
     {
-      "rank": 13,
-      "rankLabel": "13",
+      "rank": 14,
+      "rankLabel": "14",
       "name": "Cataclysm",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=uBUKD39U11U",
