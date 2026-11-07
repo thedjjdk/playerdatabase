@@ -70,3 +70,13 @@
 .background-switches {display:flex;flex-wrap:wrap;gap:12px 24px;margin:14px 0}
 .background-switches label {display:flex;align-items:center;gap:9px}
 .editor .background-switches input {width:20px;height:20px;min-height:0;accent-color:var(--accent);flex:none}
+
+.badge-fields {display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;margin-bottom:12px}
+.badge-fields>* {min-width:0}
+#frame-preview {position:relative;isolation:isolate;overflow:hidden;aspect-ratio:16/9;max-width:680px;border:1px solid var(--border);padding:25px;margin:18px auto;background:var(--surface)}
+#frame-preview.mobile-preview {aspect-ratio:9/16;max-width:280px}
+#frame-image {position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--profile-left),var(--profile-right));mask-size:cover;mask-repeat:no-repeat;-webkit-mask-size:cover;-webkit-mask-repeat:no-repeat}
+#frame-controls {display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+#frame-controls label {display:flex;flex-direction:column}
+.customization h3 {margin-top:30px}
+@media(max-width:700px){.badge-fields{grid-template-columns:1fr 1fr}#frame-controls{grid-template-columns:1fr}}

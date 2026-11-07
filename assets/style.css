@@ -1457,3 +1457,12 @@ body .listcard:is(:hover,:focus-within,:focus-visible) {
   box-shadow:-4px 0 18px -6px color-mix(in srgb,var(--profile-left,var(--accent)) 42%,transparent),4px 0 18px -6px color-mix(in srgb,var(--profile-right,var(--accent)) 42%,transparent);
 }
 @media(prefers-reduced-motion:reduce) {body .listcard {transition:none}}
+
+.profile-badges {display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.profile-badge {display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);background:var(--panel-fill);border-radius:20px;font-size:14px;color:var(--text)}
+.profile-badge>span {color:var(--accent)}
+.game-banner {position:relative;isolation:isolate;overflow:hidden;min-height:150px;display:flex;align-items:center;padding:24px;margin:0 0 20px;border:1px solid var(--border)}
+.game-banner img {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.game-banner h2 {margin:0;text-shadow:0 1px 6px var(--surface)}
+#in-progress-toggle[aria-pressed=true] {background:var(--accent)!important;color:var(--surface)!important}
+#profile-background {clip-path:inset(0)}

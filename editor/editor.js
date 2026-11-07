@@ -1,4 +1,5 @@
-import '../assets/profile-theme.js?v=background-controls-4';
+import './customization.js?v=profile-options-1';
+import '../assets/profile-theme.js?v=profile-options-1';
 import { editorApi } from './config.js?v=review-1';
 
 const $ = id => document.getElementById(id);
@@ -40,7 +41,7 @@ let listOrder = [], orderBaseline = '[]';
 const orderChanged = () => JSON.stringify(listOrder) !== orderBaseline;
 function fields() {
   return [
-    ['name', 'Level name', 'text'], ['videoUrl', 'Video link', 'url'],
+    ['name', 'Level name', 'text'], ['status', 'Status', 'status'], ['progress', 'Progress / best run', 'text'], ['videoUrl', 'Video link', 'url'],
     game === 'geometry-dash' ? ['difficulty', 'Difficulty', 'select'] : ['gameRank', 'Rank', 'text'],
     ['completionDate', 'Completion date', 'date'],
     game === 'geometry-dash' ? ['attempts', 'Attempts', 'text'] : ['timeTaken', 'Game Time', 'text'],
@@ -93,6 +94,7 @@ async function initAppearance() {
     $('background-invert-dark').checked = profile.backgroundInvertDark;
     $('background-opacity').value = opacityOf(profile);
     savedBackground = backgroundSnapshot(profile);
+    window.dispatchEvent(new CustomEvent('player-editor-ready',{detail:{profile,player,list}}));
     backgroundReady = true;
     refreshBackground();
     applyEditorTheme();
@@ -235,6 +237,7 @@ $('background-form').addEventListener('submit', async event => {
     profile.backgroundInvertDark = result.document.backgroundInvertDark === true;
     $('background-opacity').value = opacityOf(profile);
     savedBackground = backgroundSnapshot(profile);
+    window.dispatchEvent(new CustomEvent('player-editor-ready',{detail:{profile,player,list}}));
     appearanceRevision = result.revision;
     clearBackgroundDraft();
     $('background-status').textContent = 'Background saved. It will appear after deployment.';
@@ -266,8 +269,8 @@ function changed() {
 
 function fieldControl(row, key, label, kind, max, title) {
   const wrap = text('label', label);
-  const input = document.createElement(kind === 'select' ? 'select' : 'input');
-  if (kind === 'select') {
+  const input = document.createElement(['select','status'].includes(kind) ? 'select' : 'input');
+  if (kind === 'status') { for (const [value,label] of [['completed','Completed'],['in-progress','In Progress']]) input.add(new Option(label,value)); } else if (kind === 'select') {
     for (const [value, name] of [["","Unspecified"],["easy","Easy"],["normal","Normal"],["hard","Hard"],["harder","Harder"],["insane","Insane"],["easy-demon","Easy Demon"],["medium-demon","Medium Demon"],["hard-demon","Hard Demon"],["insane-demon","Insane Demon"],["extreme-demon","Extreme Demon"]]) input.add(new Option(name, value));
   } else input.type = kind;
   if (max) { input.min = '0'; input.max = String(max); input.step = 'any'; }
@@ -276,7 +279,7 @@ function fieldControl(row, key, label, kind, max, title) {
     input.placeholder = 'e.g. Grandmaster or GM+1';
   }
   input.name = key;
-  input.value = row[key] ?? '';
+  input.value = row[key] ?? (key === 'status' ? 'completed' : '');
   input.addEventListener('input', () => {
     row[key] = kind === 'number' && input.value !== '' ? input.valueAsNumber : input.value;
     if (key === 'name') title.textContent = '#' + (rows.indexOf(row) + 1) + ' – ' + (row.name || 'New placement');
@@ -439,6 +442,7 @@ async function switchList(id) {
     $('title').textContent = 'Edit ' + profile.name;
     $('back').href = '../#/player/' + player + '/' + list;
     refreshListSelector();
+    window.dispatchEvent(new CustomEvent('player-editor-ready',{detail:{profile,player,list}}));
     history.replaceState(null, '', '?' + new URLSearchParams({ player, list }));
     $('status').textContent = dirty ? 'Unsaved draft restored.' : '';
   } catch (error) {
@@ -726,3 +730,4 @@ async function init() {
 }
 applyEditorTheme();
 init();
+

@@ -54,7 +54,18 @@
     layer.style.maskComposite = inverted ? 'exclude' : 'add';
     layer.style.webkitMaskComposite = inverted ? 'xor' : 'source-over';
   }
+  function applyFrame(layer, frame = {}) {
+    const x = Number.isFinite(frame.x) ? frame.x : 50;
+    const y = Number.isFinite(frame.y) ? frame.y : 50;
+    const zoom = Number.isFinite(frame.zoom) ? Math.max(100,Math.min(200,frame.zoom)) : 100;
+    layer.style.maskPosition = layer.style.webkitMaskPosition = `${x}% ${y}%`;
+    layer.style.transform = `scale(${zoom/100})`;
+    layer.style.transformOrigin = `${x}% ${y}%`;
+  }
+  let currentProfile, currentOptions;
+  window.addEventListener('resize',()=>{if(currentProfile) applyBackground(currentProfile,currentOptions);});
   function applyBackground(profile, options) {
+    currentProfile=profile;currentOptions=options;
     const source = Object.hasOwn(options, 'backgroundUrl') ? options.backgroundUrl : imageUrl(profile, options.prefix || '');
     let layer = document.getElementById('profile-background');
     if (!source) { layer?.remove(); return; }
@@ -65,6 +76,7 @@
       document.body.prepend(layer);
     }
     applyImageMask(layer, source, options.light ? profile?.backgroundInvertLight !== true : profile?.backgroundInvertDark === true);
+    applyFrame(layer,profile?.backgroundFraming?.[window.innerWidth<=700?'mobile':'desktop']);
   }
   function apply(profile, theme, options = {}) {
 
@@ -85,5 +97,6 @@
     document.documentElement.style.colorScheme = light ? 'light' : 'dark';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', light ? '#fff' : '#1b1e22');
   }
-  window.PlayerListsTheme = { colors, readableAccent, imageUrl, applyImageMask, apply };
+  window.PlayerListsTheme = { colors, readableAccent, imageUrl, applyImageMask, applyFrame, apply };
 })();
+

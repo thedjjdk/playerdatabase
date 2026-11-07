@@ -19,7 +19,7 @@
     highlightedResult: 0,
     listSearch: '',
     year: 'all',
-    order: 'rank',
+    order: 'rank', inProgress:false,
     activeKey: '',
     activeList: null,
     activeProfile: null,
@@ -299,8 +299,16 @@
     if (game === 'celeste') return celesteMeter(item.gameRank, profile);
     return '';
   }
+  function badgesMarkup(profile) {
+    const icons={milestone:'★','personal-best':'↗',count:'#',perfect:'◆',challenge:'⚑',endurance:'◷',favorite:'♥'};
+    return `<div class="profile-badges" aria-label="Player highlights">${(profile.badges||[]).filter(b=>!b.list||b.list===state.route?.listId).map(b=>`<span class="profile-badge" title="Player-created highlight"><span aria-hidden="true">${icons[b.style]||'★'}</span> ${esc(b.name)}</span>`).join('')}</div>`;
+  }
+  function gameBanner(profile,entry) {
+    if(entry.bannerImage !== 'banner-'+entry.id+'.webp' || !/^[a-f0-9]{64}$/.test(entry.bannerVersion||'')) return '';
+    return `<div class="game-banner"><img src="players/${esc(profile.id)}/${esc(entry.bannerImage)}?v=${entry.bannerVersion}" alt="" style="opacity:${Math.max(5,Math.min(50,entry.bannerOpacity||15))/100}"><h2>${esc(entry.title)}</h2></div>`;
+  }
   function playerIntro(profile) {
-    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div></div>`;
+    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div>${badgesMarkup(profile)}</div>`;
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);
@@ -315,6 +323,7 @@
     });
   }
   function completionInfo(item, profile = state.activeProfile) {
+    if(item.status === 'in-progress') return {prefix:'In Progress',label:'PROGRESS',value:item.progress || 'Not provided',year:''};
     if (item.completionDate) return { prefix: 'Completed on', label: 'COMPLETION DATE', value: displayDate(item.completionDate), year: String(item.completionDate).slice(0, 4) };
     if (item.completionYear) return { prefix: 'Completed in', label: 'COMPLETION YEAR', value: String(item.completionYear), year: String(item.completionYear) };
     if (item.videoPublishedDate) return { prefix: profile?.id === 'djjdk' ? 'Completed on' : 'Completed by', label: profile?.id === 'djjdk' ? 'COMPLETION DATE' : 'COMPLETED BY', value: displayDate(item.videoPublishedDate), year: String(item.videoPublishedDate).slice(0, 4) };
@@ -330,6 +339,7 @@
     const game = listGame(profile.lists.find(entry => entry.id === listId));
     const gd = game === 'geometry-dash';
     const rank = Number.isInteger(item.rank) ? item.rank : index+1;
+    const displayRank = state.activeList.levels.filter(v => (v.status === 'in-progress') === (item.status === 'in-progress')).findIndex(v => v.rank === item.rank) + 1;
     const link = playerRoute(profile.id, listId, rank);
     const video = levelVideo(item);
     const thumbnail = thumbnailFor(item,profile);
@@ -340,7 +350,7 @@
       ${thumbnail ? (video
         ? `<a class="thumbnail has-video" href="${esc(video)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(name)}"><img src="${esc(thumbnail)}" loading="lazy" alt="" data-thumbnail></a>`
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
-      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${rank}</span> – ${esc(name)}</span>${difficultyBadge(item, profile, game)}</h2>
+      <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${displayRank || rank}</span> – ${esc(name)}</span>${difficultyBadge(item, profile, game)}</h2>
       <p class="creator">${completion.prefix ? `${completion.prefix} <strong>${esc(completion.value)}</strong>` : 'Completion date unavailable'}</p>
       <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${gd ? (item.attempts ? ` · ${esc(item.attempts)} attempts` : '') : (item.timeTaken ? ` · Game Time: ${esc(item.timeTaken)}` : '')}${!gd && item.gameRank ? ` · Rank: ${esc(item.gameRank)}` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
@@ -348,6 +358,7 @@
     const items = Array.isArray(state.activeList?.levels) ? [...state.activeList.levels] : [];
     const q = state.listSearch.trim().toLocaleLowerCase();
     let list = items.filter(v => {
+      if ((v.status === 'in-progress') !== !!state.inProgress) return false;
       if (state.year!=='all' && completionInfo(v).year!==state.year) return false;
       return !q || [v.name,completionInfo(v).year,v.videoTitle].some(x=>String(x||'').toLocaleLowerCase().includes(q));
     });
@@ -361,7 +372,7 @@
     const countEl = document.getElementById('result-count');
     if (!listEl || !state.activeProfile || !state.route) return;
     const items = filteredLevels();
-    const total = state.activeList.levels.length;
+    const total = state.activeList.levels.filter(v => (v.status === 'in-progress') === !!state.inProgress).length;
     if (countEl) countEl.textContent = `${items.length} of ${total} ranked ${total === 1 ? 'entry' : 'entries'}`;
     if (!total) {
       listEl.innerHTML = `<div class="empty list-empty"><strong>No levels added yet</strong><span>${esc(state.activeList.description||'This list is ready for entries.')}</span></div>`;
@@ -374,11 +385,11 @@
   }
   function listView(profile, entry, doc) {
     const years = [...new Set(doc.levels.map(x=>completionInfo(x).year).filter(Boolean))].sort((a,b)=>b-a);
-    const content = `<p class="list-description-inline">${esc(doc.description||'Personal ranked list.')}</p>
+    const content = `${gameBanner(profile,entry)}<p class="list-description-inline">${esc(doc.description||'Personal ranked list.')}</p>
       <div class="list-toolbar"><div class="list-filter-area">
       <input class="filter" type="search" id="level-search" aria-label="Search levels" placeholder="Search levels..." value="${esc(state.listSearch)}" autocomplete="off">
       <select class="select" id="year-filter" aria-label="Filter by completion year"><option value="all">All years</option>${years.map(year=>`<option value="${year}" ${state.year===String(year)?'selected':''}>${year}</option>`).join('')}</select>
-      <select class="select" id="sort-order" aria-label="Sort levels"><option value="rank" ${state.order==='rank'?'selected':''}>Rank: hardest first</option><option value="reverse" ${state.order==='reverse'?'selected':''}>Rank: easiest first</option><option value="name" ${state.order==='name'?'selected':''}>Level name</option>${years.length?`<option value="year" ${state.order==='year'?'selected':''}>Newest first</option>`:''}</select></div></div>
+      <select class="select" id="sort-order" aria-label="Sort levels"><option value="rank" ${state.order==='rank'?'selected':''}>Rank: hardest first</option><option value="reverse" ${state.order==='reverse'?'selected':''}>Rank: easiest first</option><option value="name" ${state.order==='name'?'selected':''}>Level name</option>${years.length?`<option value="year" ${state.order==='year'?'selected':''}>Newest first</option>`:''}</select><button class="ghostbutton" id="in-progress-toggle" aria-pressed="${!!state.inProgress}">In Progress</button></div></div>
       <div class="count-line" id="result-count"></div><div class="listcards" id="level-list"></div>`;
     shell(`<main class="container">${playerIntro(profile)}${tabsMarkup(profile.id,profile,entry.id)}<div class="layout"><div class="content">${content}</div>${sidebar(profile,doc)}</div></main>`);
     updateCardList();
@@ -453,7 +464,7 @@
       }
       const key = `${folder}/${entry.id}`;
       if (state.activeKey !== key) {
-        state.listSearch='';state.year='all';state.order='rank';state.activeKey=key;
+        state.listSearch='';state.year='all';state.order='rank';state.inProgress=false;state.activeKey=key;
       }
       const data = entry.data || await fetchJson(`players/${folder}/${entry.file}`);
       if (seq !== state.request) return;
@@ -477,6 +488,7 @@
     state.highlightedResult=0;
     refreshResults();
   }
+  app.addEventListener('click',e=>{if(e.target.id==='in-progress-toggle'){state.inProgress=!state.inProgress;state.year='all';document.getElementById('year-filter').value='all';e.target.setAttribute('aria-pressed',String(state.inProgress));updateCardList();}});
   app.addEventListener('input',e=>{
     if (e.target.id==='player-search') syncSearch(e);
     if (e.target.id==='level-search') {state.listSearch=e.target.value;updateCardList();}
@@ -585,6 +597,7 @@
   setTheme(state.theme);
   boot();
 })();
+
 
 
 
