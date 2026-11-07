@@ -12,7 +12,8 @@
       "worstFail": 89,
       "videoPublishedDate": "2022-05-01",
       "difficulty": "extreme-demon",
-      "timeTaken": "Just over 2 years, including breaks"
+      "timeTaken": "Just over 2 years, including breaks",
+      "status": "completed"
     },
     {
       "rank": 2,
@@ -22,7 +23,8 @@
       "attempts": "1,989",
       "enjoyment": 10,
       "worstFail": 91,
-      "videoPublishedDate": "2025-05-27"
+      "videoPublishedDate": "2025-05-27",
+      "status": "completed"
     },
     {
       "rank": 3,
@@ -32,7 +34,8 @@
       "attempts": "7,382",
       "enjoyment": 8,
       "worstFail": 98,
-      "videoPublishedDate": "2021-01-24"
+      "videoPublishedDate": "2021-01-24",
+      "status": "completed"
     },
     {
       "rank": 4,
@@ -42,7 +45,8 @@
       "attempts": "4,538 + ~2,500 lost",
       "enjoyment": 9,
       "worstFail": 96,
-      "videoPublishedDate": "2020-12-12"
+      "videoPublishedDate": "2020-12-12",
+      "status": "completed"
     },
     {
       "rank": 5,
@@ -52,7 +56,8 @@
       "attempts": "~2,800",
       "enjoyment": 7,
       "worstFail": 98,
-      "videoPublishedDate": "2023-08-21"
+      "videoPublishedDate": "2023-08-21",
+      "status": "completed"
     },
     {
       "rank": 6,
@@ -63,7 +68,8 @@
       "completionDate": "2022-08-31",
       "completionYear": 2022,
       "videoUrl": "https://www.youtube.com/watch?v=NaCiBFbCZ2M",
-      "difficulty": "insane-demon"
+      "difficulty": "insane-demon",
+      "status": "completed"
     },
     {
       "rank": 7,
@@ -74,7 +80,8 @@
       "completionDate": "2022-01-07",
       "completionYear": 2022,
       "videoUrl": "https://youtu.be/agLW4Yj9RFU",
-      "difficulty": "insane-demon"
+      "difficulty": "insane-demon",
+      "status": "completed"
     },
     {
       "rank": 8,
@@ -85,7 +92,8 @@
       "completionDate": "2022-10-27",
       "completionYear": 2022,
       "videoUrl": "https://youtu.be/zbvN5YEuUaE",
-      "difficulty": "insane-demon"
+      "difficulty": "insane-demon",
+      "status": "completed"
     },
     {
       "name": "Acropolis",
@@ -95,7 +103,8 @@
       "enjoyment": 5,
       "worstFail": 69,
       "videoPublishedDate": "2020-06-25",
-      "rank": 9
+      "rank": 9,
+      "status": "completed"
     },
     {
       "name": "Periodic Elements",
@@ -105,17 +114,27 @@
       "enjoyment": 6.5,
       "worstFail": 58,
       "videoPublishedDate": "2021-02-26",
-      "rank": 10
+      "rank": 10,
+      "status": "completed"
     },
     {
       "rank": 11,
+      "name": "Stalemate",
+      "status": "completed",
+      "progress": "96",
+      "enjoyment": 1,
+      "difficulty": "insane-demon"
+    },
+    {
+      "rank": 12,
       "name": "CastleMania (All Paths)",
       "attempts": "2544",
       "enjoyment": 8.2,
       "completionDate": "2020-11-08",
       "completionYear": 2020,
       "videoUrl": "https://youtu.be/S2ih4foG_kI",
-      "difficulty": "insane-demon"
+      "difficulty": "insane-demon",
+      "status": "completed"
     },
     {
       "name": "Spacelocked II",
@@ -125,10 +144,11 @@
       "enjoyment": 4,
       "worstFail": 84,
       "videoPublishedDate": "2021-02-12",
-      "rank": 12
+      "rank": 13,
+      "status": "completed"
     },
     {
-      "rank": 13,
+      "rank": 14,
       "name": "bomb the rave",
       "attempts": "1133",
       "enjoyment": 6,
@@ -136,7 +156,8 @@
       "completionDate": "2021-12-24",
       "completionYear": 2021,
       "videoUrl": "https://youtu.be/Wet5V-GRbvA",
-      "difficulty": "insane-demon"
+      "difficulty": "insane-demon",
+      "status": "completed"
     },
     {
       "name": "CraZy II",
@@ -146,7 +167,8 @@
       "enjoyment": 8,
       "worstFail": 97,
       "videoPublishedDate": "2020-09-08",
-      "rank": 14
+      "rank": 15,
+      "status": "completed"
     },
     {
       "name": "Rupture",
@@ -156,7 +178,8 @@
       "enjoyment": 0,
       "worstFail": 92,
       "videoPublishedDate": "2021-02-06",
-      "rank": 15
+      "rank": 16,
+      "status": "completed"
     },
     {
       "name": "Windy Landscape",
@@ -166,7 +189,8 @@
       "enjoyment": 6,
       "worstFail": 88,
       "videoPublishedDate": "2022-09-18",
-      "rank": 16
+      "rank": 17,
+      "status": "completed"
     },
     {
       "name": "Game Time",
@@ -176,7 +200,8 @@
       "enjoyment": 9,
       "worstFail": 99,
       "videoPublishedDate": "2021-01-19",
-      "rank": 17
+      "rank": 18,
+      "status": "completed"
     }
   ]
 }
