@@ -294,9 +294,16 @@
     const label = 'Celeste rank: ' + rank;
     return `<span class="celeste-meter" role="img" aria-label="${esc(label)}" title="${esc(label)}"><img src="assets/celeste-${state}.png" alt="" aria-hidden="true" width="66" height="62"><span class="celeste-meter-tier" aria-hidden="true">${esc(tier)}</span></span>`;
   }
+  function beatSaberGrade(value) {
+    const match = String(value ?? '').trim().match(/^(?:grade\s*)?(\d{1,2})$/i);
+    const grade = match ? Number(match[1]) : 0;
+    if (grade < 1 || grade > 40) return '';
+    return `<img class="player-demon-face beat-saber-grade" src="assets/beat-saber/grade${String(grade).padStart(2, '0')}.webp" alt="Beat Saber Grade ${grade}" title="Grade ${grade}" width="56" height="56" style="width:56px;height:56px">`;
+  }
   function difficultyBadge(item, profile, game) {
     if (game === 'geometry-dash') return demonFace(item.difficulty, profile);
     if (game === 'celeste') return celesteMeter(item.gameRank, profile);
+    if (game === 'beat-saber') return beatSaberGrade(item.gameRank);
     return '';
   }
   function badgesMarkup(profile) {
@@ -352,7 +359,7 @@
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
       <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${displayRank || rank}</span> – ${esc(name)}</span>${difficultyBadge(item, profile, game)}</h2>
       <p class="creator">${completion.prefix ? `${completion.prefix} <strong>${esc(completion.value)}</strong>` : 'Completion date unavailable'}</p>
-      <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${gd ? (item.attempts ? ` · ${esc(item.attempts)} attempts` : '') : (item.timeTaken ? ` · Game Time: ${esc(item.timeTaken)}` : '')}${!gd && item.gameRank ? ` · Rank: ${esc(item.gameRank)}` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
+      <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${gd ? (item.attempts ? ` · ${esc(item.attempts)} attempts` : '') : (item.timeTaken ? ` · Game Time: ${esc(item.timeTaken)}` : '')}${!gd && item.gameRank ? ` · ${game === 'beat-saber' ? 'Grade' : 'Rank'}: ${esc(game === 'beat-saber' ? String(item.gameRank).replace(/^grade\s*/i, '') : item.gameRank)}` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
   }
   function filteredLevels() {
     const items = Array.isArray(state.activeList?.levels) ? [...state.activeList.levels] : [];
@@ -427,7 +434,7 @@
       ${detailVideo(item)}
       <div class="facts detail-grid">${facts.map(([value,label])=>`<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>
       <p class="statline"><strong>Enjoyment rating:</strong> ${item.enjoyment == null ? 'Not provided' : `${esc(item.enjoyment)}/10`}</p>
-      ${gd ? `<p class="statline"><strong>Time taken:</strong> ${attr('timeTaken')}</p>` : `<p class="statline"><strong>Rank:</strong> ${attr('gameRank')}</p>`}
+      ${gd ? `<p class="statline"><strong>Time taken:</strong> ${attr('timeTaken')}</p>` : `<p class="statline"><strong>${game === 'beat-saber' ? 'Grade' : 'Rank'}:</strong> ${game === 'beat-saber' ? attr('gameRank').replace(/^grade\s*/i, '') : attr('gameRank')}</p>`}
       ${item.videoTitle ? `<p class="statline"><strong>Video title:</strong> ${esc(item.videoTitle)}</p>` : ''}
       ${item.rankLabel && item.rankLabel !== String(item.rank) ? `<p class="statline"><strong>Original ranking label:</strong> ${esc(item.rankLabel)}</p>` : ''}
       ${item.name.includes('*') ? `<p class="statline"><strong>Source notation:</strong> Asterisk(s) are retained as written in the source spreadsheet.</p>` : ''}
@@ -597,6 +604,7 @@
   setTheme(state.theme);
   boot();
 })();
+
 
 
 

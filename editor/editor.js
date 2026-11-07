@@ -42,7 +42,7 @@ const orderChanged = () => JSON.stringify(listOrder) !== orderBaseline;
 function fields() {
   return [
     ['name', 'Level name', 'text'], ['status', 'Status', 'status'], ['progress', 'Progress / best run', 'text'], ['videoUrl', 'Video link', 'url'],
-    game === 'geometry-dash' ? ['difficulty', 'Difficulty', 'select'] : ['gameRank', 'Rank', 'text'],
+    game === 'geometry-dash' ? ['difficulty', 'Difficulty', 'select'] : game === 'beat-saber' ? ['gameRank', 'Grade', 'beat-grade'] : ['gameRank', 'Rank', 'text'],
     ['completionDate', 'Completion date', 'date'],
     game === 'geometry-dash' ? ['attempts', 'Attempts', 'text'] : ['timeTaken', 'Game Time', 'text'],
     ['enjoyment', 'Enjoyment / 10', 'number', 10],
@@ -269,8 +269,18 @@ function changed() {
 
 function fieldControl(row, key, label, kind, max, title) {
   const wrap = text('label', label);
-  const input = document.createElement(['select','status'].includes(kind) ? 'select' : 'input');
-  if (kind === 'status') { for (const [value,label] of [['completed','Completed'],['in-progress','In Progress']]) input.add(new Option(label,value)); } else if (kind === 'select') {
+  const input = document.createElement(['select','status','beat-grade'].includes(kind) ? 'select' : 'input');
+  let displayedValue = row[key] ?? (key === 'status' ? 'completed' : '');
+  if (kind === 'beat-grade') {
+    input.add(new Option('Unspecified', ''));
+    for (let grade = 1; grade <= 40; grade++) input.add(new Option('Grade ' + grade, 'Grade ' + grade));
+    // Preserve pre-existing rank text until the player deliberately chooses a grade.
+    const existing = String(row[key] ?? '').trim();
+    const match = existing.match(/^(?:grade\s*)?(\d{1,2})$/i);
+    const grade = match ? Number(match[1]) : 0;
+    if (grade >= 1 && grade <= 40) displayedValue = 'Grade ' + grade;
+    else if (existing) input.add(new Option(existing + ' (current value)', existing));
+  } else if (kind === 'status') { for (const [value,label] of [['completed','Completed'],['in-progress','In Progress']]) input.add(new Option(label,value)); } else if (kind === 'select') {
     for (const [value, name] of [["","Unspecified"],["easy","Easy"],["normal","Normal"],["hard","Hard"],["harder","Harder"],["insane","Insane"],["easy-demon","Easy Demon"],["medium-demon","Medium Demon"],["hard-demon","Hard Demon"],["insane-demon","Insane Demon"],["extreme-demon","Extreme Demon"]]) input.add(new Option(name, value));
   } else input.type = kind;
   if (max) { input.min = '0'; input.max = String(max); input.step = 'any'; }
@@ -279,13 +289,27 @@ function fieldControl(row, key, label, kind, max, title) {
     input.placeholder = 'e.g. Grandmaster or GM+1';
   }
   input.name = key;
-  input.value = row[key] ?? (key === 'status' ? 'completed' : '');
+  input.value = displayedValue;
   input.addEventListener('input', () => {
     row[key] = kind === 'number' && input.value !== '' ? input.valueAsNumber : input.value;
     if (key === 'name') title.textContent = '#' + (rows.indexOf(row) + 1) + ' – ' + (row.name || 'New placement');
     changed();
   });
   wrap.append(input);
+  if (kind === 'beat-grade') {
+    const preview = document.createElement('img');
+    preview.width = 56; preview.height = 56;
+    preview.style.cssText = 'object-fit:contain;display:block;margin-top:8px';
+    const updatePreview = () => {
+      const match = input.value.match(/^Grade (\d{1,2})$/);
+      preview.hidden = !match;
+      preview.style.display = match ? 'block' : 'none';
+      if (match) { preview.src = '../assets/beat-saber/grade' + match[1].padStart(2, '0') + '.webp'; preview.alt = 'Beat Saber Grade ' + match[1]; }
+      else { preview.removeAttribute('src'); preview.alt = ''; }
+    };
+    input.addEventListener('input', updatePreview);
+    updatePreview(); wrap.append(preview);
+  }
   return wrap;
 }
 
@@ -730,4 +754,5 @@ async function init() {
 }
 applyEditorTheme();
 init();
+
 
