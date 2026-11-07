@@ -179,7 +179,7 @@
     applyTheme();
   }
   function tabsMarkup(pid, profile, active) {
-    return `<div class="wide-tabs" role="tablist" aria-label="Player lists">${profile.lists.map(entry=>`<button type="button" role="tab" aria-selected="${entry.id===active}" data-player-tab="${esc(entry.id)}" data-player-id="${esc(pid)}">${esc(entry.title)}</button>`).join('')}${profile.editable===false?'':`<button type="button" data-list-editor data-player-id="${esc(pid)}" data-list-id="${esc(active)}">Edit</button>`}</div>`;
+    return `<div class="wide-tabs" role="tablist" aria-label="Player lists">${profile.lists.map(entry=>`<button type="button" role="tab" aria-selected="${entry.id===active}" data-player-tab="${esc(entry.id)}" data-player-id="${esc(pid)}">${gameBanner(profile,entry)}<span class="list-tab-label">${esc(entry.title)}</span></button>`).join('')}${profile.editable===false?'':`<button type="button" data-list-editor data-player-id="${esc(pid)}" data-list-id="${esc(active)}">Edit</button>`}</div>`;
   }
   function playerAvatar(player) {
     const initial = esc(player.name.slice(0, 1).toUpperCase());
@@ -312,7 +312,7 @@
   }
   function gameBanner(profile,entry) {
     if(entry.bannerImage !== 'banner-'+entry.id+'.webp' || !/^[a-f0-9]{64}$/.test(entry.bannerVersion||'')) return '';
-    return `<div class="game-banner"><img src="players/${esc(profile.id)}/${esc(entry.bannerImage)}?v=${entry.bannerVersion}" alt="" style="opacity:${Math.max(5,Math.min(50,entry.bannerOpacity||15))/100}"><h2>${esc(entry.title)}</h2></div>`;
+    return `<img class="list-tab-banner" src="players/${esc(profile.id)}/${esc(entry.bannerImage)}?v=${entry.bannerVersion}" alt="" aria-hidden="true" style="opacity:${Math.max(5,Math.min(50,entry.bannerOpacity||15))/100}">`;
   }
   function playerIntro(profile) {
     return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div>${badgesMarkup(profile)}</div>`;
@@ -392,7 +392,7 @@
   }
   function listView(profile, entry, doc) {
     const years = [...new Set(doc.levels.map(x=>completionInfo(x).year).filter(Boolean))].sort((a,b)=>b-a);
-    const content = `${gameBanner(profile,entry)}<p class="list-description-inline">${esc(doc.description||'Personal ranked list.')}</p>
+    const content = `<p class="list-description-inline">${esc(doc.description||'Personal ranked list.')}</p>
       <div class="list-toolbar"><div class="list-filter-area">
       <input class="filter" type="search" id="level-search" aria-label="Search levels" placeholder="Search levels..." value="${esc(state.listSearch)}" autocomplete="off">
       <select class="select" id="year-filter" aria-label="Filter by completion year"><option value="all">All years</option>${years.map(year=>`<option value="${year}" ${state.year===String(year)?'selected':''}>${year}</option>`).join('')}</select>
@@ -604,6 +604,7 @@
   setTheme(state.theme);
   boot();
 })();
+
 
 
 

@@ -1,0 +1,6 @@
+.wide-tabs button[data-player-tab] {isolation:isolate;overflow:hidden}
+.wide-tabs .list-tab-banner {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0}
+.wide-tabs .list-tab-label {position:relative;z-index:1}
+.wide-tabs button[aria-selected=true]::after {z-index:2}
+.game-banner.list-tab-banner-preview {min-height:65px;max-width:320px;padding:18px 22px;border:1px dashed var(--border);background:var(--surface)}
+.game-banner.list-tab-banner-preview h2 {font-size:16px;font-weight:800}
