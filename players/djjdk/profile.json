@@ -7,12 +7,28 @@
     {
       "id": "geometry-dash",
       "title": "Geometry Dash List",
-      "file": "geometry-dash.json"
+      "file": "geometry-dash.json",
+      "bannerOpacity": 15,
+      "bannerVersion": "8f6c39eaf168e9de3f75953dd039fc1276675702a28807a7913e0ff39b7c3778",
+      "bannerImage": "banner-geometry-dash.webp"
     }
   ],
   "backgroundImage": "background.webp",
   "backgroundImageVersion": "c36d4fc3f87a901fc94b5ac5b8e79433249b792f6e7088ccd1cac998b9ec3188",
   "backgroundInvertLight": false,
   "backgroundInvertDark": false,
-  "backgroundOpacity": 15
+  "backgroundOpacity": 15,
+  "backgroundFraming": {
+    "desktop": {
+      "x": 50,
+      "y": 50,
+      "zoom": 100
+    },
+    "mobile": {
+      "x": 50,
+      "y": 50,
+      "zoom": 100
+    }
+  },
+  "badges": []
 }
