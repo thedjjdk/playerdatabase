@@ -285,8 +285,7 @@ function fieldControl(row, key, label, kind, max, title) {
   } else input.type = kind;
   if (max) { input.min = '0'; input.max = String(max); input.step = 'any'; }
   if (key === 'gameRank' && game === 'celeste') {
-    input.setAttribute('list', 'celeste-rank-options');
-    input.placeholder = 'e.g. Grandmaster or GM+1';
+    input.placeholder = 'e.g. Green GM+1';
   }
   input.name = key;
   input.value = displayedValue;
@@ -295,6 +294,31 @@ function fieldControl(row, key, label, kind, max, title) {
     if (key === 'name') title.textContent = '#' + (rows.indexOf(row) + 1) + ' – ' + (row.name || 'New placement');
     changed();
   });
+  if (key === 'gameRank' && game === 'celeste') {
+    const presets = new Map([
+      ['Blue', 'Beginner'], ['Green', 'Intermediate'], ['Lime', 'Advanced'],
+      ['Yellow', 'Expert'], ['Orange', 'Grandmaster'], ['Red', 'Cracked Grandmaster'],
+      ['Cracked', 'GM+1'], ['Shattered', 'GM+2'],
+    ]);
+    const picker = document.createElement('select');
+    picker.setAttribute('aria-label', 'Celeste difficulty preset');
+    picker.add(new Option('Choose a difficulty preset', ''));
+    for (const [code, tier] of presets) picker.add(new Option(code + ' · ' + tier, code));
+    const syncPicker = () => {
+      const rank = input.value.trim().toLowerCase();
+      picker.value = [...presets].find(([code, tier]) =>
+        [code.toLowerCase(), tier.toLowerCase()].includes(rank))?.[0] ?? '';
+    };
+    picker.addEventListener('change', () => {
+      if (!picker.value) return syncPicker();
+      input.value = picker.value;
+      input.dispatchEvent(new Event('input'));
+    });
+    input.addEventListener('input', syncPicker);
+    syncPicker();
+    input.setAttribute('aria-label', 'Celeste rank or custom label');
+    wrap.append(picker);
+  }
   wrap.append(input);
   if (kind === 'beat-grade') {
     const preview = document.createElement('img');
