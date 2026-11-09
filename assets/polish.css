@@ -38,3 +38,6 @@ body dialog#confirm {background:var(--surface)!important;border-radius:14px;bord
  body .list-filter-area .filter {flex-basis:100%}
 }
 @media(prefers-reduced-motion:reduce) {body .listcard {transition:none}}
+
+/* The results panel provides the directory surface. */
+body .player-directory {background:transparent!important}
