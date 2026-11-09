@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Difficulty Help · Player Database</title>
+<link rel="stylesheet" href="../assets/style.css?v=opaque-overlays-1">
+<link rel="stylesheet" href="../assets/polish.css?v=directory-3">
+<style>
+.guide {max-width:880px;padding-block:24px 48px}
+.guide .panel {margin-block:16px}
+.guide dl {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:8px 16px;margin:0}
+.guide dt,.guide dd {margin:0;overflow-wrap:anywhere}
+.guide label {display:block;margin-block:12px}
+.guide textarea {display:block;width:100%;min-height:8rem;background:var(--page);color:var(--text);font:inherit;padding:8px}
+</style>
+<script src="help.js?v=1" defer></script>
+</head>
+<body>
+<main class="container guide">
+<a href="../#/">← Back to player search</a>
+<h1>Difficulty Help</h1>
+<p>List editors: <strong>DJ JDK</strong> and <strong>KayceeNoelle</strong>.</p>
+<div id="guide"></div>
+<p id="status" role="status"></p>
+<button type="button" class="ghostbutton" id="edit" disabled>Edit difficulty lists</button>
+<form id="edit-form" class="panel" hidden>
+<p>Enter one difficulty per line. Separate the name and description with a vertical bar (|).</p>
+<div id="fields"></div>
+<label>List editor
+<select class="select" name="editor"><option value="djjdk">DJ JDK</option><option value="kayceenoelle">KayceeNoelle</option></select>
+</label>
+<label>Player ID <input class="filter" name="code" type="password" inputmode="numeric" pattern="[0-9]{16}" maxlength="16" required autocomplete="off"></label>
+<button class="ghostbutton" type="submit">Save guide</button>
+<button class="ghostbutton" type="button" id="cancel">Cancel</button>
+</form>
+</main>
+</body>
+</html>

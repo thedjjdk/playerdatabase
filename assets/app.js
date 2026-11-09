@@ -120,10 +120,10 @@
     const isHome = state.route?.type === 'home';
     return `<header class="sitehead"><div class="container headinner">
       <a class="wordmark" href="#/" aria-label="Player Lists home">PLAYER<b> LISTS</b></a>
-      <nav class="navlinks" aria-label="Main navigation"><a class="${isHome?'active':''}" href="#/">Players</a></nav>
+      <nav class="navlinks" aria-label="Main navigation"><a class="${isHome?'active':''}" href="#/">Players</a><a href="help/">Help</a></nav>
       <div class="appearance-tools theme-only"><button type="button" class="appearance-button" data-theme-toggle title="${state.theme==='light'?'Switch to dark mode':'Switch to light mode'}" aria-label="${state.theme==='light'?'Switch to dark mode':'Switch to light mode'}">${state.theme==='light'?ICON_SUN:ICON_MOON}</button></div>
       <div class="mobilehead-tools"><button type="button" class="mobileicon ${state.menuOpen?'is-open':''}" data-menu-toggle aria-label="${state.menuOpen?'Close':'Open'} navigation" aria-controls="site-menu" aria-expanded="${state.menuOpen}"><span class="menu-bars" aria-hidden="true"><i></i><i></i><i></i></span></button></div>
-    </div><div id="site-menu" class="mobile-menu ${state.menuOpen?'open':''}" role="navigation" aria-label="Mobile navigation" aria-hidden="${!state.menuOpen}" ${state.menuOpen?'':'inert'}><div class="mobile-menu-inner"><a href="#/">Search players</a>${state.route?.type==='player'?`<a href="${esc(playerRoute(state.route.player.id))}">${esc(state.route.player.name)}'s lists</a>`:''}</div></div></header>`;
+    </div><div id="site-menu" class="mobile-menu ${state.menuOpen?'open':''}" role="navigation" aria-label="Mobile navigation" aria-hidden="${!state.menuOpen}" ${state.menuOpen?'':'inert'}><div class="mobile-menu-inner"><a href="#/">Search players</a><a href="help/">Help</a>${state.route?.type==='player'?`<a href="${esc(playerRoute(state.route.player.id))}">${esc(state.route.player.name)}'s lists</a>`:''}</div></div></header>`;
   }
   function footer() {
     return `<footer class="container player-foot"><span>Player Lists · Built from the supplied Layout List design</span><a href="#/">Search players</a></footer>`;
@@ -169,7 +169,7 @@
     shell(`<main class="container home-main"><section class="home-focus" aria-label="Player search">
       <div class="home-kicker">PLAYER DIRECTORY</div><h1>Find a player</h1>
       <div class="player-search-wrap"><div class="player-search-box">${ICON_SEARCH}<input type="search" id="player-search" placeholder="Search for a player..." autocomplete="off" aria-label="Search players" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="player-results" value="${esc(state.search)}"></div>
-      </div><p class="home-helper">Search by name or filter by game.</p>
+      </div><p class="home-helper">Search by name or filter by game. <a href="help/">Difficulty help</a></p>
       <div class="game-filters" role="group" aria-label="Filter players by game">
         ${Object.entries(games).sort((a,b)=>a[1].localeCompare(b[1], 'en', {sensitivity:'base'})).map(([id, name]) => `<button type="button" data-game-filter="${id}" aria-pressed="${state.game === id}">${name}</button>`).join('')}
       </div></section>
