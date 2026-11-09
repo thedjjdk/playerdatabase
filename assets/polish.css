@@ -1,0 +1,40 @@
+/* Visual refresh. Rank artwork and player-defined theme colors remain unchanged. */
+body {--polish-edge:color-mix(in srgb,var(--text) 23%,transparent)}
+body :is(.listcard,.panel,.singlepanel,.list-empty,.player-search-box,.player-results,.fact,.editor-row,.background-preview) {border-radius:14px;border-style:solid;border-color:var(--polish-edge);box-shadow:0 8px 24px #00000012;background-image:linear-gradient(125deg,#ffffff05,transparent 65%)!important}
+body :is(.filter,.select,.ghostbutton,.pagebtn,.detail-actions a,.backbutton,.editor input:not([type=checkbox]):not([type=range]),.editor select,.editor button) {border-radius:10px;border-style:solid}
+body :is(.filter,.select,.ghostbutton) {min-height:44px}
+body .wide-tabs {border:1px solid var(--polish-edge);border-radius:13px;height:64px;margin-bottom:22px;padding:0;gap:0}
+body .wide-tabs button {position:relative;border:0;border-right:1px solid var(--polish-edge);border-radius:0;font-size:15px!important;isolation:isolate;overflow:hidden}
+body .wide-tabs button:last-child {border-right:0}
+body .wide-tabs button[aria-selected=true] {border-radius:12px;box-shadow:inset 0 0 0 2px var(--accent-strong);color:var(--text)}
+body .wide-tabs button[aria-selected=true]::after {display:none}
+body .wide-tabs button[aria-selected=true] .list-tab-label {color:#fff;text-shadow:0 1px 5px #000,0 1px 12px #000}
+body .wide-tabs button:not([aria-selected=true]) .list-tab-banner {display:none}
+body .wide-tabs .list-tab-banner {border-radius:11px}
+body .wide-tabs button[aria-selected=true]::before {content:'';position:absolute;inset:0;background:linear-gradient(90deg,#090f1960,#090f1920);z-index:1;pointer-events:none;border-radius:11px}
+body .wide-tabs .list-tab-label {z-index:2}
+body .listcard {padding:16px;gap:22px;min-height:150px;transition:box-shadow .18s ease,border-color .18s ease}
+body .listcard .thumbnail {border-radius:10px;flex:0 0 38%;width:38%;height:auto;aspect-ratio:16/9;border:0}
+body .listcard h2 {font-size:clamp(20px,2vw,27px);line-height:1.25;letter-spacing:-.5px}
+body .listcard .creator {margin-top:10px;font-style:normal}
+body .listcard .tiernote {line-height:1.7;color:var(--muted)}
+body .panel {padding:20px}
+body .panel h2 {border-bottom:0;padding-bottom:0;margin-bottom:12px}
+body .panel p {color:var(--muted)}
+body .bulletrows>div {border-color:var(--polish-edge);padding-bottom:11px}
+body .player-title-wrap .player-avatar-small {border-radius:16px;border:1px solid var(--polish-edge)}
+body .player-result {border-radius:9px}
+body .list-filter-area {width:100%}
+body .list-filter-area .filter {flex:1 1 190px;width:auto;min-width:0}
+body .list-toolbar {justify-content:flex-start}
+body .tierchip {border-radius:8px;border-style:solid}
+body .mobile-menu {background:var(--surface)!important}
+body dialog#confirm {background:var(--surface)!important;border-radius:14px;border:1px solid var(--polish-edge)}
+@media(max-width:780px) {
+ body .listcard {gap:16px;padding:14px}
+ body .listcard .thumbnail {width:100%;flex:0 0 auto;aspect-ratio:16/9}
+ body .wide-tabs {height:64px}
+ body .wide-tabs button {font-size:13px!important}
+ body .list-filter-area .filter {flex-basis:100%}
+}
+@media(prefers-reduced-motion:reduce) {body .listcard {transition:none}}

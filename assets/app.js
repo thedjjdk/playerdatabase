@@ -311,8 +311,13 @@
     return `<div class="profile-badges" aria-label="Player highlights">${(profile.badges||[]).filter(b=>!b.list||b.list===state.route?.listId).map(b=>`<span class="profile-badge" title="Player-created highlight"><span aria-hidden="true">${icons[b.style]||'★'}</span> ${esc(b.name)}</span>`).join('')}</div>`;
   }
   function gameBanner(profile,entry) {
-    if(entry.bannerImage !== 'banner-'+entry.id+'.webp' || !/^[a-f0-9]{64}$/.test(entry.bannerVersion||'')) return '';
-    return `<img class="list-tab-banner" src="players/${esc(profile.id)}/${esc(entry.bannerImage)}?v=${entry.bannerVersion}" alt="" aria-hidden="true" style="opacity:${Math.max(5,Math.min(50,entry.bannerOpacity||15))/100}">`;
+    const custom = entry.bannerImage === 'banner-'+entry.id+'.webp' && /^[a-f0-9]{64}$/.test(entry.bannerVersion||'');
+    const defaults = {'geometry-dash':'geometry-dash','celeste':'celeste','beat-saber':'beat-saber','fnaf-challenges':'fnaf','fnaf':'fnaf'};
+    const artwork = defaults[listGame(entry)];
+    if (!custom && !artwork) return '';
+    const src = custom ? `players/${esc(profile.id)}/${esc(entry.bannerImage)}?v=${entry.bannerVersion}` : `assets/game-art/${artwork}.webp`;
+    const opacity = custom ? Math.max(5,Math.min(50,entry.bannerOpacity||15))/100 : .65;
+    return `<img class="list-tab-banner" src="${src}" alt="" aria-hidden="true" style="opacity:${opacity}">`;
   }
   function playerIntro(profile) {
     return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div>${badgesMarkup(profile)}</div>`;
