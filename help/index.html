@@ -16,6 +16,8 @@
 .guide dl {align-items:center}
 .guide dt {display:flex;align-items:center;gap:8px}
 .guide dt img {flex:none;object-fit:contain}
+/* The source sprite ends partway through its caption. Use the full row label. */
+.guide dt img[src="../assets/insane.png"] {clip-path:inset(0 0 12% 0)}
 </style>
 <script src="help.js?v=2" defer></script>
 </head>
