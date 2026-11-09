@@ -1436,12 +1436,12 @@ body::before,body::after {z-index:1!important}
 .background-preview p {font-weight:750;color:var(--text);text-align:center}
 /* Translucent gray fills keep text, images and controls fully opaque. */
 body {--panel-fill:color-mix(in srgb,var(--surface) 75%,transparent);--panel-fill-raised:color-mix(in srgb,var(--surface2) 75%,transparent)}
-body :is(.singlepanel,.panel,.listcard,.list-empty,.player-search-box,.player-results,.player-directory,.fact,.data-note,.video-area-empty,.editor-row,.background-preview,.appearance-popover,.difficulty-popover,.game-options,.deletion-notice,dialog) {background:var(--panel-fill)!important}
+body :is(.singlepanel,.panel,.listcard,.list-empty,.player-search-box,.player-results,.player-directory,.fact,.data-note,.video-area-empty,.editor-row,.background-preview,.appearance-popover,.difficulty-popover,.game-options,.deletion-notice,dialog:not(#confirm)) {background:var(--panel-fill)!important}
 body :is(.tabs,.wide-tabs) {background:var(--panel-fill)!important}
 body :is(.filter,.select,.ghostbutton,.game-filters button,.editor input:not([type=range]):not([type=checkbox]):not([type=color]),.editor select,.editor button:not(#save)) {background:var(--panel-fill-raised)!important}
 body :is(.listcard:hover,.listcard:focus-visible,.player-result:hover,.player-result:focus-visible,.player-result.is-highlighted) {background:var(--panel-fill-raised)!important}
 body :is(.tabs,.wide-tabs) button:is(:hover,[aria-selected=true]) {background:var(--panel-fill-raised)!important}
-body :is(.sitehead,.mobile-menu,.language-menu,.reviewcard,.review-note,.statsbox,.grind-suggest) {background:var(--panel-fill)!important}
+body :is(.sitehead,.language-menu,.reviewcard,.review-note,.statsbox,.grind-suggest) {background:var(--panel-fill)!important}
 .sitehead::before {background:none!important}
 
 /* Keep hover and keyboard focus visibly brighter than selected/default fills. */
