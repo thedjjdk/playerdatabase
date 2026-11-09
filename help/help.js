@@ -17,6 +17,22 @@ function element(tag, text) {
   node.textContent = text;
   return node;
 }
+function difficultyIcon(game, name) {
+  const key = name.trim().toLowerCase();
+  if (game === 0 && defaults[0].some(([label]) => label.toLowerCase() === key)) {
+    return '../assets/' + key.replaceAll(' ', '-') + '.png';
+  }
+  if (game === 1) {
+    const match = defaults[1].find(([code, tier]) =>
+      code.toLowerCase() === key || tier.toLowerCase() === key);
+    if (match) return '../assets/celeste-' + match[0].toLowerCase() + '.png';
+  }
+  if (game === 2) {
+    const match = key.match(/^grade\s+([1-9]|[1-3][0-9]|40)$/);
+    if (match) return '../assets/beat-saber/grade' + match[1].padStart(2, '0') + '.webp';
+  }
+  return '';
+}
 function render() {
   byId('guide').replaceChildren(...sections.map((rows, i) => {
     const panel = element('section', '');
@@ -25,7 +41,18 @@ function render() {
     if (i === 0 || i === 2) panel.append(element('p', 'Listed from easiest to hardest.'));
     const list = element('dl', '');
     for (const [name, description] of rows) {
-      list.append(element('dt', name), element('dd', description));
+      const term = element('dt', name);
+      const src = difficultyIcon(i, name);
+      if (src) {
+        const icon = document.createElement('img');
+        icon.src = src;
+        icon.alt = '';
+        icon.width = 42;
+        icon.height = 42;
+        icon.loading = 'lazy';
+        term.prepend(icon);
+      }
+      list.append(term, element('dd', description));
     }
     panel.append(list);
     return panel;
