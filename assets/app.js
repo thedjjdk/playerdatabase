@@ -161,14 +161,25 @@
     const timing = {duration: 240, easing: 'ease-in-out'};
     bar.classList.add('is-sliding');
     bar.append(ring);
-    const banner = outgoing.querySelector('.list-tab-banner');
-    if (banner) {
-      const opacity = banner.style.opacity || '1';
+    const artwork = [];
+    for (const [tab, bounds] of [[outgoing, from], [selected, to]]) {
+      const banner = tab.querySelector('.list-tab-banner');
+      if (!banner) continue;
       banner.style.display = 'block';
-      banner.animate([{opacity}, {opacity: 0}], timing);
+      const windowAt = rect => {
+        const left = rect.left - bounds.left;
+        const right = rect.right - bounds.left;
+        const top = rect.top - bounds.top;
+        const bottom = rect.bottom - bounds.top;
+        return {clipPath: `polygon(${left}px ${top}px, ${right}px ${top}px, ${right}px ${bottom}px, ${left}px ${bottom}px)`};
+      };
+      artwork.push([banner, banner.animate([windowAt(from), windowAt(to)], {...timing, fill: 'both'})]);
     }
     const finish = () => {
-      if (banner) banner.style.removeProperty('display');
+      for (const [banner, animation] of artwork) {
+        banner.style.removeProperty('display');
+        animation.cancel();
+      }
       ring.remove();
       bar.classList.remove('is-sliding');
     };
