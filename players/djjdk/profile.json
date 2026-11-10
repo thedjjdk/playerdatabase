@@ -41,6 +41,12 @@
       "name": "First Rated Extreme Demon",
       "list": "geometry-dash",
       "level": "video:https://youtu.be/h1tJHDGBpEU"
+    },
+    {
+      "style": "milestone",
+      "name": "First Insane Demon",
+      "list": "geometry-dash",
+      "level": "video:https://youtu.be/tAl4DFFpeHg"
     }
   ]
 }
