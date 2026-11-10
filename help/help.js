@@ -33,16 +33,72 @@ function difficultyIcon(game, name) {
   }
   return '';
 }
+const xp = window.PlayerDatabaseXp;
+const search = byId('game-search');
+const guide = byId('guide');
+const expandedGames = new Set();
+
+function awardFor(game, name) {
+  const key = name.trim().toLowerCase();
+  if (game === 0) {
+    if (key === 'extreme demon') return xp.extremeTiers.at(-1).xp;
+    return xp.geometryXp.get(key.replace(/\s+/g, '-')) ?? xp.fallback;
+  }
+  if (game === 1) {
+    const match = defaults[1].find(([color, tier]) =>
+      [color, tier, color + ' · ' + tier].some(label => label.toLowerCase() === key));
+    return xp.celesteXp.get(match?.[0].toLowerCase()) ?? xp.fallback;
+  }
+  if (game === 2) {
+    const match = key.match(/^grade\s*([1-9]|[1-3][0-9]|40)$/);
+    return xp.beatSaberXp(match ? Number(match[1]) : 0);
+  }
+  return '—';
+}
+
+function filterGames() {
+  const query = search.value.trim();
+  const matches = window.PlayerDatabaseSearch(query);
+  let count = 0;
+  for (const panel of guide.children) {
+    panel.hidden = !matches(titles[Number(panel.dataset.game)]);
+    panel.open = !panel.hidden && (Boolean(query) || expandedGames.has(panel.dataset.game));
+    if (!panel.hidden) count++;
+  }
+  const result = byId('game-results');
+  result.hidden = count > 0;
+  result.textContent = count ? '' : 'No games match your search.';
+}
+
 function render() {
-  byId('guide').replaceChildren(...sections.map((rows, i) => {
-    const panel = element('section', '');
+  guide.replaceChildren(...sections.map((rows, i) => {
+    const panel = element('details', '');
     panel.className = 'panel';
-    panel.append(element('h2', titles[i]));
-    if (i === 0 || i === 2) panel.append(element('p', 'Listed from easiest to hardest.'));
-    const list = element('dl', '');
-    for (const [name, description] of rows) {
-      const term = element('dt', name);
-      const src = difficultyIcon(i, name);
+    panel.dataset.game = String(i);
+    const summary = element('summary', titles[i]);
+    summary.addEventListener('click', () => {
+      if (!search.value.trim()) {
+        if (panel.open) expandedGames.delete(panel.dataset.game);
+        else expandedGames.add(panel.dataset.game);
+      }
+    });
+    panel.append(summary);
+    if (i === 3) panel.append(element('p', 'XP scoring is on hold.'));
+    const table = document.createElement('table');
+    table.setAttribute('aria-label', titles[i] + ' difficulty and XP');
+    const header = table.createTHead().insertRow();
+    for (const label of [i === 2 ? 'Grade' : 'Difficulty', 'Description', 'XP']) {
+      const cell = element('th', label);
+      cell.scope = 'col';
+      header.append(cell);
+    }
+    const body = table.createTBody();
+    const addRow = (name, description, award, src = '') => {
+      const row = body.insertRow();
+      const term = element('th', '');
+      term.scope = 'row';
+      const label = element('span', name);
+      label.className = 'difficulty-label';
       if (src) {
         const icon = document.createElement('img');
         icon.src = src;
@@ -50,14 +106,29 @@ function render() {
         icon.width = 42;
         icon.height = 42;
         icon.loading = 'lazy';
-        term.prepend(icon);
+        label.prepend(icon);
       }
-      list.append(term, element('dd', description));
+      term.append(label);
+      row.append(term, element('td', description || '—'), element('td', award.toLocaleString()));
+    };
+    for (const [name, description] of rows) {
+      addRow(name, description, awardFor(i, name), difficultyIcon(i, name));
     }
-    panel.append(list);
+    if (i === 0) {
+      for (const {label, xp: award} of xp.extremeTiers.slice(0, -1).reverse()) {
+        addRow('Extreme Demon', label.replace(/^Extreme Demon · /, ''), award);
+      }
+    }
+    panel.append(table);
     return panel;
   }));
+  filterGames();
 }
+
+search.addEventListener('input', filterGames);
+byId('xp-thresholds').textContent = `Players start at Level 1. Level 2 takes ${xp.firstLevelCost} XP, and each next level takes ${xp.levelStep} XP more than the last.`;
+byId('xp-fallback').textContent = `A completed placement with an unrecognized difficulty or grade earns ${xp.fallback} XP in a supported game.`;
+
 async function request(options) {
   const response = await fetch(endpoint, options);
   const data = await response.json();
@@ -120,26 +191,3 @@ request().then(data => {
   render();
   byId('edit').disabled = false;
 }).catch(() => { status.textContent = 'Showing the default guide. Editing is currently unavailable.'; });
-
-function renderXpGuide() {
-  const {geometryXp, celesteXp, extremeTiers, fallback, firstLevelCost, levelStep, beatSaberXp} = window.PlayerDatabaseXp;
-  const celesteNames = ['Blue · Beginner', 'Green · Intermediate', 'Lime · Advanced', 'Yellow · Expert',
-    'Orange · Grandmaster', 'Red · Cracked Grandmaster', 'Cracked · GM+1', 'Shattered · GM+2'];
-  const table = (title, label, rows) => `<h3>${title}</h3><table aria-label="${title} XP">
-    <thead><tr><th scope="col">${label}</th><th scope="col">XP</th></tr></thead>
-    <tbody>${rows.map(([name, xp]) => `<tr><th scope="row">${name}</th><td>${xp.toLocaleString()}</td></tr>`).join('')}</tbody>
-  </table>`;
-  const geometryRows = [...geometryXp].map(([id, xp]) => [
-    id.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' '), xp
-  ]);
-  geometryRows.push(...extremeTiers.map(({label, xp}) => [label, xp]));
-  byId('xp-rules').innerHTML = `
-    <p>Players start at Level 1. Level 2 takes <strong>${firstLevelCost} XP</strong>, and each next level takes <strong>${levelStep} XP more</strong> than the last. Level 3 takes another ${firstLevelCost + levelStep} XP.</p>
-    <p>Completed placements with no recognized difficulty or grade earn ${fallback} XP.</p>
-    ${table('Geometry Dash', 'Difficulty', geometryRows)}
-    <p>The Extreme Demon bonuses use a fixed set of recorded AREDL ranks. Extremes without a recorded rank receive the base award.</p>
-    ${table('Celeste', 'Difficulty', [...celesteXp.values()].map((xp, i) => [celesteNames[i], xp]))}
-    ${table('Beat Saber', 'Grade', Array.from({length: 40}, (_, i) => [`Grade ${i + 1}`, beatSaberXp(i + 1)]))}
-  `;
-}
-renderXpGuide();

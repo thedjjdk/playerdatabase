@@ -9,35 +9,45 @@
 <style>
 .guide {max-width:880px;padding-block:24px 48px}
 .guide .panel {margin-block:16px}
-.guide dl {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:8px 16px;margin:0}
-.guide dt,.guide dd {margin:0;overflow-wrap:anywhere}
 .guide label {display:block;margin-block:12px}
 .guide textarea {display:block;width:100%;min-height:8rem;background:var(--page);color:var(--text);font:inherit;padding:8px}
-.guide dl {align-items:center}
-.guide dt {display:flex;align-items:center;gap:8px}
-.guide dt img {flex:none;object-fit:contain}
-.guide :is(#xp-guide,#difficulty-guide) {scroll-margin-top:16px}
-.guide #xp-rules h3 {margin:16px 0 6px}
-.guide #xp-rules table {width:100%;border-collapse:collapse}
-.guide #xp-rules :is(th,td) {padding:5px 8px;border-bottom:1px solid var(--border);text-align:left}
-.guide #xp-rules :is(th,td):last-child {text-align:right;white-space:nowrap}
 /* The source sprite ends partway through its caption. Use the full row label. */
-.guide dt img[src="../assets/insane.png"] {clip-path:inset(0 0 12% 0)}
+.guide summary {cursor:pointer;font-weight:750;overflow-wrap:anywhere}
+.guide details[open] > summary {margin-bottom:10px}
+.guide .faq details {padding:10px 0;border-top:1px solid var(--border)}
+.guide .faq details p {margin:0}
+.guide #game-search {width:100%;max-width:30rem}
+.guide table {width:100%;border-collapse:collapse}
+.guide :is(th,td) {padding:6px;border-bottom:1px solid var(--border);text-align:left;overflow-wrap:anywhere}
+.guide :is(th,td):last-child {text-align:right;white-space:nowrap}
+.guide .difficulty-label {display:flex;align-items:center;gap:8px}
+.guide .difficulty-label img {flex:none;object-fit:contain}
+@media(max-width:480px) {
+  .guide .panel {padding:12px}
+  .guide :is(th,td) {padding-inline:4px}
+  .guide .difficulty-label img {width:30px;height:30px}
+}
 </style>
 <script src="../assets/xp.js?v=1" defer></script>
-<script src="help.js?v=3" defer></script>
+<script src="../assets/search.js?v=1" defer></script>
+<script src="help.js?v=combined-guide-1" defer></script>
 </head>
 <body>
 <main class="container guide">
 <a href="../#/">← Back to player search</a>
 <h1>Player Database Help</h1>
-<nav aria-label="Help topics"><a href="#xp-guide">Levels and XP</a> · <a href="#difficulty-guide">Difficulty Guide</a></nav>
-<section id="xp-guide" class="panel" aria-labelledby="xp-guide-title">
-<h2 id="xp-guide-title">Levels and XP</h2>
-<p>Completed placements across Geometry Dash, Celeste, and Beat Saber contribute to one overall profile level. Matching names within the same game count once, using the higher XP award. In-progress placements and personal list order do not affect XP. FNaF scoring is on hold.</p>
-<div id="xp-rules"></div>
+<section class="panel faq" aria-labelledby="faq-title">
+<h2 id="faq-title">Frequently Asked Questions</h2>
+<details id="xp-guide"><summary>How do I earn XP?</summary><p>Completed placements in Geometry Dash, Celeste, and Beat Saber contribute to one profile level. Matching names in the same game count once, using the higher award. In-progress placements and personal list order have no effect.</p></details>
+<details><summary>How much XP does it take to level up?</summary><p id="xp-thresholds"></p></details>
+<details><summary>What if a difficulty or grade is missing?</summary><p id="xp-fallback"></p></details>
+<details><summary>How do Extreme Demon bonuses work?</summary><p>The bonuses use a fixed set of recorded AREDL ranks. Extremes without a recorded rank receive the base award.</p></details>
+<details><summary>How do I search the guide?</summary><p>Type letters from a game’s name in order. You can skip letters. For example, “bts” finds Beat Saber.</p></details>
 </section>
-<h2 id="difficulty-guide">Difficulty Guide</h2>
+<h2 id="difficulty-guide">Game Difficulty and XP Guide</h2>
+<label for="game-search">Search games</label>
+<input id="game-search" class="filter" type="search" placeholder="Search games…" autocomplete="off">
+<p id="game-results" role="status" hidden></p>
 <p>List editors: <strong>DJ JDK</strong> and <strong>KayceeNoelle</strong>.</p>
 <div id="guide"></div>
 <p id="status" role="status"></p>

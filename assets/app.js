@@ -194,8 +194,8 @@
     return players.map((p,i)=>`<a class="player-result ${i===state.highlightedResult?'is-highlighted':''}" href="${esc(playerRoute(p.id))}" role="option" aria-selected="${i===state.highlightedResult}" id="player-option-${i}">${playerAvatar(p)}<span><span class="result-name">${esc(p.name)}</span><span class="result-meta">Open personal lists</span></span><span class="result-arrow" aria-hidden="true">›</span></a>`).join('');
   }
   function matchingPlayers() {
-    const query = state.search.trim().toLocaleLowerCase();
-    return state.directory.filter(p => p.name.toLocaleLowerCase().includes(query) &&
+    const matches = window.PlayerDatabaseSearch(state.search);
+    return state.directory.filter(p => matches(p.name) &&
       (!state.game || p.games?.includes(state.game)));
   }
   function fitPlayerResults() {
