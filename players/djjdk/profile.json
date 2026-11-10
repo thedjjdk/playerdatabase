@@ -29,5 +29,18 @@
       "zoom": 100
     }
   },
-  "badges": []
+  "badges": [
+    {
+      "style": "milestone",
+      "name": "First Extreme Demon",
+      "list": "geometry-dash",
+      "level": "video:https://youtu.be/rJiQRf_-wjo"
+    },
+    {
+      "style": "milestone",
+      "name": "First Rated Extreme Demon",
+      "list": "geometry-dash",
+      "level": "video:https://youtu.be/h1tJHDGBpEU"
+    }
+  ]
 }
