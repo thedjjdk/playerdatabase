@@ -1441,7 +1441,8 @@ body :is(.tabs,.wide-tabs) {background:var(--panel-fill)!important}
 body :is(.filter,.select,.ghostbutton,.game-filters button,.editor input:not([type=range]):not([type=checkbox]):not([type=color]),.editor select,.editor button:not(#save)) {background:var(--panel-fill-raised)!important}
 body :is(.listcard:hover,.listcard:focus-visible,.player-result:hover,.player-result:focus-visible,.player-result.is-highlighted) {background:var(--panel-fill-raised)!important}
 body :is(.tabs,.wide-tabs) button:is(:hover,[aria-selected=true]) {background:var(--panel-fill-raised)!important}
-body :is(.sitehead,.language-menu,.reviewcard,.review-note,.statsbox,.grind-suggest) {background:var(--panel-fill)!important}
+body .sitehead {background:var(--top)!important}
+body :is(.language-menu,.reviewcard,.review-note,.statsbox,.grind-suggest) {background:var(--panel-fill)!important}
 .sitehead::before {background:none!important}
 
 /* Keep hover and keyboard focus visibly brighter than selected/default fills. */
