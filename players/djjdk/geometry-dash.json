@@ -137,6 +137,26 @@
       "status": "completed"
     },
     {
+      "rank": 13,
+      "name": "Magma Bound",
+      "videoUrl": "https://youtu.be/tAl4DFFpeHg",
+      "attempts": "4,418",
+      "completionDate": "2020-02-22",
+      "completionYear": 2020,
+      "difficulty": "insane-demon",
+      "status": "completed"
+    },
+    {
+      "rank": 14,
+      "name": "SourCream II",
+      "videoUrl": "https://youtu.be/n4Y8CVH9050",
+      "attempts": "2,868",
+      "completionDate": "2020-04-13",
+      "completionYear": 2020,
+      "difficulty": "insane-demon",
+      "status": "completed"
+    },
+    {
       "name": "Spacelocked II",
       "videoUrl": "https://youtu.be/0rQ80nl-Gl8",
       "difficulty": "insane-demon",
@@ -144,11 +164,11 @@
       "enjoyment": 4,
       "worstFail": 84,
       "videoPublishedDate": "2021-02-12",
-      "rank": 13,
+      "rank": 15,
       "status": "completed"
     },
     {
-      "rank": 14,
+      "rank": 16,
       "name": "bomb the rave",
       "attempts": "1133",
       "enjoyment": 6,
@@ -167,7 +187,7 @@
       "enjoyment": 8,
       "worstFail": 97,
       "videoPublishedDate": "2020-09-08",
-      "rank": 15,
+      "rank": 17,
       "status": "completed"
     },
     {
@@ -178,7 +198,7 @@
       "enjoyment": 0,
       "worstFail": 92,
       "videoPublishedDate": "2021-02-06",
-      "rank": 16,
+      "rank": 18,
       "status": "completed"
     },
     {
@@ -189,7 +209,7 @@
       "enjoyment": 6,
       "worstFail": 88,
       "videoPublishedDate": "2022-09-18",
-      "rank": 17,
+      "rank": 19,
       "status": "completed"
     },
     {
@@ -200,27 +220,7 @@
       "enjoyment": 9,
       "worstFail": 99,
       "videoPublishedDate": "2021-01-19",
-      "rank": 18,
-      "status": "completed"
-    },
-    {
-      "rank": 19,
-      "name": "Magma Bound",
-      "videoUrl": "https://youtu.be/tAl4DFFpeHg",
-      "attempts": "4,418",
-      "completionDate": "2020-02-22",
-      "completionYear": 2020,
-      "difficulty": "insane-demon",
-      "status": "completed"
-    },
-    {
       "rank": 20,
-      "name": "SourCream II",
-      "videoUrl": "https://youtu.be/n4Y8CVH9050",
-      "attempts": "2,868",
-      "completionDate": "2020-04-13",
-      "completionYear": 2020,
-      "difficulty": "insane-demon",
       "status": "completed"
     }
   ]
