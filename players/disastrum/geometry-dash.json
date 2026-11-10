@@ -16,6 +16,15 @@
     },
     {
       "rank": 2,
+      "name": "Allegiance",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://youtu.be/0_V22rWP6dk",
+      "videoPublishedDate": "2022-05-17",
+      "worstFail": 96,
+      "enjoyment": 7.6
+    },
+    {
+      "rank": 3,
       "name": "The Flawless",
       "difficulty": "extreme-demon",
       "videoUrl": "https://youtu.be/OMHTCEPaZcg",
@@ -25,7 +34,7 @@
       "enjoyment": 3.3
     },
     {
-      "rank": 3,
+      "rank": 4,
       "name": "8o X",
       "difficulty": "extreme-demon",
       "videoUrl": "https://youtu.be/tetMhJDhQAY",
@@ -33,7 +42,7 @@
       "enjoyment": 6.4
     },
     {
-      "rank": 4,
+      "rank": 5,
       "name": "Acu",
       "difficulty": "extreme-demon",
       "videoUrl": "https://youtu.be/Ll5r5g5GvPo",
@@ -42,7 +51,7 @@
       "enjoyment": 8.4
     },
     {
-      "rank": 5,
+      "rank": 6,
       "name": "Acropolis",
       "difficulty": "insane-demon",
       "videoUrl": "https://youtu.be/9m1BxYnr2kk",
