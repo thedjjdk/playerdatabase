@@ -129,9 +129,50 @@
     return `<footer class="container player-foot"><span>Player Lists · Built from the supplied Layout List design</span><a href="#/">Search players</a></footer>`;
   }
   function shell(body) {
+    const previous = app.querySelector('.wide-tabs [aria-selected="true"][data-player-tab]');
+    const previousScroll = previous?.parentElement.scrollLeft ?? 0;
     app.innerHTML = `${header()}${body}${footer()}`;
+    const selected = app.querySelector('.wide-tabs [aria-selected="true"][data-player-tab]');
+    if (selected && previous?.dataset.playerId === selected.dataset.playerId) {
+      const bar = selected.parentElement;
+      bar.scrollLeft = previousScroll;
+      if (previous.dataset.playerTab !== selected.dataset.playerTab) {
+        const outgoing = [...bar.querySelectorAll('[data-player-tab]')]
+          .find(tab => tab.dataset.playerTab === previous.dataset.playerTab);
+        if (outgoing) slideTabBorder(bar, outgoing, selected);
+      }
+    }
     applyTheme();
     applyDifficultyColors();
+  }
+  function slideTabBorder(bar, outgoing, selected) {
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion || !selected.animate) return;
+    const track = bar.getBoundingClientRect();
+    const from = outgoing.getBoundingClientRect();
+    const to = selected.getBoundingClientRect();
+    const ring = document.createElement('span');
+    ring.className = 'list-tab-sliding-border';
+    ring.setAttribute('aria-hidden', 'true');
+    const position = rect => ({
+      transform: `translate(${rect.left - track.left - bar.clientLeft + bar.scrollLeft}px, ${rect.top - track.top - bar.clientTop}px)`,
+      width: `${rect.width}px`, height: `${rect.height}px`
+    });
+    const timing = {duration: 240, easing: 'ease-in-out'};
+    bar.classList.add('is-sliding');
+    bar.append(ring);
+    const banner = outgoing.querySelector('.list-tab-banner');
+    if (banner) {
+      const opacity = banner.style.opacity || '1';
+      banner.style.display = 'block';
+      banner.animate([{opacity}, {opacity: 0}], timing);
+    }
+    const finish = () => {
+      if (banner) banner.style.removeProperty('display');
+      ring.remove();
+      bar.classList.remove('is-sliding');
+    };
+    ring.animate([position(from), position(to)], timing).finished.then(finish, finish);
   }
   function showError(title, detail) {
     shell(`<main class="container"><section class="singlepanel player-route-error"><h2>${esc(title)}</h2><p class="data-note">${esc(detail)}</p><button type="button" class="ghostbutton" data-retry>Try again</button><div class="buttonrow"><a class="inline-back" href="#/">← Back to player search</a></div></section></main>`);
@@ -457,8 +498,11 @@
     const {player} = state.route;
     const folder = validId(player.folder) ? player.folder : player.id;
     try {
-      state.activeProfile = player;
-      shell(`<main class="container"><div class="pageintro"><h1>${esc(player.name)}</h1></div><div class="singlepanel">Loading player data…</div></main>`);
+      const currentTab = app.querySelector('.wide-tabs [aria-selected="true"][data-player-tab]');
+      if (currentTab?.dataset.playerId !== player.id) {
+        state.activeProfile = player;
+        shell(`<main class="container"><div class="pageintro"><h1>${esc(player.name)}</h1></div><div class="singlepanel">Loading player data…</div></main>`);
+      }
       const profile = await fetchJson(`players/${folder}/profile.json`);
       if (seq !== state.request) return;
       if (!profile || profile.id !== player.id || !Array.isArray(profile.lists)) throw new Error('Player profile is invalid.');
