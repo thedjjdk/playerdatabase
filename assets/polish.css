@@ -61,7 +61,8 @@ body .wide-tabs.is-sliding button[aria-selected=true] {box-shadow:none}
 
 /* Profile identity and active controls */
 body .player-title-wrap {
-  display:inline-flex;
+  display:flex;
+  width:fit-content;
   max-width:100%;
   padding:8px 20px 8px 8px;
   border:1px solid var(--polish-edge);
