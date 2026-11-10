@@ -291,8 +291,14 @@ function fieldControl(row, key, label, kind, max, title) {
   input.value = displayedValue;
   input.addEventListener('input', () => {
     row[key] = kind === 'number' && input.value !== '' ? input.valueAsNumber : input.value;
-    if (key === 'name') title.textContent = '#' + (rows.indexOf(row) + 1) + ' – ' + (row.name || 'New placement');
+    if (key === 'name') title.textContent = '#' + title.dataset.placement + ' – ' + (row.name || 'New placement');
     changed();
+    if (key === 'status') {
+      render();
+      const moved = document.querySelector(`#levels [data-position="${rows.indexOf(row)}"]`);
+      moved.querySelector('details').open = true;
+      moved.querySelector('[name="status"]').focus();
+    }
   });
   if (key === 'gameRank' && game === 'celeste') {
     const presets = new Map([
@@ -337,8 +343,10 @@ function fieldControl(row, key, label, kind, max, title) {
   return wrap;
 }
 
+function inProgress(row) { return row.status === 'in-progress'; }
+
 function move(from, to) {
-  if (from === to || to < 0 || to >= rows.length) return;
+  if (from === to || !rows[from] || !rows[to] || inProgress(rows[from]) !== inProgress(rows[to])) return;
   rows.splice(to, 0, rows.splice(from, 1)[0]);
   changed();
   render();
@@ -348,7 +356,21 @@ function render() {
   const listEl = $('levels');
   listEl.replaceChildren();
 
-  rows.forEach((row, i) => {
+  const groups = [false, true].map(progress => {
+    const section = document.createElement('section');
+    const heading = text('h2', progress ? 'In Progress' : 'Completed');
+    heading.id = progress ? 'editor-progress-heading' : 'editor-completed-heading';
+    section.setAttribute('aria-labelledby', heading.id);
+    const entries = document.createElement('ol');
+    entries.style.cssText = 'list-style:none;padding:0;margin:0 0 16px';
+    const indexes = rows.flatMap((row, index) => inProgress(row) === progress ? [index] : []);
+    section.append(heading, entries);
+    if (!indexes.length) section.append(text('p', progress ? 'No in-progress placements. Set a level’s status to In Progress to move it here.' : 'No completed placements.'));
+    listEl.append(section);
+    return {entries, indexes};
+  });
+  groups.forEach(({entries, indexes}) => indexes.forEach((i, placementIndex) => {
+    const row = rows[i];
     const li = text('li', '', 'editor-row');
     li.dataset.position = i;
     const head = text('div', '', 'editor-row-head');
@@ -361,14 +383,16 @@ function render() {
       dragFrame = requestAnimationFrame(scrollDrag);
       listEl.setPointerCapture(event.pointerId);
     });
-    const title = text('strong', '#' + (i + 1) + ' – ' + (row.name || 'New placement'));
+    const title = text('strong', '#' + (placementIndex + 1) + ' – ' + (row.name || 'New placement'));
+    title.dataset.placement = placementIndex + 1;
     head.append(handle, title);
     for (const [direction, offset, icon] of [['up', -1, '↑'], ['down', 1, '↓']]) {
       const button = text('button', icon);
       button.type = 'button';
       button.setAttribute('aria-label', 'Move ' + (row.name || 'new level') + ' ' + direction);
-      button.disabled = i + offset < 0 || i + offset >= rows.length;
-      button.addEventListener('click', () => move(i, i + offset));
+      const target = indexes[placementIndex + offset];
+      button.disabled = target === undefined;
+      button.addEventListener('click', () => move(i, target));
       head.append(button);
     }
     const details = document.createElement('details');
@@ -379,11 +403,11 @@ function render() {
     const position = document.createElement('input');
     position.type = 'number';
     position.min = '1';
-    position.max = String(rows.length);
+    position.max = String(indexes.length);
     position.step = '1';
-    position.value = String(i + 1);
+    position.value = String(placementIndex + 1);
     position.addEventListener('change', () => {
-      if (position.reportValidity() && position.value) move(i, position.valueAsNumber - 1);
+      if (position.reportValidity() && position.value) move(i, indexes[position.valueAsNumber - 1]);
     });
     placement.append(position);
     controls.append(placement);
@@ -403,8 +427,8 @@ function render() {
       $('deletion-notice').scrollIntoView({ block: 'nearest' });
     });
     li.append(head, details, trash);
-    listEl.append(li);
-  });
+    entries.append(li);
+  }));
   $('save').disabled = !dirty;
   $('deletion-notice').hidden = deletedRows.length === 0;
   $('deletion-count').textContent = deletedRows.length + ' placement' + (deletedRows.length === 1 ? '' : 's') + ' removed from this draft. Save with your Player ID to apply.';
@@ -419,7 +443,7 @@ $('undo-delete').addEventListener('click', () => {
 
 function updateDragTarget() {
   const row = document.elementFromPoint(drag.x, drag.y)?.closest('.editor-row');
-  if (!row) return;
+  if (!row || !rows[+row.dataset.position] || inProgress(rows[+row.dataset.position]) !== inProgress(rows[drag.from])) return;
   $('levels').querySelector('.drag-target')?.classList.remove('drag-target');
   row.classList.add('drag-target');
   drag.to = +row.dataset.position;
@@ -456,7 +480,7 @@ $('create-placement').addEventListener('click', () => {
   rows.push({ name: '' });
   changed();
   render();
-  const entry = $('levels').lastElementChild;
+  const entry = $('levels').querySelector(`[data-position="${rows.length - 1}"]`);
   entry.scrollIntoView({ block: 'nearest' });
   entry.querySelector('input[name="name"]').focus({ preventScroll: true });
 });
