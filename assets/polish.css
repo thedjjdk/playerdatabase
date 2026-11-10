@@ -89,3 +89,7 @@ body.light-mode .sitehead .wordmark {
   background:var(--profile-right,var(--accent));
   mix-blend-mode:color;
 }
+
+/* The moving window owns the rounded corners; tiles meet squarely during the slide. */
+body .wide-tabs.is-sliding button[data-player-tab],
+body .wide-tabs.is-sliding .list-tab-banner {border-radius:0}

@@ -172,7 +172,7 @@
         const right = rect.right - bounds.left;
         const top = rect.top - bounds.top;
         const bottom = rect.bottom - bounds.top;
-        return {clipPath: `polygon(${left}px ${top}px, ${right}px ${top}px, ${right}px ${bottom}px, ${left}px ${bottom}px)`};
+        return {clipPath: `inset(${top}px ${bounds.width - right}px ${bounds.height - bottom}px ${left}px round 11px)`};
       };
       artwork.push([banner, banner.animate([windowAt(from), windowAt(to)], {...timing, fill: 'both'})]);
     }
