@@ -377,44 +377,8 @@
     const opacity = custom ? Math.max(5,Math.min(50,entry.bannerOpacity||15))/100 : .65;
     return `<span class="list-tab-banner${entry.bannerTint === true ? ' banner-accent' : ''}" aria-hidden="true" style="opacity:${opacity}"><img src="${src}" alt=""></span>`;
   }
-  const scoringGames = new Set(['geometry-dash', 'celeste', 'beat-saber']);
-
-  function profileXp(lists) {
-    const awards = new Map();
-    for (const {game, levels} of lists) {
-      for (const item of levels) {
-        const name = String(item.name ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
-        if (!name || (item.status && item.status !== 'completed')) continue;
-        const key = game + '/' + name;
-        const rating = game === 'geometry-dash' ? item.difficulty
-          : game === 'celeste' ? celesteMeterRank(item.gameRank).state
-          : parseBeatSaberGrade(item.gameRank);
-        awards.set(key, Math.max(awards.get(key) ?? 0, window.PlayerDatabaseXp.placementXp(game, rating, name)));
-      }
-    }
-    return [...awards.values()].reduce((sum, xp) => sum + xp, 0);
-  }
-
-  async function showProfileXp(profile, folder, seq) {
-    const target = app.querySelector('[data-profile-xp]');
-    if (!target) return;
-    try {
-      const lists = await Promise.all(profile.lists.filter(entry => scoringGames.has(listGame(entry))).map(async entry => {
-        const data = entry.data || (validJsonName(entry.file) && await fetchJson(`players/${folder}/${entry.file}`));
-        if (!Array.isArray(data?.levels)) throw new Error('Invalid list data');
-        return {game: listGame(entry), levels: data.levels};
-      }));
-      if (seq !== state.request) return;
-      const total = profileXp(lists);
-      const {level, progress, next} = window.PlayerDatabaseXp.levelProgress(total);
-      target.innerHTML = `<span class="profile-level-badge" aria-hidden="true">${level}</span><strong>Level ${level}</strong><progress aria-label="XP toward level ${level + 1}" value="${progress}" max="${next}"></progress><span class="profile-xp-count" title="${total.toLocaleString()} total XP">${progress.toLocaleString()} / ${next.toLocaleString()} XP</span>`;
-    } catch {
-      if (seq === state.request) target.textContent = 'XP unavailable';
-    }
-  }
-
   function playerIntro(profile) {
-    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div class="profile-identity"><h1>${esc(profile.name)}</h1><div class="profile-xp" data-profile-xp aria-live="polite">Loading XP…</div></div></div>${badgesMarkup(profile)}</div>`;
+    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div class="profile-identity"><h1>${esc(profile.name)}</h1></div></div>${badgesMarkup(profile)}</div>`;
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);
@@ -582,7 +546,6 @@
       state.activeList = data;
       if (state.route.rank != null) detailView(state.activeProfile,entry,data,state.route.rank);
       else listView(state.activeProfile,entry,data);
-      showProfileXp(profile, folder, seq);
     } catch (err) {
       if (seq !== state.request) return;
       showError('Unable to load player data',`${err.message}. Check that the player JSON files are present and that the site is being served over HTTP (not file://).`);

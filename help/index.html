@@ -19,7 +19,6 @@
 .guide #game-search {width:100%;max-width:30rem}
 .guide table {width:100%;border-collapse:collapse}
 .guide :is(th,td) {padding:6px;border-bottom:1px solid var(--border);text-align:left;overflow-wrap:anywhere}
-.guide :is(th,td):last-child {text-align:right;white-space:nowrap}
 .guide .difficulty-label {display:flex;align-items:center;gap:8px}
 .guide .difficulty-label img {flex:none;object-fit:contain}
 @media(max-width:480px) {
@@ -29,9 +28,8 @@
 }
 .guide .list-editors {margin-top:10px}
 </style>
-<script src="../assets/xp.js?v=1" defer></script>
 <script src="../assets/search.js?v=1" defer></script>
-<script src="help.js?v=combined-guide-1" defer></script>
+<script src="help.js?v=difficulty-only" defer></script>
 </head>
 <body>
 <main class="container guide">
@@ -39,13 +37,9 @@
 <h1>Player Database Help</h1>
 <section class="panel faq" aria-labelledby="faq-title">
 <h2 id="faq-title">Frequently Asked Questions</h2>
-<details id="xp-guide"><summary>How do I earn XP?</summary><p>Completed placements in Geometry Dash, Celeste, and Beat Saber contribute to one profile level. Matching names in the same game count once, using the higher award. In-progress placements and personal list order have no effect.</p></details>
-<details><summary>How much XP does it take to level up?</summary><p id="xp-thresholds"></p></details>
-<details><summary>What if a difficulty or grade is missing?</summary><p id="xp-fallback"></p></details>
-<details><summary>How do Extreme Demon bonuses work?</summary><p>The bonuses use a fixed set of recorded AREDL ranks. Extremes without a recorded rank receive the base award.</p></details>
 <details><summary>How do I search the guide?</summary><p>Type letters from a game’s name in order. You can skip letters. For example, “bts” finds Beat Saber.</p></details>
 </section>
-<h2 id="difficulty-guide">Game Difficulty and XP Guide</h2>
+<h2 id="difficulty-guide">Game Difficulty Guide</h2>
 <label for="game-search">Search games</label>
 <input id="game-search" class="filter" type="search" placeholder="Search games…" autocomplete="off">
 <p id="game-results" role="status" hidden></p>

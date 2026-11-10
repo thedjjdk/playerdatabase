@@ -33,28 +33,9 @@ function difficultyIcon(game, name) {
   }
   return '';
 }
-const xp = window.PlayerDatabaseXp;
 const search = byId('game-search');
 const guide = byId('guide');
 const expandedGames = new Set();
-
-function awardFor(game, name) {
-  const key = name.trim().toLowerCase();
-  if (game === 0) {
-    if (key === 'extreme demon') return xp.extremeTiers.at(-1).xp;
-    return xp.geometryXp.get(key.replace(/\s+/g, '-')) ?? xp.fallback;
-  }
-  if (game === 1) {
-    const match = defaults[1].find(([color, tier]) =>
-      [color, tier, color + ' · ' + tier].some(label => label.toLowerCase() === key));
-    return xp.celesteXp.get(match?.[0].toLowerCase()) ?? xp.fallback;
-  }
-  if (game === 2) {
-    const match = key.match(/^grade\s*([1-9]|[1-3][0-9]|40)$/);
-    return xp.beatSaberXp(match ? Number(match[1]) : 0);
-  }
-  return '—';
-}
 
 function filterGames() {
   const query = search.value.trim();
@@ -83,17 +64,16 @@ function render() {
       }
     });
     panel.append(summary);
-    if (i === 3) panel.append(element('p', 'XP scoring is on hold.'));
     const table = document.createElement('table');
-    table.setAttribute('aria-label', titles[i] + ' difficulty and XP');
+    table.setAttribute('aria-label', titles[i] + ' difficulty guide');
     const header = table.createTHead().insertRow();
-    for (const label of [i === 2 ? 'Grade' : 'Difficulty', 'Description', 'XP']) {
+    for (const label of [i === 2 ? 'Grade' : 'Difficulty', 'Description']) {
       const cell = element('th', label);
       cell.scope = 'col';
       header.append(cell);
     }
     const body = table.createTBody();
-    const addRow = (name, description, award, src = '') => {
+    const addRow = (name, description, src = '') => {
       const row = body.insertRow();
       const term = element('th', '');
       term.scope = 'row';
@@ -109,15 +89,10 @@ function render() {
         label.prepend(icon);
       }
       term.append(label);
-      row.append(term, element('td', description || '—'), element('td', award.toLocaleString()));
+      row.append(term, element('td', description || '—'));
     };
     for (const [name, description] of rows) {
-      addRow(name, description, awardFor(i, name), difficultyIcon(i, name));
-    }
-    if (i === 0) {
-      for (const {label, xp: award} of xp.extremeTiers.slice(0, -1).reverse()) {
-        addRow('Extreme Demon', label.replace(/^Extreme Demon · /, ''), award);
-      }
+      addRow(name, description, difficultyIcon(i, name));
     }
     panel.append(table);
     return panel;
@@ -126,8 +101,6 @@ function render() {
 }
 
 search.addEventListener('input', filterGames);
-byId('xp-thresholds').textContent = `Players start at Level 1. Level 2 takes ${xp.firstLevelCost} XP, and each next level takes ${xp.levelStep} XP more than the last.`;
-byId('xp-fallback').textContent = `A completed placement with an unrecognized difficulty or grade earns ${xp.fallback} XP in a supported game.`;
 
 async function request(options) {
   const response = await fetch(endpoint, options);
