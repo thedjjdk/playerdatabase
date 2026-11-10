@@ -93,3 +93,34 @@ body.light-mode .sitehead .wordmark {
 /* The moving window owns the rounded corners; tiles meet squarely during the slide. */
 body .wide-tabs.is-sliding button[data-player-tab],
 body .wide-tabs.is-sliding .list-tab-banner {border-radius:0}
+
+/* Continue the hovered tab's fill behind the adjoining selected corners. */
+body .wide-tabs button:first-child {border-right-style:solid}
+body .wide-tabs button:is(:hover,:focus-visible) {border-color:var(--polish-edge)}
+body .wide-tabs button:focus-visible {outline:2px solid var(--text);outline-offset:-4px}
+body .wide-tabs:not(.is-sliding) button[aria-selected=true]:is(:has(+ button:hover),button:hover + button) {
+  border-radius:0;
+  background:linear-gradient(to var(--tab-hover-edge),transparent calc(100% - 13px),var(--control-hover) 0)!important;
+  box-shadow:none;
+}
+body .wide-tabs button[aria-selected=true]:has(+ button:hover) {--tab-hover-edge:right}
+body .wide-tabs button:hover + button[aria-selected=true] {--tab-hover-edge:left}
+body .wide-tabs:not(.is-sliding) button[aria-selected=true]:is(:has(+ button:hover),button:hover + button)::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  background:var(--panel-fill-raised);
+  z-index:-1;
+  pointer-events:none;
+}
+body .wide-tabs:not(.is-sliding) button[aria-selected=true]:is(:has(+ button:hover),button:hover + button)::after {
+  display:block;
+  content:"";
+  inset:0;
+  height:auto;
+  background:none;
+  border-radius:12px;
+  box-shadow:inset 0 0 0 2px var(--accent-strong);
+  pointer-events:none;
+}
