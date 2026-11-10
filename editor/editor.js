@@ -1,4 +1,4 @@
-import './customization.js?v=tab-banners-1';
+import './customization.js?v=refinements-1';
 import '../assets/profile-theme.js?v=profile-options-1';
 import { editorApi } from './config.js?v=review-1';
 
@@ -778,6 +778,7 @@ async function init() {
 }
 applyEditorTheme();
 init();
+
 
 
 

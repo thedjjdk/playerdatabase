@@ -80,3 +80,13 @@
 #frame-controls label {display:flex;flex-direction:column}
 .customization h3 {margin-top:30px}
 @media(max-width:700px){.badge-fields{grid-template-columns:1fr 1fr}#frame-controls{grid-template-columns:1fr}}
+
+
+.editor :is(h1,h2,h3,h4,strong,legend) {text-transform:capitalize}
+body .editor dialog, body .editor dialog#confirm {border-radius:14px}
+.editor #background-framing {margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.editor .badge-fields {grid-template-columns:1fr 1.3fr 1.3fr 1fr auto}
+.editor #banner-preview {position:relative;isolation:isolate;border-radius:12px}
+.editor #banner-art {position:absolute;inset:0;pointer-events:none}
+.editor #banner-title {position:relative;z-index:1}
+@media(max-width:850px){.editor .badge-fields {grid-template-columns:repeat(2,minmax(0,1fr))}}

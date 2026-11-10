@@ -359,9 +359,10 @@
     if (game === 'beat-saber') return beatSaberGrade(item.gameRank);
     return '';
   }
-  function badgesMarkup(profile) {
+  function badgesMarkup(profile, item) {
+    const level = item ? (item.videoUrl ? 'video:' + item.videoUrl : 'name:' + item.name) : '';
     const icons={milestone:'★','personal-best':'↗',count:'#',perfect:'◆',challenge:'⚑',endurance:'◷',favorite:'♥'};
-    return `<div class="profile-badges" aria-label="Player highlights">${(profile.badges||[]).filter(b=>!b.list||b.list===state.route?.listId).map(b=>`<span class="profile-badge" title="Player-created highlight"><span aria-hidden="true">${icons[b.style]||'★'}</span> ${esc(b.name)}</span>`).join('')}</div>`;
+    return `<div class="profile-badges" aria-label="${item ? 'Placement Highlights' : 'Player Highlights'}">${(profile.badges||[]).filter(b => level ? b.list === state.route?.listId && b.level === level : !b.level && (!b.list || b.list === state.route?.listId)).map(b=>`<span class="profile-badge" title="Player-created highlight"><span aria-hidden="true">${icons[b.style]||'★'}</span> ${esc(b.name)}</span>`).join('')}</div>`;
   }
   function gameBanner(profile,entry) {
     const custom = entry.bannerImage === 'banner-'+entry.id+'.webp' && /^[a-f0-9]{64}$/.test(entry.bannerVersion||'');
@@ -370,7 +371,7 @@
     if (!custom && !artwork) return '';
     const src = custom ? `players/${esc(profile.id)}/${esc(entry.bannerImage)}?v=${entry.bannerVersion}` : `assets/game-art/${artwork}.webp`;
     const opacity = custom ? Math.max(5,Math.min(50,entry.bannerOpacity||15))/100 : .65;
-    return `<img class="list-tab-banner" src="${src}" alt="" aria-hidden="true" style="opacity:${opacity}">`;
+    return `<span class="list-tab-banner${entry.bannerTint === true ? ' banner-accent' : ''}" aria-hidden="true" style="opacity:${opacity}"><img src="${src}" alt=""></span>`;
   }
   function playerIntro(profile) {
     return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div>${badgesMarkup(profile)}</div>`;
@@ -417,7 +418,7 @@
         : `<span class="thumbnail"><img src="${esc(thumbnail)}" loading="lazy" alt="${esc(name)} thumbnail" data-thumbnail></span>`) : ''}
       <div class="listcardmeta"><h2 class="demon-title"><span><span class="hash">#${displayRank || rank}</span> – ${esc(name)}</span>${difficultyBadge(item, profile, game)}</h2>
       <p class="creator">${completion.prefix ? `${completion.prefix} <strong>${esc(completion.value)}</strong>` : 'Completion date unavailable'}</p>
-      <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${gd ? (item.attempts ? ` · ${esc(item.attempts)} attempts` : '') : (item.timeTaken ? ` · Game Time: ${esc(item.timeTaken)}` : '')}${!gd && item.gameRank ? ` · ${game === 'beat-saber' ? 'Grade' : 'Rank'}: ${esc(game === 'beat-saber' ? String(item.gameRank).replace(/^grade\s*/i, '') : item.gameRank)}` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p></div></article>`;
+      <p class="tiernote">${item.enjoyment != null ? `Enjoyment: ${esc(item.enjoyment)}/10` : 'Personal ranking'}${gd ? (item.attempts ? ` · ${esc(item.attempts)} attempts` : '') : (item.timeTaken ? ` · Game Time: ${esc(item.timeTaken)}` : '')}${!gd && item.gameRank ? ` · ${game === 'beat-saber' ? 'Grade' : 'Rank'}: ${esc(game === 'beat-saber' ? String(item.gameRank).replace(/^grade\s*/i, '') : item.gameRank)}` : ''}${item.worstFail != null ? ` · ${esc(item.worstFail)}% worst fail` : ''}</p>${badgesMarkup(profile, item)}</div></article>`;
   }
   function filteredLevels() {
     const items = Array.isArray(state.activeList?.levels) ? [...state.activeList.levels] : [];
@@ -490,7 +491,8 @@
       <button type="button" ${prev?'':'disabled'} data-rank-nav="${prev?prev.rank:''}">‹ Previous</button><button type="button" ${next?'':'disabled'} data-rank-nav="${next?next.rank:''}">Next ›</button></div></div>
       <section class="singlepanel"><div class="detailheading"><h1 class="demon-title"><span>#${esc(item.rank)} – ${esc(item.name)}</span>${difficultyBadge(item, profile, game)}</h1><p>${esc(doc.title||entry.title)} · ${esc(profile.name)}</p></div>
       ${detailVideo(item)}
-      <div class="facts detail-grid">${facts.map(([value,label])=>`<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>
+      ${badgesMarkup(profile, item)}
+    <div class="facts detail-grid">${facts.map(([value,label])=>`<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>
       <p class="statline"><strong>Enjoyment rating:</strong> ${item.enjoyment == null ? 'Not provided' : `${esc(item.enjoyment)}/10`}</p>
       ${gd ? `<p class="statline"><strong>Time taken:</strong> ${attr('timeTaken')}</p>` : `<p class="statline"><strong>${game === 'beat-saber' ? 'Grade' : 'Rank'}:</strong> ${game === 'beat-saber' ? attr('gameRank').replace(/^grade\s*/i, '') : attr('gameRank')}</p>`}
       ${item.videoTitle ? `<p class="statline"><strong>Video title:</strong> ${esc(item.videoTitle)}</p>` : ''}
@@ -665,6 +667,7 @@
   setTheme(state.theme);
   boot();
 })();
+
 
 
 
