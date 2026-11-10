@@ -66,7 +66,8 @@
     }
     if (item.thumbnail) return safeLink(item.thumbnail);
     const id = youtubeId(item.videoUrl);
-    return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+    const version = Number.isSafeInteger(item.thumbnailVersion) ? `?v=${item.thumbnailVersion}` : '';
+    return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg${version}` : null;
   }
   function readTheme() {
     try {return localStorage.getItem('player-lists-theme') === 'light' ? 'light' : 'dark';}
