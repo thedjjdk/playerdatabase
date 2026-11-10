@@ -378,12 +378,12 @@
     return `<span class="list-tab-banner${entry.bannerTint === true ? ' banner-accent' : ''}" aria-hidden="true" style="opacity:${opacity}"><img src="${src}" alt=""></span>`;
   }
   const geometryXp = new Map([
-    ['easy', 10], ['normal', 15], ['hard', 20], ['harder', 25], ['insane', 35],
-    ['easy-demon', 45], ['medium-demon', 60], ['hard-demon', 80], ['insane-demon', 100]
+    ['easy', 2], ['normal', 4], ['hard', 8], ['harder', 15], ['insane', 25],
+    ['easy-demon', 45], ['medium-demon', 80], ['hard-demon', 140], ['insane-demon', 250]
   ]);
   const celesteXp = new Map([
-    ['blue', 10], ['green', 20], ['lime', 35], ['yellow', 55], ['orange', 80],
-    ['red', 120], ['cracked', 180], ['shattered', 260]
+    ['blue', 5], ['green', 15], ['lime', 40], ['yellow', 100], ['orange', 240],
+    ['red', 500], ['cracked', 900], ['shattered', 1500]
   ]);
   // Fixed reference ranks for confirmed Extreme Demons. Personal placement never affects XP.
   const extremeRanks = new Map([
@@ -395,13 +395,14 @@
 
   function placementXp(game, item, name) {
     if (game === 'geometry-dash') {
-      if (item.difficulty !== 'extreme-demon') return geometryXp.get(item.difficulty) ?? 10;
+      if (item.difficulty !== 'extreme-demon') return geometryXp.get(item.difficulty) ?? 2;
       const rank = extremeRanks.get(name) ?? Infinity;
-      return rank <= 250 ? 260 : rank <= 500 ? 180 : 120;
+      return rank <= 250 ? 1500 : rank <= 500 ? 900 : 500;
     }
-    if (game === 'celeste') return celesteXp.get(celesteMeterRank(item.gameRank).state) ?? 10;
+    if (game === 'celeste') return celesteXp.get(celesteMeterRank(item.gameRank).state) ?? 2;
     const grade = parseBeatSaberGrade(item.gameRank);
-    return grade ? grade * 5 : 10;
+    // Keep the lowest grade worth 5 XP and make gains steeper at higher grades.
+    return grade ? 5 + Math.round(995 * ((grade - 1) / 39) ** 3) : 2;
   }
 
   function profileXp(lists) {
