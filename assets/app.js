@@ -162,7 +162,8 @@
     bar.classList.add('is-sliding');
     bar.append(ring);
     const artwork = [];
-    for (const [tab, bounds] of [[outgoing, from], [selected, to]]) {
+    for (const tab of bar.querySelectorAll('[data-player-tab]')) {
+      const bounds = tab.getBoundingClientRect();
       const banner = tab.querySelector('.list-tab-banner');
       if (!banner) continue;
       banner.style.display = 'block';
