@@ -8,7 +8,8 @@
       "id": "geometry-dash",
       "title": "Geometry Dash List",
       "file": "geometry-dash.json",
-      "bannerOpacity": 15
+      "bannerOpacity": 15,
+      "bannerTint": true
     }
   ],
   "backgroundImage": "background.webp",
