@@ -21,7 +21,7 @@ body .panel {padding:20px}
 body .panel h2 {border-bottom:0;padding-bottom:0;margin-bottom:12px}
 body .panel p {color:var(--muted)}
 body .bulletrows>div {border-color:var(--polish-edge);padding-bottom:11px}
-body .player-title-wrap .player-avatar-small {width:96px;height:96px;flex-shrink:0;border-radius:15px;border:1px solid var(--polish-edge)}
+body .player-title-wrap .player-avatar-small {width:96px;height:96px;flex-shrink:0;margin:-1px 0 -1px -1px;border-radius:20px;border:1px solid var(--polish-edge)}
 @media(max-width:540px) {body .player-title-wrap .player-avatar-small {width:80px;height:80px}}
 body .player-result {border-radius:9px}
 body .list-filter-area {width:100%}
@@ -65,7 +65,7 @@ body .player-title-wrap {
   display:flex;
   width:fit-content;
   max-width:100%;
-  padding:4px 20px 4px 4px;
+  padding:0 20px 0 0;
   border:1px solid var(--polish-edge);
   border-radius:20px;
   background:var(--panel-fill,var(--surface));
