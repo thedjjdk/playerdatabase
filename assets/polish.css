@@ -10,8 +10,7 @@ body .wide-tabs button[aria-selected=true] {border-radius:12px;box-shadow:inset 
 body .wide-tabs button[aria-selected=true]::after {display:none}
 body .wide-tabs button[aria-selected=true] .list-tab-label {color:#fff;text-shadow:0 1px 5px #000,0 1px 12px #000}
 body .wide-tabs button:not([aria-selected=true]) .list-tab-banner {display:none}
-body .wide-tabs .list-tab-banner {border-radius:11px}
-body .wide-tabs button[aria-selected=true]::before {content:'';position:absolute;inset:0;background:linear-gradient(90deg,#090f1960,#090f1920);z-index:1;pointer-events:none;border-radius:11px}
+body .wide-tabs .list-tab-banner {border-radius:11px;filter:brightness(.8)}
 body .wide-tabs .list-tab-label {z-index:2}
 body .listcard {padding:16px;gap:22px;min-height:150px;transition:box-shadow .18s ease,border-color .18s ease}
 body .listcard .thumbnail {border-radius:10px;flex:0 0 38%;width:38%;height:auto;aspect-ratio:16/9;border:0}
