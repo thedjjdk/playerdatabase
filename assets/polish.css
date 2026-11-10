@@ -1,13 +1,20 @@
 /* Visual refresh. Rank artwork and player-defined theme colors remain unchanged. */
-body {--polish-edge:color-mix(in srgb,var(--text) 23%,transparent)}
-body :is(.listcard,.panel,.singlepanel,.list-empty,.player-search-box,.player-results,.fact,.editor-row,.background-preview) {border-radius:14px;border-style:solid;border-color:var(--polish-edge);box-shadow:0 8px 24px #00000012;background-image:linear-gradient(125deg,#ffffff05,transparent 65%)!important}
+body {
+  --polish-edge:color-mix(in srgb,var(--text) 23%,transparent);
+  --panel-inner-glow:inset 0 1px 0 #ffffff0e,inset 0 0 15px color-mix(in srgb,var(--accent) 9%,transparent);
+  --active-list-outline:var(--profile-right,var(--accent-strong));
+}
+body.light-mode {
+  --panel-inner-glow:inset 0 1px 0 #ffffffa0,inset 0 0 15px color-mix(in srgb,var(--accent) 10%,transparent);
+}
+body :is(.listcard,.panel,.singlepanel,.list-empty,.player-search-box,.player-results,.fact,.editor-row,.background-preview) {border-radius:14px;border-style:solid;border-color:var(--polish-edge);box-shadow:var(--panel-inner-glow),0 8px 24px #00000012;background-image:linear-gradient(125deg,#ffffff05,transparent 65%)!important}
 body :is(.filter,.select,.ghostbutton,.pagebtn,.detail-actions a,.backbutton,.editor input:not([type=checkbox]):not([type=range]),.editor select,.editor button) {border-radius:10px;border-style:solid}
 body :is(.filter,.select,.ghostbutton) {min-height:44px}
 body .wide-tabs {border:1px solid var(--polish-edge);border-radius:13px;height:64px;margin-bottom:22px;padding:0;gap:0}
 body .wide-tabs button {position:relative;border:0;border-right:1px solid var(--polish-edge);border-radius:0;font-size:15px!important;isolation:isolate;overflow:hidden}
 body .wide-tabs button:last-child {border-right:0}
-body .wide-tabs button[aria-selected=true] {border-radius:12px;box-shadow:inset 0 0 0 2px var(--accent-strong);color:var(--text)}
-body .wide-tabs button[aria-selected=true]::after {display:none}
+body .wide-tabs button[aria-selected=true] {border-radius:12px;color:var(--text)}
+
 body .wide-tabs button[aria-selected=true] .list-tab-label {color:#fff;text-shadow:0 1px 5px #000,0 1px 12px #000}
 body .wide-tabs button:not([aria-selected=true]) .list-tab-banner {display:none}
 body .wide-tabs .list-tab-banner {border-radius:11px;filter:brightness(.8)}
@@ -48,13 +55,13 @@ body dialog#confirm {background:var(--surface)!important;border-radius:14px;bord
 
 /* Keep the selected outline on the sliding layer until it reaches the next tab. */
 body .wide-tabs {position:relative}
-body .wide-tabs.is-sliding button[aria-selected=true] {box-shadow:none}
+
 .list-tab-sliding-border {
   position:absolute;
   top:0;
   left:0;
   border-radius:12px;
-  box-shadow:inset 0 0 0 2px var(--accent-strong);
+  box-shadow:inset 0 0 0 2px var(--active-list-outline);
   pointer-events:none;
   z-index:3;
 }
@@ -69,7 +76,7 @@ body .player-title-wrap {
   border:1px solid var(--polish-edge);
   border-radius:20px;
   background:var(--panel-fill,var(--surface));
-  box-shadow:0 8px 24px #00000024;
+  box-shadow:var(--panel-inner-glow),0 8px 24px #00000024;
 }
 body #in-progress-toggle[aria-pressed=true] {
   background:color-mix(in srgb,var(--surface) 77%,white)!important;
@@ -115,13 +122,44 @@ body .wide-tabs:not(.is-sliding) button[aria-selected=true]:is(:has(+ button:hov
   z-index:-1;
   pointer-events:none;
 }
-body .wide-tabs:not(.is-sliding) button[aria-selected=true]:is(:has(+ button:hover),button:hover + button)::after {
+body .wide-tabs:not(.is-sliding) button[aria-selected=true]::after {
   display:block;
   content:"";
   inset:0;
   height:auto;
+  z-index:3;
   background:none;
   border-radius:12px;
-  box-shadow:inset 0 0 0 2px var(--accent-strong);
+  box-shadow:inset 0 0 0 2px var(--active-list-outline);
   pointer-events:none;
+}
+
+
+body .wide-tabs.is-sliding button[aria-selected=true]::after {display:none}
+body :is(.wide-tabs,.listcard .thumbnail,.data-note,.video-area-empty,.appearance-popover,.difficulty-popover,.game-options,.deletion-notice,.profile-badge,dialog) {
+  box-shadow:var(--panel-inner-glow);
+}
+body .player-search-box:focus-within {
+  box-shadow:var(--panel-inner-glow),0 0 0 2px color-mix(in srgb,var(--accent-strong) 15%,transparent);
+}
+body .listcard:is(:hover,:focus-within) {
+  box-shadow:var(--panel-inner-glow),0 0 16px color-mix(in srgb,var(--accent-strong) 23%,transparent);
+}
+
+.profile-identity {min-width:0;padding-block:8px}
+.profile-xp {
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px 9px;margin-top:4px;
+  min-height:25px;font-size:13px;color:var(--muted);
+}
+.profile-xp strong {color:var(--text);white-space:nowrap}
+.profile-level-badge {
+  display:grid;place-items:center;min-width:27px;height:27px;padding:0 4px;
+  border:1px solid var(--accent-strong);border-radius:8px;color:var(--accent-strong);
+  background:color-mix(in srgb,var(--accent-strong) 12%,transparent);font-weight:850;
+}
+.profile-xp progress {width:clamp(60px,13vw,185px);height:7px;accent-color:var(--accent-strong)}
+.profile-xp-count {white-space:nowrap;font-variant-numeric:tabular-nums}
+@media(max-width:540px) {
+  body .player-title-wrap {gap:10px;padding-right:10px}
+  .profile-xp {font-size:12px}
 }

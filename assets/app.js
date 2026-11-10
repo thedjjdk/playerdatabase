@@ -347,10 +347,14 @@
     const label = 'Celeste rank: ' + rank;
     return `<span class="celeste-meter" role="img" aria-label="${esc(label)}" title="${esc(label)}"><img src="assets/celeste-${state}.png" alt="" aria-hidden="true" width="66" height="62"><span class="celeste-meter-tier" aria-hidden="true">${esc(tier)}</span></span>`;
   }
-  function beatSaberGrade(value) {
+  function parseBeatSaberGrade(value) {
     const match = String(value ?? '').trim().match(/^(?:grade\s*)?(\d{1,2})$/i);
     const grade = match ? Number(match[1]) : 0;
-    if (grade < 1 || grade > 40) return '';
+    return grade >= 1 && grade <= 40 ? grade : 0;
+  }
+  function beatSaberGrade(value) {
+    const grade = parseBeatSaberGrade(value);
+    if (!grade) return '';
     return `<img class="player-demon-face beat-saber-grade" src="assets/beat-saber/grade${String(grade).padStart(2, '0')}.webp" alt="Beat Saber Grade ${grade}" title="Grade ${grade}" width="56" height="56" style="width:56px;height:56px">`;
   }
   function difficultyBadge(item, profile, game) {
@@ -373,8 +377,76 @@
     const opacity = custom ? Math.max(5,Math.min(50,entry.bannerOpacity||15))/100 : .65;
     return `<span class="list-tab-banner${entry.bannerTint === true ? ' banner-accent' : ''}" aria-hidden="true" style="opacity:${opacity}"><img src="${src}" alt=""></span>`;
   }
+  const geometryXp = new Map([
+    ['easy', 10], ['normal', 15], ['hard', 20], ['harder', 25], ['insane', 35],
+    ['easy-demon', 45], ['medium-demon', 60], ['hard-demon', 80], ['insane-demon', 100]
+  ]);
+  const celesteXp = new Map([
+    ['blue', 10], ['green', 20], ['lime', 35], ['yellow', 55], ['orange', 80],
+    ['red', 120], ['cracked', 180], ['shattered', 260]
+  ]);
+  // Fixed reference ranks for confirmed Extreme Demons. Personal placement never affects XP.
+  const extremeRanks = new Map([
+    ['zodiac', 169], ['arctic lights', 320], ['spectrum cyclone', 326],
+    ['storming summit', 329], ['generic wave', 427], ['chromatic haze', 448],
+    ['catalyze', 465]
+  ]);
+  const scoringGames = new Set(['geometry-dash', 'celeste', 'beat-saber']);
+
+  function placementXp(game, item, name) {
+    if (game === 'geometry-dash') {
+      if (item.difficulty !== 'extreme-demon') return geometryXp.get(item.difficulty) ?? 10;
+      const rank = extremeRanks.get(name) ?? Infinity;
+      return rank <= 250 ? 260 : rank <= 500 ? 180 : 120;
+    }
+    if (game === 'celeste') return celesteXp.get(celesteMeterRank(item.gameRank).state) ?? 10;
+    const grade = parseBeatSaberGrade(item.gameRank);
+    return grade ? grade * 5 : 10;
+  }
+
+  function profileXp(lists) {
+    const awards = new Map();
+    for (const {game, levels} of lists) {
+      for (const item of levels) {
+        const name = String(item.name ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
+        if (!name || (item.status && item.status !== 'completed')) continue;
+        const key = game + '/' + name;
+        awards.set(key, Math.max(awards.get(key) ?? 0, placementXp(game, item, name)));
+      }
+    }
+    return [...awards.values()].reduce((sum, xp) => sum + xp, 0);
+  }
+
+  function levelProgress(total) {
+    // Completing n levels costs 100n + 25n(n-1)/2 XP.
+    const earned = Math.floor((Math.sqrt(49 + 8 * total / 25) - 7) / 2);
+    return {
+      level: earned + 1,
+      progress: total - (100 * earned + 25 * earned * (earned - 1) / 2),
+      next: 100 + 25 * earned
+    };
+  }
+
+  async function showProfileXp(profile, folder, seq) {
+    const target = app.querySelector('[data-profile-xp]');
+    if (!target) return;
+    try {
+      const lists = await Promise.all(profile.lists.filter(entry => scoringGames.has(listGame(entry))).map(async entry => {
+        const data = entry.data || (validJsonName(entry.file) && await fetchJson(`players/${folder}/${entry.file}`));
+        if (!Array.isArray(data?.levels)) throw new Error('Invalid list data');
+        return {game: listGame(entry), levels: data.levels};
+      }));
+      if (seq !== state.request) return;
+      const total = profileXp(lists);
+      const {level, progress, next} = levelProgress(total);
+      target.innerHTML = `<span class="profile-level-badge" aria-hidden="true">${level}</span><strong>Level ${level}</strong><progress aria-label="XP toward level ${level + 1}" value="${progress}" max="${next}"></progress><span class="profile-xp-count" title="${total.toLocaleString()} total XP">${progress.toLocaleString()} / ${next.toLocaleString()} XP</span>`;
+    } catch {
+      if (seq === state.request) target.textContent = 'XP unavailable';
+    }
+  }
+
   function playerIntro(profile) {
-    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div><h1>${esc(profile.name)}</h1></div></div>${badgesMarkup(profile)}</div>`;
+    return `<div class="pageintro"><a href="#/" class="inline-back">‹ Back to player search</a><div class="player-title-wrap" style="margin-top:13px">${playerAvatar(profile)}<div class="profile-identity"><h1>${esc(profile.name)}</h1><div class="profile-xp" data-profile-xp aria-live="polite">Loading XP…</div></div></div>${badgesMarkup(profile)}</div>`;
   }
   function sidebar(profile, doc) {
     const src = safeLink(doc.sourceUrl);
@@ -542,6 +614,7 @@
       state.activeList = data;
       if (state.route.rank != null) detailView(state.activeProfile,entry,data,state.route.rank);
       else listView(state.activeProfile,entry,data);
+      showProfileXp(profile, folder, seq);
     } catch (err) {
       if (seq !== state.request) return;
       showError('Unable to load player data',`${err.message}. Check that the player JSON files are present and that the site is being served over HTTP (not file://).`);
@@ -667,12 +740,3 @@
   setTheme(state.theme);
   boot();
 })();
-
-
-
-
-
-
-
-
-
