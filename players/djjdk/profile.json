@@ -13,7 +13,7 @@
   ],
   "backgroundImage": "background.webp",
   "backgroundImageVersion": "e8263507495054f42ae3a41ffaae7fffde14b485781fc100d34217f11915d7e1",
-  "backgroundInvertLight": false,
+  "backgroundInvertLight": true,
   "backgroundInvertDark": false,
   "backgroundOpacity": 15,
   "backgroundFraming": {
