@@ -202,6 +202,26 @@
       "videoPublishedDate": "2021-01-19",
       "rank": 18,
       "status": "completed"
+    },
+    {
+      "rank": 19,
+      "name": "Magma Bound",
+      "videoUrl": "https://youtu.be/tAl4DFFpeHg",
+      "attempts": "4,418",
+      "completionDate": "2020-02-22",
+      "completionYear": 2020,
+      "difficulty": "insane-demon",
+      "status": "completed"
+    },
+    {
+      "rank": 20,
+      "name": "SourCream II",
+      "videoUrl": "https://youtu.be/n4Y8CVH9050",
+      "attempts": "2,868",
+      "completionDate": "2020-04-13",
+      "completionYear": 2020,
+      "difficulty": "insane-demon",
+      "status": "completed"
     }
   ]
 }
