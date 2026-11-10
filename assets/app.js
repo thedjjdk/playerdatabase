@@ -377,33 +377,7 @@
     const opacity = custom ? Math.max(5,Math.min(50,entry.bannerOpacity||15))/100 : .65;
     return `<span class="list-tab-banner${entry.bannerTint === true ? ' banner-accent' : ''}" aria-hidden="true" style="opacity:${opacity}"><img src="${src}" alt=""></span>`;
   }
-  const geometryXp = new Map([
-    ['easy', 2], ['normal', 4], ['hard', 8], ['harder', 15], ['insane', 25],
-    ['easy-demon', 45], ['medium-demon', 80], ['hard-demon', 140], ['insane-demon', 250]
-  ]);
-  const celesteXp = new Map([
-    ['blue', 5], ['green', 15], ['lime', 40], ['yellow', 100], ['orange', 240],
-    ['red', 500], ['cracked', 900], ['shattered', 1500]
-  ]);
-  // Fixed reference ranks for confirmed Extreme Demons. Personal placement never affects XP.
-  const extremeRanks = new Map([
-    ['zodiac', 169], ['arctic lights', 320], ['spectrum cyclone', 326],
-    ['storming summit', 329], ['generic wave', 427], ['chromatic haze', 448],
-    ['catalyze', 465]
-  ]);
   const scoringGames = new Set(['geometry-dash', 'celeste', 'beat-saber']);
-
-  function placementXp(game, item, name) {
-    if (game === 'geometry-dash') {
-      if (item.difficulty !== 'extreme-demon') return geometryXp.get(item.difficulty) ?? 2;
-      const rank = extremeRanks.get(name) ?? Infinity;
-      return rank <= 250 ? 1500 : rank <= 500 ? 900 : 500;
-    }
-    if (game === 'celeste') return celesteXp.get(celesteMeterRank(item.gameRank).state) ?? 2;
-    const grade = parseBeatSaberGrade(item.gameRank);
-    // Keep the lowest grade worth 5 XP and make gains steeper at higher grades.
-    return grade ? 5 + Math.round(995 * ((grade - 1) / 39) ** 3) : 2;
-  }
 
   function profileXp(lists) {
     const awards = new Map();
@@ -412,20 +386,13 @@
         const name = String(item.name ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
         if (!name || (item.status && item.status !== 'completed')) continue;
         const key = game + '/' + name;
-        awards.set(key, Math.max(awards.get(key) ?? 0, placementXp(game, item, name)));
+        const rating = game === 'geometry-dash' ? item.difficulty
+          : game === 'celeste' ? celesteMeterRank(item.gameRank).state
+          : parseBeatSaberGrade(item.gameRank);
+        awards.set(key, Math.max(awards.get(key) ?? 0, window.PlayerDatabaseXp.placementXp(game, rating, name)));
       }
     }
     return [...awards.values()].reduce((sum, xp) => sum + xp, 0);
-  }
-
-  function levelProgress(total) {
-    // Completing n levels costs 100n + 25n(n-1)/2 XP.
-    const earned = Math.floor((Math.sqrt(49 + 8 * total / 25) - 7) / 2);
-    return {
-      level: earned + 1,
-      progress: total - (100 * earned + 25 * earned * (earned - 1) / 2),
-      next: 100 + 25 * earned
-    };
   }
 
   async function showProfileXp(profile, folder, seq) {
@@ -439,7 +406,7 @@
       }));
       if (seq !== state.request) return;
       const total = profileXp(lists);
-      const {level, progress, next} = levelProgress(total);
+      const {level, progress, next} = window.PlayerDatabaseXp.levelProgress(total);
       target.innerHTML = `<span class="profile-level-badge" aria-hidden="true">${level}</span><strong>Level ${level}</strong><progress aria-label="XP toward level ${level + 1}" value="${progress}" max="${next}"></progress><span class="profile-xp-count" title="${total.toLocaleString()} total XP">${progress.toLocaleString()} / ${next.toLocaleString()} XP</span>`;
     } catch {
       if (seq === state.request) target.textContent = 'XP unavailable';

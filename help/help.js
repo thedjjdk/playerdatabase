@@ -120,3 +120,26 @@ request().then(data => {
   render();
   byId('edit').disabled = false;
 }).catch(() => { status.textContent = 'Showing the default guide. Editing is currently unavailable.'; });
+
+function renderXpGuide() {
+  const {geometryXp, celesteXp, extremeTiers, fallback, firstLevelCost, levelStep, beatSaberXp} = window.PlayerDatabaseXp;
+  const celesteNames = ['Blue · Beginner', 'Green · Intermediate', 'Lime · Advanced', 'Yellow · Expert',
+    'Orange · Grandmaster', 'Red · Cracked Grandmaster', 'Cracked · GM+1', 'Shattered · GM+2'];
+  const table = (title, label, rows) => `<h3>${title}</h3><table aria-label="${title} XP">
+    <thead><tr><th scope="col">${label}</th><th scope="col">XP</th></tr></thead>
+    <tbody>${rows.map(([name, xp]) => `<tr><th scope="row">${name}</th><td>${xp.toLocaleString()}</td></tr>`).join('')}</tbody>
+  </table>`;
+  const geometryRows = [...geometryXp].map(([id, xp]) => [
+    id.split('-').map(word => word[0].toUpperCase() + word.slice(1)).join(' '), xp
+  ]);
+  geometryRows.push(...extremeTiers.map(({label, xp}) => [label, xp]));
+  byId('xp-rules').innerHTML = `
+    <p>Players start at Level 1. Level 2 takes <strong>${firstLevelCost} XP</strong>, and each next level takes <strong>${levelStep} XP more</strong> than the last. Level 3 takes another ${firstLevelCost + levelStep} XP.</p>
+    <p>Completed placements with no recognized difficulty or grade earn ${fallback} XP.</p>
+    ${table('Geometry Dash', 'Difficulty', geometryRows)}
+    <p>The Extreme Demon bonuses use a fixed set of recorded AREDL ranks. Extremes without a recorded rank receive the base award.</p>
+    ${table('Celeste', 'Difficulty', [...celesteXp.values()].map((xp, i) => [celesteNames[i], xp]))}
+    ${table('Beat Saber', 'Grade', Array.from({length: 40}, (_, i) => [`Grade ${i + 1}`, beatSaberXp(i + 1)]))}
+  `;
+}
+renderXpGuide();

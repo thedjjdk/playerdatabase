@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Difficulty Help · Player Database</title>
+<title>Help · Player Database</title>
 <link rel="stylesheet" href="../assets/style.css?v=opaque-overlays-1">
 <link rel="stylesheet" href="../assets/polish.css?v=profile-levels-1">
 <style>
@@ -16,15 +16,28 @@
 .guide dl {align-items:center}
 .guide dt {display:flex;align-items:center;gap:8px}
 .guide dt img {flex:none;object-fit:contain}
+.guide :is(#xp-guide,#difficulty-guide) {scroll-margin-top:16px}
+.guide #xp-rules h3 {margin:16px 0 6px}
+.guide #xp-rules table {width:100%;border-collapse:collapse}
+.guide #xp-rules :is(th,td) {padding:5px 8px;border-bottom:1px solid var(--border);text-align:left}
+.guide #xp-rules :is(th,td):last-child {text-align:right;white-space:nowrap}
 /* The source sprite ends partway through its caption. Use the full row label. */
 .guide dt img[src="../assets/insane.png"] {clip-path:inset(0 0 12% 0)}
 </style>
-<script src="help.js?v=2" defer></script>
+<script src="../assets/xp.js?v=1" defer></script>
+<script src="help.js?v=3" defer></script>
 </head>
 <body>
 <main class="container guide">
 <a href="../#/">← Back to player search</a>
-<h1>Difficulty Help</h1>
+<h1>Player Database Help</h1>
+<nav aria-label="Help topics"><a href="#xp-guide">Levels and XP</a> · <a href="#difficulty-guide">Difficulty Guide</a></nav>
+<section id="xp-guide" class="panel" aria-labelledby="xp-guide-title">
+<h2 id="xp-guide-title">Levels and XP</h2>
+<p>Completed placements across Geometry Dash, Celeste, and Beat Saber contribute to one overall profile level. Matching names within the same game count once, using the higher XP award. In-progress placements and personal list order do not affect XP. FNaF scoring is on hold.</p>
+<div id="xp-rules"></div>
+</section>
+<h2 id="difficulty-guide">Difficulty Guide</h2>
 <p>List editors: <strong>DJ JDK</strong> and <strong>KayceeNoelle</strong>.</p>
 <div id="guide"></div>
 <p id="status" role="status"></p>
