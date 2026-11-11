@@ -62,12 +62,12 @@
       return `players/${profile.id}/${item.thumbnail}?v=1`;
     }
     if (item.thumbnail && /^https:\/\/i\.ytimg\.com\/vi\/[A-Za-z0-9_-]{11}\/hqdefault\.jpg$/.test(item.thumbnail)) {
-      return item.thumbnail;
+      return item.thumbnail.replace('/hqdefault.jpg', '/sddefault.jpg');
     }
     if (item.thumbnail) return safeLink(item.thumbnail);
     const id = youtubeId(item.videoUrl);
     const version = Number.isSafeInteger(item.thumbnailVersion) ? `?v=${item.thumbnailVersion}` : '';
-    return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg${version}` : null;
+    return id ? `https://i.ytimg.com/vi/${id}/sddefault.jpg${version}` : null;
   }
   function readTheme() {
     try {return localStorage.getItem('player-lists-theme') === 'light' ? 'light' : 'dark';}
@@ -625,9 +625,19 @@
     const retry=e.target.closest('[data-retry]');
     if(retry) {cache.clear();state.activeKey='';routeView();}
   });
+  function fallbackThumbnail(image) {
+    if (!image.hasAttribute('data-thumbnail')) return false;
+    if (!/^https:\/\/i\.ytimg\.com\/vi\/[A-Za-z0-9_-]{11}\/sddefault\.jpg(?:\?v=\d+)?$/.test(image.src)) return false;
+    image.src = image.src.replace('/sddefault.jpg', '/hqdefault.jpg');
+    return true;
+  }
+  app.addEventListener('load', e => {
+    if (e.target instanceof HTMLImageElement && e.target.naturalWidth <= 120) fallbackThumbnail(e.target);
+  }, true);
   app.addEventListener('error',e=>{
     if (e.target instanceof HTMLImageElement && e.target.hasAttribute('data-player-avatar')) e.target.remove();
     if(e.target instanceof HTMLImageElement && e.target.hasAttribute('data-thumbnail')) {
+      if (fallbackThumbnail(e.target)) return;
       const frame = e.target.closest('.thumbnail, .videoarea:not(a)');
       (frame || e.target).remove();
     }
