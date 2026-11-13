@@ -86,6 +86,17 @@
     },
     {
       "rank": 8,
+      "name": "the far sky",
+      "videoUrl": "https://youtu.be/3VwQyxlgglE",
+      "difficulty": "insane-demon",
+      "attempts": "2,027 (683 old attempts)",
+      "enjoyment": 4,
+      "worstFail": 98,
+      "videoPublishedDate": "2023-02-24",
+      "status": "completed"
+    },
+    {
+      "rank": 9,
       "name": "Shitty Digital Descent",
       "attempts": "~1637",
       "enjoyment": 7,
@@ -104,7 +115,7 @@
       "enjoyment": 5,
       "worstFail": 69,
       "videoPublishedDate": "2020-06-25",
-      "rank": 9,
+      "rank": 10,
       "status": "completed"
     },
     {
@@ -115,18 +126,18 @@
       "enjoyment": 6.5,
       "worstFail": 58,
       "videoPublishedDate": "2021-02-26",
-      "rank": 10,
+      "rank": 11,
       "status": "completed"
     },
     {
-      "rank": 11,
+      "rank": 12,
       "name": "Fusion Core",
       "status": "in-progress",
       "enjoyment": 4,
       "worstFail": 86
     },
     {
-      "rank": 12,
+      "rank": 13,
       "name": "Stalemate",
       "status": "in-progress",
       "progress": "97",
@@ -134,7 +145,7 @@
       "difficulty": "insane-demon"
     },
     {
-      "rank": 13,
+      "rank": 14,
       "name": "CastleMania (All Paths)",
       "attempts": "2544",
       "enjoyment": 8.2,
@@ -145,7 +156,7 @@
       "status": "completed"
     },
     {
-      "rank": 14,
+      "rank": 15,
       "name": "Magma Bound",
       "videoUrl": "https://youtu.be/tAl4DFFpeHg",
       "attempts": "4,418",
@@ -155,7 +166,7 @@
       "status": "completed"
     },
     {
-      "rank": 15,
+      "rank": 16,
       "name": "SourCream II",
       "videoUrl": "https://youtu.be/n4Y8CVH9050",
       "attempts": "2,868",
@@ -172,11 +183,11 @@
       "enjoyment": 4,
       "worstFail": 84,
       "videoPublishedDate": "2021-02-12",
-      "rank": 16,
+      "rank": 17,
       "status": "completed"
     },
     {
-      "rank": 17,
+      "rank": 18,
       "name": "bomb the rave",
       "attempts": "1133",
       "enjoyment": 6,
@@ -195,7 +206,7 @@
       "enjoyment": 8,
       "worstFail": 97,
       "videoPublishedDate": "2020-09-08",
-      "rank": 18,
+      "rank": 19,
       "status": "completed"
     },
     {
@@ -206,7 +217,7 @@
       "enjoyment": 0,
       "worstFail": 92,
       "videoPublishedDate": "2021-02-06",
-      "rank": 19,
+      "rank": 20,
       "status": "completed"
     },
     {
@@ -217,7 +228,7 @@
       "enjoyment": 6,
       "worstFail": 88,
       "videoPublishedDate": "2022-09-18",
-      "rank": 20,
+      "rank": 21,
       "status": "completed"
     },
     {
@@ -228,7 +239,7 @@
       "enjoyment": 9,
       "worstFail": 99,
       "videoPublishedDate": "2021-01-19",
-      "rank": 21,
+      "rank": 22,
       "status": "completed"
     }
   ]
