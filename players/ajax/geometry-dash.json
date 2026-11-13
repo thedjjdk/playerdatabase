@@ -138,6 +138,19 @@
     {
       "rank": 12,
       "rankLabel": "12",
+      "name": "Zettabyte",
+      "creator": "Jenkins",
+      "difficulty": "extreme-demon",
+      "videoUrl": "https://youtu.be/uqJPEJxP4_g",
+      "videoTitle": "Zettabyte (Extreme Demon) - 100%",
+      "videoPublishedDate": "2023-04-29",
+      "attempts": "7,619",
+      "worstFail": 88,
+      "enjoyment": 7.5
+    },
+    {
+      "rank": 13,
+      "rankLabel": "13",
       "name": "8O X",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=f1RzYpoO_nc",
@@ -148,8 +161,8 @@
       "enjoyment": 6
     },
     {
-      "rank": 13,
-      "rankLabel": "13",
+      "rank": 14,
+      "rankLabel": "14",
       "name": "Without U",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=P-T9tDAodRA",
@@ -160,8 +173,8 @@
       "enjoyment": 8.4
     },
     {
-      "rank": 14,
-      "rankLabel": "14",
+      "rank": 15,
+      "rankLabel": "15",
       "name": "Cataclysm",
       "difficulty": "extreme-demon",
       "videoUrl": "https://www.youtube.com/watch?v=uBUKD39U11U",
