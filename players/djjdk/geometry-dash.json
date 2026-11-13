@@ -120,14 +120,21 @@
     },
     {
       "rank": 11,
+      "name": "Fusion Core",
+      "status": "in-progress",
+      "enjoyment": 4,
+      "worstFail": 86
+    },
+    {
+      "rank": 12,
       "name": "Stalemate",
       "status": "in-progress",
-      "progress": "96",
+      "progress": "97",
       "enjoyment": 1,
       "difficulty": "insane-demon"
     },
     {
-      "rank": 12,
+      "rank": 13,
       "name": "CastleMania (All Paths)",
       "attempts": "2544",
       "enjoyment": 8.2,
@@ -138,7 +145,7 @@
       "status": "completed"
     },
     {
-      "rank": 13,
+      "rank": 14,
       "name": "Magma Bound",
       "videoUrl": "https://youtu.be/tAl4DFFpeHg",
       "attempts": "4,418",
@@ -148,7 +155,7 @@
       "status": "completed"
     },
     {
-      "rank": 14,
+      "rank": 15,
       "name": "SourCream II",
       "videoUrl": "https://youtu.be/n4Y8CVH9050",
       "attempts": "2,868",
@@ -165,11 +172,11 @@
       "enjoyment": 4,
       "worstFail": 84,
       "videoPublishedDate": "2021-02-12",
-      "rank": 15,
+      "rank": 16,
       "status": "completed"
     },
     {
-      "rank": 16,
+      "rank": 17,
       "name": "bomb the rave",
       "attempts": "1133",
       "enjoyment": 6,
@@ -188,7 +195,7 @@
       "enjoyment": 8,
       "worstFail": 97,
       "videoPublishedDate": "2020-09-08",
-      "rank": 17,
+      "rank": 18,
       "status": "completed"
     },
     {
@@ -199,7 +206,7 @@
       "enjoyment": 0,
       "worstFail": 92,
       "videoPublishedDate": "2021-02-06",
-      "rank": 18,
+      "rank": 19,
       "status": "completed"
     },
     {
@@ -210,7 +217,7 @@
       "enjoyment": 6,
       "worstFail": 88,
       "videoPublishedDate": "2022-09-18",
-      "rank": 19,
+      "rank": 20,
       "status": "completed"
     },
     {
@@ -221,7 +228,7 @@
       "enjoyment": 9,
       "worstFail": 99,
       "videoPublishedDate": "2021-01-19",
-      "rank": 20,
+      "rank": 21,
       "status": "completed"
     }
   ]
