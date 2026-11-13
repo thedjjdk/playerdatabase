@@ -74,6 +74,17 @@
     },
     {
       "rank": 7,
+      "name": "the far sky",
+      "videoUrl": "https://youtu.be/3VwQyxlgglE",
+      "difficulty": "insane-demon",
+      "attempts": "2,027 (683 old attempts)",
+      "enjoyment": 4,
+      "worstFail": 98,
+      "videoPublishedDate": "2023-02-24",
+      "status": "completed"
+    },
+    {
+      "rank": 8,
       "name": "Reverie",
       "attempts": "~1400",
       "enjoyment": 8.5,
@@ -82,17 +93,6 @@
       "completionYear": 2022,
       "videoUrl": "https://youtu.be/agLW4Yj9RFU",
       "difficulty": "insane-demon",
-      "status": "completed"
-    },
-    {
-      "rank": 8,
-      "name": "the far sky",
-      "videoUrl": "https://youtu.be/3VwQyxlgglE",
-      "difficulty": "insane-demon",
-      "attempts": "2,027 (683 old attempts)",
-      "enjoyment": 4,
-      "worstFail": 98,
-      "videoPublishedDate": "2023-02-24",
       "status": "completed"
     },
     {
@@ -119,14 +119,13 @@
       "status": "completed"
     },
     {
-      "name": "Periodic Elements",
-      "videoUrl": "https://youtu.be/dGbwZBBiyho",
-      "difficulty": "insane-demon",
-      "attempts": "1,964",
-      "enjoyment": 6.5,
-      "worstFail": 58,
-      "videoPublishedDate": "2021-02-26",
       "rank": 11,
+      "name": "SourCream II",
+      "videoUrl": "https://youtu.be/n4Y8CVH9050",
+      "attempts": "2,868",
+      "completionDate": "2020-04-13",
+      "completionYear": 2020,
+      "difficulty": "insane-demon",
       "status": "completed"
     },
     {
@@ -145,7 +144,29 @@
       "difficulty": "insane-demon"
     },
     {
+      "name": "Game Time",
+      "videoUrl": "https://youtu.be/aBl7JY4nRcA",
+      "difficulty": "insane-demon",
+      "attempts": "694",
+      "enjoyment": 9,
+      "worstFail": 99,
+      "videoPublishedDate": "2021-01-19",
       "rank": 14,
+      "status": "completed"
+    },
+    {
+      "name": "Periodic Elements",
+      "videoUrl": "https://youtu.be/dGbwZBBiyho",
+      "difficulty": "insane-demon",
+      "attempts": "1,964",
+      "enjoyment": 6.5,
+      "worstFail": 58,
+      "videoPublishedDate": "2021-02-26",
+      "rank": 15,
+      "status": "completed"
+    },
+    {
+      "rank": 16,
       "name": "CastleMania (All Paths)",
       "attempts": "2544",
       "enjoyment": 8.2,
@@ -156,21 +177,11 @@
       "status": "completed"
     },
     {
-      "rank": 15,
+      "rank": 17,
       "name": "Magma Bound",
       "videoUrl": "https://youtu.be/tAl4DFFpeHg",
       "attempts": "4,418",
       "completionDate": "2020-02-22",
-      "completionYear": 2020,
-      "difficulty": "insane-demon",
-      "status": "completed"
-    },
-    {
-      "rank": 16,
-      "name": "SourCream II",
-      "videoUrl": "https://youtu.be/n4Y8CVH9050",
-      "attempts": "2,868",
-      "completionDate": "2020-04-13",
       "completionYear": 2020,
       "difficulty": "insane-demon",
       "status": "completed"
@@ -183,11 +194,11 @@
       "enjoyment": 4,
       "worstFail": 84,
       "videoPublishedDate": "2021-02-12",
-      "rank": 17,
+      "rank": 18,
       "status": "completed"
     },
     {
-      "rank": 18,
+      "rank": 19,
       "name": "bomb the rave",
       "attempts": "1133",
       "enjoyment": 6,
@@ -206,7 +217,7 @@
       "enjoyment": 8,
       "worstFail": 97,
       "videoPublishedDate": "2020-09-08",
-      "rank": 19,
+      "rank": 20,
       "status": "completed"
     },
     {
@@ -217,7 +228,7 @@
       "enjoyment": 0,
       "worstFail": 92,
       "videoPublishedDate": "2021-02-06",
-      "rank": 20,
+      "rank": 21,
       "status": "completed"
     },
     {
@@ -228,17 +239,6 @@
       "enjoyment": 6,
       "worstFail": 88,
       "videoPublishedDate": "2022-09-18",
-      "rank": 21,
-      "status": "completed"
-    },
-    {
-      "name": "Game Time",
-      "videoUrl": "https://youtu.be/aBl7JY4nRcA",
-      "difficulty": "insane-demon",
-      "attempts": "694",
-      "enjoyment": 9,
-      "worstFail": 99,
-      "videoPublishedDate": "2021-01-19",
       "rank": 22,
       "status": "completed"
     }
