@@ -1,3 +1,6 @@
+---
+layout: null
+---
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,11 +13,24 @@
   <link rel="stylesheet" href="assets/style.css?v=opaque-header-1">
   <script src="assets/profile-theme.js?v=tab-banners-1" defer></script>
   <script src="assets/search.js?v=1" defer></script>
-  <script src="assets/app.js?v=site-timestamp-fallback-1" defer></script>
+  <script src="assets/app.js?v=embedded-update-time-1" defer></script>
   <link rel="stylesheet" href="assets/list-banners.css?v=tab-banners-1">
   <link rel="stylesheet" href="assets/polish.css?v=profile-levels-1">
+  <style>
+    .sitehead .site-updated {color:var(--text);font-size:12px;white-space:nowrap}
+  </style>
 </head>
 <body>
-  <div id="app"><main class="container"><div class="pageintro"><h1>Player Lists</h1></div><div class="singlepanel">Loading player directory…</div></main></div>
+  <div id="app">
+    <header class="sitehead">
+      <div class="container headinner">
+        <div>
+          <a class="wordmark" href="#/" aria-label="Player Lists home">PLAYER<b> LISTS</b></a>
+          <div><time id="published-update" class="site-updated" datetime="{{ site.time | date_to_xmlschema }}">Updated {{ site.time | date: "%b %-d, %-I:%M %p %Z" }}</time></div>
+        </div>
+      </div>
+    </header>
+    <main class="container"><div class="pageintro"><h1>Player Lists</h1></div><div class="singlepanel">Loading player directory…</div></main>
+  </div>
 </body>
 </html>

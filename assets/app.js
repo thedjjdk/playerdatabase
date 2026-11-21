@@ -2,6 +2,7 @@
 (() => {
   'use strict';
   const app = document.getElementById('app');
+  const builtAt = Date.parse(document.getElementById('published-update')?.dateTime);
   const directoryUrl = 'players.json';
   const cache = new Map();
   const games = {
@@ -12,7 +13,7 @@
   };
   const state = {
     directory: [],
-    siteUpdatedAt: null,
+    siteUpdatedAt: Number.isFinite(builtAt) ? new Date(builtAt) : null,
     loadError: null,
     theme: readTheme(),
     search: '',
@@ -110,10 +111,9 @@
     if (!cache.has(path)) {
       cache.set(path, fetch(path, {cache: 'no-cache'}).then(r => {
         if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
-        if (path === directoryUrl) {
-          // GitHub Pages stamps the deployed directory even for list-only updates.
+        if (path === directoryUrl && !state.siteUpdatedAt) {
           const publishedAt = Date.parse(r.headers.get('Last-Modified'));
-          state.siteUpdatedAt = Number.isFinite(publishedAt) ? new Date(publishedAt) : null;
+          if (Number.isFinite(publishedAt)) state.siteUpdatedAt = new Date(publishedAt);
         }
         return r.json();
       }).catch(error => {cache.delete(path); throw error;}));
@@ -129,7 +129,7 @@
     const updatedLabel = updatedAt.toLocaleString('en-US', {
       month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
     });
-    return `<time datetime="${updatedAt.toISOString()}" title="Last published site update">Updated ${esc(updatedLabel)}</time>`;
+    return `<time class="site-updated" datetime="${updatedAt.toISOString()}" title="Last published site update">Updated ${esc(updatedLabel)}</time>`;
   }
   function header() {
     const isHome = state.route?.type === 'home';
@@ -137,7 +137,7 @@
       <div>
         <a class="wordmark" href="#/" aria-label="Player Lists home">PLAYER<b> LISTS</b></a>
         <div>
-          <small data-site-updated>${siteUpdatedMarkup()}</small>
+          ${siteUpdatedMarkup()}
           <button type="button" class="textbutton" data-refresh-site title="Reload the latest published version">Refresh</button>
         </div>
       </div>
@@ -688,15 +688,6 @@
       if(!Array.isArray(data.players)) throw new Error('Invalid player directory');
       state.directory=data.players.filter(p=>validId(p.id) && validId(p.folder) && typeof p.name==='string').sort((a,b)=>a.name.localeCompare(b.name, undefined, {sensitivity:'base'}));
       routeView();
-      if (!state.siteUpdatedAt) {
-        fetchJson('site-build.json').then(build => {
-          const builtAt = Date.parse(build?.builtAt);
-          if (!Number.isFinite(builtAt)) return;
-          state.siteUpdatedAt = new Date(builtAt);
-          const timestamp = app.querySelector('[data-site-updated]');
-          if (timestamp) timestamp.innerHTML = siteUpdatedMarkup();
-        }).catch(() => {});
-      }
       await Promise.allSettled(state.directory.map(async player => {
         const profile = await fetchJson(`players/${player.folder}/profile.json`);
         player.games = [...new Set(profile.lists.map(entry => listGame(entry)))];
