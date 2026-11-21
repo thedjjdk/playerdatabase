@@ -132,7 +132,10 @@
     return `<header class="sitehead"><div class="container headinner">
       <div>
         <a class="wordmark" href="#/" aria-label="Player Lists home">PLAYER<b> LISTS</b></a>
-        ${updatedAt ? `<div><small><time datetime="${updatedAt.toISOString()}" title="Last published site update">Updated ${esc(updatedLabel)}</time></small></div>` : ''}
+        <div>
+          ${updatedAt ? `<small><time datetime="${updatedAt.toISOString()}" title="Last published site update">Updated ${esc(updatedLabel)}</time></small>` : ''}
+          <button type="button" class="textbutton" data-refresh-site title="Reload the latest published version">Refresh</button>
+        </div>
       </div>
       <nav class="navlinks" aria-label="Main navigation"><a class="${isHome?'active':''}" href="#/">Players</a><a href="help/">Help</a></nav>
       <div class="appearance-tools theme-only"><button type="button" class="appearance-button" data-theme-toggle title="${state.theme==='light'?'Switch to dark mode':'Switch to light mode'}" aria-label="${state.theme==='light'?'Switch to dark mode':'Switch to light mode'}">${state.theme==='light'?ICON_SUN:ICON_MOON}</button></div>
@@ -601,6 +604,13 @@
     }
   });
   app.addEventListener('click',e=>{
+    if (e.target.closest('[data-refresh-site]')) {
+      const url = new URL(location.href);
+      url.searchParams.set('refresh', String(Date.now()));
+      history.replaceState(history.state, '', url);
+      location.reload();
+      return;
+    }
     const theme=e.target.closest('[data-theme-toggle]');
     if (theme) {setTheme(state.theme==='dark'?'light':'dark');return;}
     const game = e.target.closest('[data-game-filter]');
