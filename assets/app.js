@@ -123,17 +123,21 @@
   function displayName(pid) {
     return state.directory.find(p=>p.id===pid)?.name || pid;
   }
-  function header() {
-    const isHome = state.route?.type === 'home';
+  function siteUpdatedMarkup() {
     const updatedAt = state.siteUpdatedAt;
-    const updatedLabel = updatedAt?.toLocaleString('en-US', {
+    if (!updatedAt) return '';
+    const updatedLabel = updatedAt.toLocaleString('en-US', {
       month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
     });
+    return `<time datetime="${updatedAt.toISOString()}" title="Last published site update">Updated ${esc(updatedLabel)}</time>`;
+  }
+  function header() {
+    const isHome = state.route?.type === 'home';
     return `<header class="sitehead"><div class="container headinner">
       <div>
         <a class="wordmark" href="#/" aria-label="Player Lists home">PLAYER<b> LISTS</b></a>
         <div>
-          ${updatedAt ? `<small><time datetime="${updatedAt.toISOString()}" title="Last published site update">Updated ${esc(updatedLabel)}</time></small>` : ''}
+          <small data-site-updated>${siteUpdatedMarkup()}</small>
           <button type="button" class="textbutton" data-refresh-site title="Reload the latest published version">Refresh</button>
         </div>
       </div>
@@ -684,6 +688,15 @@
       if(!Array.isArray(data.players)) throw new Error('Invalid player directory');
       state.directory=data.players.filter(p=>validId(p.id) && validId(p.folder) && typeof p.name==='string').sort((a,b)=>a.name.localeCompare(b.name, undefined, {sensitivity:'base'}));
       routeView();
+      if (!state.siteUpdatedAt) {
+        fetchJson('site-build.json').then(build => {
+          const builtAt = Date.parse(build?.builtAt);
+          if (!Number.isFinite(builtAt)) return;
+          state.siteUpdatedAt = new Date(builtAt);
+          const timestamp = app.querySelector('[data-site-updated]');
+          if (timestamp) timestamp.innerHTML = siteUpdatedMarkup();
+        }).catch(() => {});
+      }
       await Promise.allSettled(state.directory.map(async player => {
         const profile = await fetchJson(`players/${player.folder}/profile.json`);
         player.games = [...new Set(profile.lists.map(entry => listGame(entry)))];
