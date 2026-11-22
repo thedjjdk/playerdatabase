@@ -52,6 +52,15 @@
     },
     {
       "rank": 6,
+      "name": "Worlds Hardest Game",
+      "difficulty": "insane-demon",
+      "videoUrl": "https://youtu.be/W7dR4FFjPnk",
+      "videoPublishedDate": "2024-03-03",
+      "enjoyment": 1.2,
+      "videoTitle": "Worlds Hardest Game (Insane Demon Platformer) by infernal331"
+    },
+    {
+      "rank": 7,
       "name": "Acropolis",
       "difficulty": "insane-demon",
       "videoUrl": "https://youtu.be/9m1BxYnr2kk",
@@ -59,6 +68,61 @@
       "attempts": "4,500",
       "enjoyment": 6.8,
       "timeTaken": "2 days"
+    },
+    {
+      "rank": 8,
+      "name": "Night Terrors",
+      "difficulty": "insane-demon",
+      "videoUrl": "https://youtu.be/vv1L12qC-SE",
+      "videoPublishedDate": "2022-09-03",
+      "completionDate": "2022-09-03",
+      "enjoyment": 3.3,
+      "videoTitle": "Night Terrors (Sleep Paralysis Demon) by Hinds"
+    },
+    {
+      "rank": 9,
+      "name": "8o",
+      "difficulty": "insane-demon",
+      "videoUrl": "https://youtu.be/yBTKrkLST78",
+      "videoPublishedDate": "2023-02-19",
+      "enjoyment": 4.3,
+      "videoTitle": "8o (Eminem Demon) by Etzer + Zobros"
+    },
+    {
+      "rank": 10,
+      "name": "Supersonic",
+      "difficulty": "insane-demon",
+      "videoUrl": "https://youtu.be/4w20ebJVoRo",
+      "videoPublishedDate": "2022-08-30",
+      "enjoyment": 1.9,
+      "videoTitle": "Supersonic (Insane Demon) by ZenthicAlpha and more"
+    },
+    {
+      "rank": 11,
+      "name": "Magma Bound",
+      "difficulty": "insane-demon",
+      "videoUrl": "https://youtu.be/3BhdpMF_w2M",
+      "videoPublishedDate": "2021-05-11",
+      "enjoyment": 8.6,
+      "videoTitle": "Magma Bound 100% (Insane Demon) by ScorchVX {On Stream}"
+    },
+    {
+      "rank": 12,
+      "name": "Rupture",
+      "difficulty": "insane-demon",
+      "videoUrl": "https://youtu.be/uPzMfUiAts4",
+      "videoPublishedDate": "2021-04-09",
+      "enjoyment": 1.6,
+      "videoTitle": "Rupture 100% (Insane Demon) by Jekko {On Stream}"
+    },
+    {
+      "rank": 13,
+      "name": "Arcane16",
+      "difficulty": "insane-demon",
+      "videoUrl": "https://youtu.be/qXZFhUjufjY",
+      "videoPublishedDate": "2022-02-07",
+      "enjoyment": 7.4,
+      "videoTitle": "Arcane16 (2 Player Insane Demon) by LCynox w/ JDK"
     }
   ]
 }
