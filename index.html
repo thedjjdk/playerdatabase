@@ -1,6 +1,3 @@
----
-layout: null
----
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,10 +10,11 @@ layout: null
   <link rel="stylesheet" href="assets/style.css?v=opaque-header-1">
   <script src="assets/profile-theme.js?v=tab-banners-1" defer></script>
   <script src="assets/search.js?v=1" defer></script>
-  <script src="assets/app.js?v=embedded-update-time-1" defer></script>
+  <script src="assets/app.js?v=header-refresh-position-1" defer></script>
   <link rel="stylesheet" href="assets/list-banners.css?v=tab-banners-1">
   <link rel="stylesheet" href="assets/polish.css?v=profile-levels-1">
   <style>
+    .sitehead .site-brand-row {display:flex;align-items:center;gap:12px}
     .sitehead .site-updated {color:var(--text);font-size:12px;white-space:nowrap}
   </style>
 </head>
@@ -24,9 +22,9 @@ layout: null
   <div id="app">
     <header class="sitehead">
       <div class="container headinner">
-        <div>
+        <div class="site-brand-row">
           <a class="wordmark" href="#/" aria-label="Player Lists home">PLAYER<b> LISTS</b></a>
-          <div><time id="published-update" class="site-updated" datetime="{{ site.time | date_to_xmlschema }}">Updated {{ site.time | date: "%b %-d, %-I:%M %p %Z" }}</time></div>
+          <button type="button" class="textbutton" data-refresh-site title="Reload the latest published version">Refresh</button>
         </div>
       </div>
     </header>

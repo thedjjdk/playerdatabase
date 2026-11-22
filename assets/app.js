@@ -2,7 +2,6 @@
 (() => {
   'use strict';
   const app = document.getElementById('app');
-  const builtAt = Date.parse(document.getElementById('published-update')?.dateTime);
   const directoryUrl = 'players.json';
   const cache = new Map();
   const games = {
@@ -13,7 +12,7 @@
   };
   const state = {
     directory: [],
-    siteUpdatedAt: Number.isFinite(builtAt) ? new Date(builtAt) : null,
+    siteUpdatedAt: null,
     loadError: null,
     theme: readTheme(),
     search: '',
@@ -135,11 +134,11 @@
     const isHome = state.route?.type === 'home';
     return `<header class="sitehead"><div class="container headinner">
       <div>
-        <a class="wordmark" href="#/" aria-label="Player Lists home">PLAYER<b> LISTS</b></a>
-        <div>
-          ${siteUpdatedMarkup()}
+        <div class="site-brand-row">
+          <a class="wordmark" href="#/" aria-label="Player Lists home">PLAYER<b> LISTS</b></a>
           <button type="button" class="textbutton" data-refresh-site title="Reload the latest published version">Refresh</button>
         </div>
+        <div data-site-updated>${siteUpdatedMarkup()}</div>
       </div>
       <nav class="navlinks" aria-label="Main navigation"><a class="${isHome?'active':''}" href="#/">Players</a><a href="help/">Help</a></nav>
       <div class="appearance-tools theme-only"><button type="button" class="appearance-button" data-theme-toggle title="${state.theme==='light'?'Switch to dark mode':'Switch to light mode'}" aria-label="${state.theme==='light'?'Switch to dark mode':'Switch to light mode'}">${state.theme==='light'?ICON_SUN:ICON_MOON}</button></div>
@@ -688,6 +687,15 @@
       if(!Array.isArray(data.players)) throw new Error('Invalid player directory');
       state.directory=data.players.filter(p=>validId(p.id) && validId(p.folder) && typeof p.name==='string').sort((a,b)=>a.name.localeCompare(b.name, undefined, {sensitivity:'base'}));
       routeView();
+      if (!state.siteUpdatedAt) {
+        fetchJson('site-build.json').then(build => {
+          const builtAt = Date.parse(build?.builtAt);
+          if (!Number.isFinite(builtAt) || state.siteUpdatedAt) return;
+          state.siteUpdatedAt = new Date(builtAt);
+          const timestamp = app.querySelector('[data-site-updated]');
+          if (timestamp) timestamp.innerHTML = siteUpdatedMarkup();
+        }).catch(() => {});
+      }
       await Promise.allSettled(state.directory.map(async player => {
         const profile = await fetchJson(`players/${player.folder}/profile.json`);
         player.games = [...new Set(profile.lists.map(entry => listGame(entry)))];
