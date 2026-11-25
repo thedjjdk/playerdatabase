@@ -71,6 +71,15 @@
     },
     {
       "rank": 9,
+      "name": "FNAC 3 Custom Night: Shadow Rat & Cat",
+      "status": "completed",
+      "enjoyment": 9.3,
+      "completionDate": "2026-11-25",
+      "completionYear": 2026,
+      "videoUrl": "https://youtu.be/Kka5uZTjPi4"
+    },
+    {
+      "rank": 10,
       "name": "Five Nights at Freddy's: 4/20 Mode is dead (3x in a row)",
       "videoUrl": "https://youtu.be/M9trTae43ok",
       "videoPublishedDate": "2026-04-20",
@@ -79,14 +88,14 @@
       "status": "completed"
     },
     {
-      "rank": 10,
+      "rank": 11,
       "name": "Five Nights at Freddy's 2: Golden Freddy Challenge (Right Vent Camp)",
       "videoUrl": "https://youtu.be/LsmaU5JhqLs",
       "videoPublishedDate": "2025-12-28",
       "status": "completed"
     },
     {
-      "rank": 11,
+      "rank": 12,
       "name": "Five Nights at Freddy's 3: Nightmare Aggressive Only",
       "videoUrl": "https://youtu.be/KBxYOTQbym8",
       "videoPublishedDate": "2026-02-22",
@@ -95,14 +104,14 @@
       "status": "completed"
     },
     {
-      "rank": 12,
+      "rank": 13,
       "name": "Five Nights at Freddy's Sister Location: Cupcake Challenge Very Hard",
       "videoUrl": "https://youtu.be/sNwYXFFOjDU",
       "videoPublishedDate": "2026-04-06",
       "status": "completed"
     },
     {
-      "rank": 13,
+      "rank": 14,
       "name": "Five Nights at Freddy's 4: 20/20/20/20 Mode (Night 8)",
       "videoUrl": "https://youtu.be/Jffkt6f3-xQ",
       "videoPublishedDate": "2026-08-29",
@@ -110,7 +119,7 @@
       "status": "completed"
     },
     {
-      "rank": 14,
+      "rank": 15,
       "name": "Freddy Fazbear's Pizzeria Simulator: Saturday All Active",
       "videoUrl": "https://youtu.be/miKRQlP7WoM",
       "videoPublishedDate": "2026-07-19",
@@ -118,7 +127,7 @@
       "status": "completed"
     },
     {
-      "rank": 15,
+      "rank": 16,
       "name": "Five Nights at Freddy’s: 4/20 Mode",
       "videoUrl": "https://youtu.be/zYvKZjUn0oA",
       "videoPublishedDate": "2025-12-08",
